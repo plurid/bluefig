@@ -1,33 +1,25 @@
 // #region imports
     // #region libraries
-    import fs from 'fs';
-
     import {
         BluetoothSerialPortServer,
     } from 'bluetooth-serial-port';
     // #endregion libraries
+
+
+    // #region imports
+    import {
+        viewsPath,
+    } from '~data/constants';
+
+    import {
+        ViewRoute,
+    } from '~data/interfaces';
+    // #endregion imports
 // #endregion imports
 
 
 
 // #region module
-export interface ViewElement {
-    type: 'text' | 'button' | 'list';
-    data: any;
-}
-
-export type ViewAction = (
-    payload?: any,
-) => Promise<any>;
-
-export interface ViewRoute {
-    title?: string;
-    elements?: ViewElement[];
-    actions?: Record<string, ViewAction>;
-}
-
-export const viewsPath = process.env.BLUEFIG_VIEWS_PATH || './data/views.js';
-
 export const writeErrorHandle = (
     error: any,
 ) => {
