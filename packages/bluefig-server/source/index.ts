@@ -4,6 +4,11 @@
         BluetoothSerialPortServer,
     } from 'bluetooth-serial-port';
     // #endregion libraries
+
+
+    // #region internal
+    import View from './objects/View';
+    // #endregion internal
 // #endregion imports
 
 
@@ -15,19 +20,11 @@ const UUID = process.env.BLUEFIG_SERVER_UUID || '2d5b3ea0-fb32-11eb-9a03-0242ac1
 
 const main = () => {
     const server = new BluetoothSerialPortServer();
+    const view = new View(server);
+
 
     server.on('data', (buffer) => {
-        console.log('Received data from client: ' + buffer);
-
-        console.log('Sending data to the client');
-
-        server.write(Buffer.from('...'), (
-            error: any,
-        ) => {
-            if (error) {
-                console.log('Error!');
-            }
-        });
+        view.handle(buffer);
     });
 
     server.listen(
