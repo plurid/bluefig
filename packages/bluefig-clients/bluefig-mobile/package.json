@@ -1,4 +1,17 @@
 {
+    "name": "@plurid/bluefig-mobile",
+    "version": "0.0.0-0",
+    "description": "Bluefig Mobile Client for Device Configuration",
+    "author": "ly3xqhl8g9 <ly3xqhl8g9@plurid.com> (https://plurid.com)",
+    "license": "SEE LICENSE IN LICENSE",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/plurid/bluefig"
+    },
+    "bugs": {
+        "email": "source@plurid.com",
+        "url": "https://github.com/plurid/bluefig/issues"
+    },
     "main": "node_modules/expo/AppEntry.js",
     "scripts": {
         "start": "expo start",
