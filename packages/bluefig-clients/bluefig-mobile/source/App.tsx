@@ -1,6 +1,7 @@
 // #region imports
     // #region libraries
     import React, {
+        useState,
         useEffect,
     } from 'react';
 
@@ -15,7 +16,8 @@
         Text,
         View,
 
-        NativeAppEventEmitter,
+        NativeModules,
+        NativeEventEmitter,
     } from 'react-native';
     // #endregion libraries
 // #endregion imports
@@ -23,7 +25,19 @@
 
 
 // #region module
-const App = () =>{
+const BleManagerModule = NativeModules.BleManager;
+const bleManagerEmitter = new NativeEventEmitter(BleManagerModule);
+
+
+const App = () => {
+    // #region state
+    const [
+        peripherals,
+        setPeripherals,
+    ] = useState<any[]>([]);
+    // #endregion state
+
+
     // #region effects
     useEffect(() => {
         BleManager.start({
@@ -34,14 +48,18 @@ const App = () =>{
             data: any,
         ) => {
             console.log(data) // Name of peripheral device
+            setPeripherals(peripherals => [
+                ...peripherals,
+                data,
+            ]);
         }
-        NativeAppEventEmitter.addListener(
+        bleManagerEmitter.addListener(
             'BleManagerDiscoverPeripheral',
             handleBle,
         );
 
         return () => {
-            NativeAppEventEmitter.removeListener(
+            bleManagerEmitter.removeListener(
                 'BleManagerDiscoverPeripheral',
                 handleBle,
             );
@@ -57,6 +75,16 @@ const App = () =>{
         <View
             style={styles.container}
         >
+            {peripherals.map(peripheral => {
+                return (
+                    <Text
+                        key={Math.random() + ''}
+                    >
+                        {peripheral.name}
+                    </Text>
+                );
+            })}
+
             <Text>
                 bluefig
             </Text>
