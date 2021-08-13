@@ -1,6 +1,10 @@
 // #region imports
     // #region libraries
-    import React from 'react';
+    import React, {
+        useEffect,
+    } from 'react';
+
+    import BleManager from 'react-native-ble-manager';
 
     import {
         StatusBar,
@@ -10,6 +14,8 @@
         StyleSheet,
         Text,
         View,
+
+        NativeAppEventEmitter,
     } from 'react-native';
     // #endregion libraries
 // #endregion imports
@@ -17,7 +23,36 @@
 
 
 // #region module
-function App() {
+const App = () =>{
+    // #region effects
+    useEffect(() => {
+        BleManager.start({
+            showAlert: false,
+        });
+
+        const handleBle = (
+            data: any,
+        ) => {
+            console.log(data) // Name of peripheral device
+        }
+        NativeAppEventEmitter.addListener(
+            'BleManagerDiscoverPeripheral',
+            handleBle,
+        );
+
+        return () => {
+            NativeAppEventEmitter.removeListener(
+                'BleManagerDiscoverPeripheral',
+                handleBle,
+            );
+        }
+    }, [
+
+    ]);
+    // #endregion effects
+
+
+    // #region render
     return (
         <View
             style={styles.container}
@@ -31,6 +66,7 @@ function App() {
             />
         </View>
     );
+    // #endregion render
 }
 
 const styles = StyleSheet.create(
