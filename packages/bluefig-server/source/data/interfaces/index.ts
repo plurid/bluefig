@@ -29,14 +29,24 @@ export interface ViewList {
 
 
 
-export type ViewAction = (
-    payload?: any,
-) => Promise<any>;
+export type ViewAction<P = any> = (
+    payload?: P,
+) => Promise<ViewRoute | void>;
 
 
 export interface ViewRoute {
     title?: string;
     elements?: ViewElement[];
-    actions?: Record<string, ViewAction>;
+    actions?: Record<string, ViewAction | undefined>;
+}
+
+
+export type Views = Record<string, ViewRoute | undefined>;
+
+
+export interface RequestView {
+    view: string;
+    action?: string;
+    payload?: any;
 }
 // #endregion module

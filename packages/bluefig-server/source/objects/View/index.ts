@@ -12,7 +12,8 @@
     } from '~data/constants';
 
     import {
-        ViewRoute,
+        Views,
+        RequestView,
     } from '~data/interfaces';
     // #endregion imports
 // #endregion imports
@@ -32,7 +33,7 @@ export const writeErrorHandle = (
 class View {
     private server: BluetoothSerialPortServer;
 
-    private views: Record<string, ViewRoute> = {};
+    private views: Views = {};
 
 
     constructor(
@@ -64,20 +65,37 @@ class View {
         );
     }
 
+    private async handleNotFound(
+        error?: string,
+    ) {
+        this.writeError(error);
+    }
+
+    private async handleError(
+        error?: string,
+    ) {
+        this.writeError(error);
+    }
+
 
     public async handle(
         buffer: Buffer,
     ) {
         try {
-            const data = JSON.parse(buffer.toString());
+            const data: RequestView = JSON.parse(buffer.toString());
 
             const view = this.views[data.view];
             if (!view) {
-                this.writeError('not found');
+                this.handleNotFound('not found');
+                return;
             }
 
             if (view.actions && data.action) {
                 const action = view.actions[data.action];
+                if (!action) {
+                    this.handleNotFound('no action');
+                    return;
+                }
                 const result = await action(data.payload);
 
                 if (result) {
@@ -87,6 +105,7 @@ class View {
                         })),
                         writeErrorHandle,
                     );
+                    return;
                 }
             }
 
@@ -97,7 +116,7 @@ class View {
                 writeErrorHandle,
             );
         } catch (error) {
-            this.writeError('error');
+            this.handleError('error');
         }
     }
 }
