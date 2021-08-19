@@ -22,17 +22,15 @@ const build = {
             format: 'cjs',
             exports: 'named',
             sourcemap: true,
-        },
-        {
-            file: pkg.module,
-            format: 'es',
-            exports: 'named',
-            sourcemap: true,
-        },
+        }
     ],
     external: [
+        'os',
+        'path',
+
         '@plurid/delog',
         '@plurid/plurid-functions',
+        'bluetooth-serial-port',
     ],
     plugins: [
         typescript({
