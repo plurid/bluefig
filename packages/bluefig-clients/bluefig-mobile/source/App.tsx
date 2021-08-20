@@ -11,6 +11,7 @@
         StatusBar,
         StyleSheet,
         Text,
+        Button,
         useColorScheme,
         View,
     } from 'react-native';
@@ -41,6 +42,7 @@ const styles = StyleSheet.create({
     sectionTitle: {
         fontSize: 24,
         fontWeight: '600',
+        textAlign: 'center',
     },
     sectionDescription: {
         marginTop: 8,
@@ -50,14 +52,24 @@ const styles = StyleSheet.create({
     highlight: {
         fontWeight: '700',
     },
+    separator: {
+        marginVertical: 8,
+        borderBottomColor: '#737373',
+        borderBottomWidth: StyleSheet.hairlineWidth,
+    },
 });
 
 
-const Section: React.FC<{
+const Separator = () => (
+    <View style={styles.separator} />
+);
+
+const DeviceItem: React.FC<{
     title: string;
+    onPress: () => void,
 }> = ({
-    children,
     title,
+    onPress,
 }) => {
     // #region properties
     const isDarkMode = useColorScheme() === 'dark';
@@ -66,25 +78,26 @@ const Section: React.FC<{
 
     // #region render
     return (
-        <View style={styles.sectionContainer}>
+        <View
+            style={styles.sectionContainer}
+        >
             <Text
                 style={[
                     styles.sectionTitle,
                     {
                         color: isDarkMode ? Colors.white : Colors.black,
                     },
-                ]}>
+                ]}
+            >
                 {title}
             </Text>
-            <Text
-                style={[
-                    styles.sectionDescription,
-                    {
-                        color: isDarkMode ? Colors.light : Colors.dark,
-                    },
-                ]}>
-                {children}
-            </Text>
+
+            <Button
+                title="Connect"
+                onPress={() => onPress()}
+            />
+
+            <Separator />
         </View>
     );
     // #endregion render
@@ -152,7 +165,10 @@ const App = () => {
 
             return () => subscription.remove();
         });
-    }, [bluetooth]);
+    }, [
+        devices,
+        bluetooth,
+    ]);
     // #endregion effects
 
 
@@ -176,12 +192,20 @@ const App = () => {
                 >
                     {devices.map(device => {
                         return (
-                            <Section
+                            <DeviceItem
                                 key={device.id}
                                 title={device.name || device.id}
-                            >
-                                device
-                            </Section>
+                                onPress={async () => {
+                                    await device.connect();
+                                    await device.discoverAllServicesAndCharacteristics();
+
+                                    const services = await device.services();
+
+                                    for (const service of services) {
+                                        console.log('service', service.id);
+                                    }
+                                }}
+                            />
                         );
                     })}
                 </View>
