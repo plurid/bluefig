@@ -1,5 +1,9 @@
 // #region imports
     // #region libraries
+    import {
+        Buffer,
+    } from 'buffer';
+
     import React, {
         useState,
         useEffect,
