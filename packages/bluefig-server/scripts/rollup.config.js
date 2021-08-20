@@ -29,6 +29,7 @@ const build = {
         'path',
 
         '@abandonware/noble',
+        '@abandonware/bleno',
         '@plurid/delog',
         '@plurid/plurid-functions',
     ],
