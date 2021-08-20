@@ -119,6 +119,11 @@ const App = () => {
         devices,
         setDevices,
     ] = useState<Device[]>([]);
+
+    const [
+        activeDevice,
+        setActiveDevice,
+    ] = useState<Device | null>(null);
     // #endregion state
 
 
@@ -134,11 +139,11 @@ const App = () => {
                 return;
             }
 
-            for (const stateDevice of devices) {
-                if (stateDevice.id === device.id) {
-                    return;
-                }
-            }
+            // for (const stateDevice of devices) {
+            //     if (stateDevice.id === device.id) {
+            //         return;
+            //     }
+            // }
 
             setDevices([
                 ...devices,
@@ -155,6 +160,8 @@ const App = () => {
 
     // #region effects
     useEffect(() => {
+        console.log('devices.length', devices.length);
+
         bluetooth.onStateChange((state) => {
             const subscription = bluetooth.onStateChange((state) => {
                 if (state === 'PoweredOn') {
@@ -166,8 +173,33 @@ const App = () => {
             return () => subscription.remove();
         });
     }, [
-        devices,
+        // devices.length,
         bluetooth,
+    ]);
+
+    useEffect(() => {
+        const connect = async () => {
+            try {
+                if (!activeDevice) {
+                    return;
+                }
+
+                const closedDevice = await activeDevice.cancelConnection();
+                const connectedDevice = await closedDevice.connect();
+                const servicedDevice = await connectedDevice.discoverAllServicesAndCharacteristics();
+                const services = await servicedDevice.services();
+
+                for (const service of services) {
+                    console.log('service', service.id);
+                }
+            } catch (error) {
+                console.log('connect error', error);
+            }
+        }
+
+        connect();
+    }, [
+        activeDevice,
     ]);
     // #endregion effects
 
@@ -196,14 +228,7 @@ const App = () => {
                                 key={device.id}
                                 title={device.name || device.id}
                                 onPress={async () => {
-                                    await device.connect();
-                                    await device.discoverAllServicesAndCharacteristics();
-
-                                    const services = await device.services();
-
-                                    for (const service of services) {
-                                        console.log('service', service.id);
-                                    }
+                                    setActiveDevice(device);
                                 }}
                             />
                         );
