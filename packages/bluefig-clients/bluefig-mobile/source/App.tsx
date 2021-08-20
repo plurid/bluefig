@@ -12,14 +12,15 @@
     import {
         SafeAreaView,
         ScrollView,
+        View,
         StatusBar,
-        StyleSheet,
         Text,
         Button,
-        ActivityIndicator,
-        useColorScheme,
-        View,
         RefreshControl,
+        ActivityIndicator,
+
+        StyleSheet,
+        useColorScheme,
     } from 'react-native';
 
     import {
@@ -40,6 +41,8 @@
     } from './data/constants';
 
     import bluetooth from './services/bluetooth';
+
+    import Renderer from './components/Renderer';
     // #endregion internal
 // #endregion imports
 
@@ -158,6 +161,11 @@ const App = () => {
         viewCharacteristic,
         setViewCharacteristic,
     ] = useState<Characteristic | null>(null);
+
+    const [
+        view,
+        setView,
+    ] = useState<any>();
     // #endregion state
 
 
@@ -285,6 +293,20 @@ const App = () => {
             const buffer = Buffer.from(data.value, 'base64');
             const value = buffer.toString();
             console.log('value', value);
+
+            const viewFromValue = {
+                elements: [
+                    {
+                        type: 'text',
+                        value: 'one',
+                    },
+                    {
+                        type: 'button',
+                        title: 'two',
+                    },
+                ],
+            };
+            setView(viewFromValue);
         }
 
         read();
@@ -345,19 +367,10 @@ const App = () => {
                     </View>
                 )}
 
-                {!loading && viewCharacteristic && (
-                    <View>
-                        <Text
-                            style={[
-                                styles.sectionTitle,
-                                {
-                                    color: isDarkMode ? Colors.white : Colors.black,
-                                },
-                            ]}
-                        >
-                            viewCharacteristic {viewCharacteristic.uuid}
-                        </Text>
-                    </View>
+                {!loading && viewCharacteristic && view && (
+                    <Renderer
+                        view={view}
+                    />
                 )}
             </ScrollView>
         </SafeAreaView>
