@@ -18,7 +18,8 @@
         "ios": "react-native run-ios",
         "start": "react-native start",
         "test": "jest",
-        "lint": "eslint . --ext .js,.jsx,.ts,.tsx"
+        "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
+        "generate.icon": "npx react-native-svg-app-icon"
     },
     "dependencies": {
         "react": "17.0.1",
