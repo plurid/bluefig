@@ -274,7 +274,13 @@ const App = () => {
 
         const read = async () => {
             const data = await viewCharacteristic.read();
-            console.log('data.value', data.value);
+            if (!data.value) {
+                return;
+            }
+
+            const buffer = Buffer.from(data.value, 'base64');
+            const value = buffer.toString();
+            console.log('value', value);
         }
 
         read();
