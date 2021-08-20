@@ -1,112 +1,157 @@
 // #region imports
     // #region libraries
     import React, {
-        useState,
         useEffect,
     } from 'react';
 
-    import BleManager from 'react-native-ble-manager';
-
     import {
+        SafeAreaView,
+        ScrollView,
         StatusBar,
-    } from 'expo-status-bar';
-
-    import {
         StyleSheet,
         Text,
+        useColorScheme,
         View,
-
-        NativeModules,
-        NativeEventEmitter,
     } from 'react-native';
+
+    import {
+        Colors,
+    } from 'react-native/Libraries/NewAppScreen';
     // #endregion libraries
+
+
+    // #region internal
+    import bluetooth from './services/bluetooth';
+    // #endregion internal
 // #endregion imports
 
 
 
 // #region module
-const BleManagerModule = NativeModules.BleManager;
-const bleManagerEmitter = new NativeEventEmitter(BleManagerModule);
+const styles = StyleSheet.create({
+    sectionContainer: {
+        marginTop: 32,
+        paddingHorizontal: 24,
+    },
+    sectionTitle: {
+        fontSize: 24,
+        fontWeight: '600',
+    },
+    sectionDescription: {
+        marginTop: 8,
+        fontSize: 18,
+        fontWeight: '400',
+    },
+    highlight: {
+        fontWeight: '700',
+    },
+});
+
+
+const Section: React.FC<{
+    title: string;
+}> = ({ children, title }) => {
+    const isDarkMode = useColorScheme() === 'dark';
+    return (
+        <View style={styles.sectionContainer}>
+            <Text
+                style={[
+                    styles.sectionTitle,
+                    {
+                        color: isDarkMode ? Colors.white : Colors.black,
+                    },
+                ]}>
+                {title}
+            </Text>
+            <Text
+                style={[
+                    styles.sectionDescription,
+                    {
+                        color: isDarkMode ? Colors.light : Colors.dark,
+                    },
+                ]}>
+                {children}
+            </Text>
+        </View>
+    );
+};
 
 
 const App = () => {
-    // #region state
-    const [
-        peripherals,
-        setPeripherals,
-    ] = useState<any[]>([]);
-    // #endregion state
+    // #region properties
+    const isDarkMode = useColorScheme() === 'dark';
+
+    const backgroundStyle = {
+        backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
+    };
+    // #endregion properties
+
+
+    // #region handlers
+    const scanAndConnect = () => {
+        bluetooth.startDeviceScan(null, null, (error, device) => {
+            if (error) {
+                // Handle error (scanning will be stopped automatically)
+                return
+            }
+
+            if (!device) {
+                return;
+            }
+
+            console.log(device);
+
+            setTimeout(() => {
+                bluetooth.stopDeviceScan();
+            }, 5_000);
+        });
+    }
+    // #endregion handlers
 
 
     // #region effects
     useEffect(() => {
-        BleManager.start({
-            showAlert: false,
+        bluetooth.onStateChange((state) => {
+            const subscription = bluetooth.onStateChange((state) => {
+                if (state === 'PoweredOn') {
+                    scanAndConnect();
+                    subscription.remove();
+                }
+            }, true);
+
+            return () => subscription.remove();
         });
-
-        const handleBle = (
-            data: any,
-        ) => {
-            console.log(data) // Name of peripheral device
-            setPeripherals(peripherals => [
-                ...peripherals,
-                data,
-            ]);
-        }
-        bleManagerEmitter.addListener(
-            'BleManagerDiscoverPeripheral',
-            handleBle,
-        );
-
-        return () => {
-            bleManagerEmitter.removeListener(
-                'BleManagerDiscoverPeripheral',
-                handleBle,
-            );
-        }
-    }, [
-
-    ]);
+    }, [bluetooth]);
     // #endregion effects
 
 
     // #region render
     return (
-        <View
-            style={styles.container}
+        <SafeAreaView
+            style={backgroundStyle}
         >
-            {peripherals.map(peripheral => {
-                return (
-                    <Text
-                        key={Math.random() + ''}
-                    >
-                        {peripheral.name}
-                    </Text>
-                );
-            })}
-
-            <Text>
-                bluefig
-            </Text>
-
             <StatusBar
-                style="auto"
+                barStyle={isDarkMode ? 'light-content' : 'dark-content'}
             />
-        </View>
+
+            <ScrollView
+                contentInsetAdjustmentBehavior="automatic"
+                style={backgroundStyle}
+            >
+                <View
+                    style={{
+                        backgroundColor: isDarkMode ? Colors.black : Colors.white,
+                    }}
+                >
+                    <Section title="bluefig">
+                        configure devices
+                    </Section>
+                </View>
+            </ScrollView>
+        </SafeAreaView>
     );
     // #endregion render
-}
-
-const styles = StyleSheet.create(
-    {
-        container: {
-            flex: 1,
-            backgroundColor: '#fff',
-            alignItems: 'center',
-            justifyContent: 'center',
-        },
-    },
-);
+};
 // #endregion module
 
 
