@@ -1,6 +1,7 @@
 // #region imports
     // #region libraries
     import React, {
+        useState,
         useEffect,
     } from 'react';
 
@@ -17,6 +18,10 @@
     import {
         Colors,
     } from 'react-native/Libraries/NewAppScreen';
+
+    import {
+        Device,
+    } from 'react-native-ble-plx';
     // #endregion libraries
 
 
@@ -50,8 +55,16 @@ const styles = StyleSheet.create({
 
 const Section: React.FC<{
     title: string;
-}> = ({ children, title }) => {
+}> = ({
+    children,
+    title,
+}) => {
+    // #region properties
     const isDarkMode = useColorScheme() === 'dark';
+    // #endregion properties
+
+
+    // #region render
     return (
         <View style={styles.sectionContainer}>
             <Text
@@ -74,6 +87,7 @@ const Section: React.FC<{
             </Text>
         </View>
     );
+    // #endregion render
 };
 
 
@@ -85,6 +99,14 @@ const App = () => {
         backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
     };
     // #endregion properties
+
+
+    // #region state
+    const [
+        devices,
+        setDevices,
+    ] = useState<Device[]>([]);
+    // #endregion state
 
 
     // #region handlers
@@ -99,11 +121,20 @@ const App = () => {
                 return;
             }
 
-            console.log(device);
+            for (const stateDevice of devices) {
+                if (stateDevice.id === device.id) {
+                    return;
+                }
+            }
+
+            setDevices([
+                ...devices,
+                device,
+            ]);
 
             setTimeout(() => {
                 bluetooth.stopDeviceScan();
-            }, 5_000);
+            }, 15_000);
         });
     }
     // #endregion handlers
@@ -143,9 +174,16 @@ const App = () => {
                         backgroundColor: isDarkMode ? Colors.black : Colors.white,
                     }}
                 >
-                    <Section title="bluefig">
-                        configure devices
-                    </Section>
+                    {devices.map(device => {
+                        return (
+                            <Section
+                                key={device.id}
+                                title={device.name || device.id}
+                            >
+                                device
+                            </Section>
+                        );
+                    })}
                 </View>
             </ScrollView>
         </SafeAreaView>
