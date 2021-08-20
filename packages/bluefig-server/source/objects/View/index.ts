@@ -1,8 +1,6 @@
 // #region imports
     // #region libraries
-    import {
-        BluetoothSerialPortServer,
-    } from 'bluetooth-serial-port';
+    import noble from '@abandonware/noble';
     // #endregion libraries
 
 
@@ -31,13 +29,13 @@ export const writeErrorHandle = (
 
 
 class View {
-    private server: BluetoothSerialPortServer;
+    private server: any;
 
     private views: Views = {};
 
 
     constructor(
-        server: BluetoothSerialPortServer,
+        server: any,
     ) {
         this.server = server;
 

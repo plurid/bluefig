@@ -1,8 +1,6 @@
 // #region imports
     // #region libraries
-    import {
-        BluetoothSerialPortServer,
-    } from 'bluetooth-serial-port';
+    import noble from '@abandonware/noble';
     // #endregion libraries
 
 
@@ -19,30 +17,64 @@ const UUID = process.env.BLUEFIG_SERVER_UUID || '2d5b3ea0-fb32-11eb-9a03-0242ac1
 
 
 const main = () => {
-    const server = new BluetoothSerialPortServer();
-    const view = new View(server);
-
-
-    server.on('data', (buffer) => {
-        view.handle(buffer);
+    noble.on('stateChange', (state) => {
+        if (state === 'poweredOn') {
+            //
+            // Once the BLE radio has been powered on, it is possible
+            // to begin scanning for services. Pass an empty array to
+            // scan for all services (uses more time and power).
+            //
+            console.log('scanning...');
+            noble.startScanning([UUID], false);
+        }
+        else {
+          noble.stopScanning();
+        }
     });
 
-    server.listen(
-        (
-            clientAddress,
-        ) => {
-            console.log('Client: ' + clientAddress + ' connected!');
-        },
-        (
-            error,
-        ) => {
-            console.error('Something wrong happened!:' + error);
-        },
-        {
-            uuid: UUID,
-            channel: CHANNEL,
-        },
-    );
+
+    noble.on('discover', (peripheral) => {
+        // we found a peripheral, stop scanning
+        noble.stopScanning();
+
+        //
+        // The advertisment data contains a name, power level (if available),
+        // certain advertised service uuids, as well as manufacturer data,
+        // which could be formatted as an iBeacon.
+        //
+        console.log('found peripheral:', peripheral.advertisement);
+
+        //
+        // Once the peripheral has been discovered, then connect to it.
+        //
+        peripheral.connect((err) => {
+            //
+            // Once the peripheral has been connected, then discover the
+            // services and characteristics of interest.
+            //
+            peripheral.discoverServices([UUID], (err, services) => {
+                services.forEach((service) => {
+                    //
+                    // This must be the service we were looking for.
+                    //
+                    console.log('found service:', service.uuid);
+
+                    //
+                    // So, discover its characteristics.
+                    //
+                    service.discoverCharacteristics([], (err, characteristics) => {
+                        characteristics.forEach((characteristic) => {
+                            //
+                            // Loop through each characteristic and match them to the
+                            // UUIDs that we know about.
+                            //
+                            console.log('found characteristic:', characteristic.uuid);
+                        });
+                    });
+                });
+            });
+        });
+    });
 }
 
 
