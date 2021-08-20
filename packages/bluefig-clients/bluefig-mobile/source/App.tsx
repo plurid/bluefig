@@ -15,6 +15,7 @@
         ActivityIndicator,
         useColorScheme,
         View,
+        RefreshControl,
     } from 'react-native';
 
     import {
@@ -23,11 +24,17 @@
 
     import {
         Device,
+        Characteristic,
     } from 'react-native-ble-plx';
     // #endregion libraries
 
 
     // #region internal
+    import {
+        BLUEFIG_SERVICE_UUID,
+        BLUEFIG_VIEW_CHARACTERISTIC_UUID,
+    } from './data/constants';
+
     import bluetooth from './services/bluetooth';
     // #endregion internal
 // #endregion imports
@@ -57,6 +64,17 @@ const styles = StyleSheet.create({
         marginVertical: 8,
         borderBottomColor: '#737373',
         borderBottomWidth: StyleSheet.hairlineWidth,
+    },
+
+
+    container: {
+        flex: 1,
+        justifyContent: 'center',
+    },
+    horizontal: {
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+        padding: 10,
     },
 });
 
@@ -131,6 +149,11 @@ const App = () => {
         activeDevice,
         setActiveDevice,
     ] = useState<Device | null>(null);
+
+    const [
+        viewCharacteristic,
+        setViewCharacteristic,
+    ] = useState<Characteristic | null>(null);
     // #endregion state
 
 
@@ -170,6 +193,14 @@ const App = () => {
             }, 10_000);
         });
     }
+
+    const onRefresh = () => {
+        setLoading(true);
+        setDevices([]);
+        setActiveDevice(null);
+
+        scanAndConnect();
+    }
     // #endregion handlers
 
 
@@ -204,11 +235,26 @@ const App = () => {
                 const services = await servicedDevice.services();
 
                 for (const service of services) {
-                    const characteristics = await service.characteristics();
                     console.log('service', service.uuid);
+                    let viewCharacteristicFound = false;
 
-                    for (const characteristic of characteristics) {
-                        console.log('characteristic', characteristic.uuid);
+                    if (service.uuid === BLUEFIG_SERVICE_UUID) {
+                        console.log('bluefig service', service.uuid);
+                        const characteristics = await service.characteristics();
+
+                        for (const characteristic of characteristics) {
+                            console.log('characteristic', characteristic.uuid);
+                            if (characteristic.uuid === BLUEFIG_VIEW_CHARACTERISTIC_UUID) {
+                                console.log('view characteristic', characteristic.uuid);
+                                setViewCharacteristic(characteristic);
+                                viewCharacteristicFound = true;
+                                break;
+                            }
+                        }
+                    }
+
+                    if (viewCharacteristicFound) {
+                        break;
                     }
                 }
             } catch (error) {
@@ -219,6 +265,21 @@ const App = () => {
         connect();
     }, [
         activeDevice,
+    ]);
+
+    useEffect(() => {
+        if (!viewCharacteristic) {
+            return;
+        }
+
+        const read = async () => {
+            const data = await viewCharacteristic.read();
+            console.log('data.value', data.value);
+        }
+
+        read();
+    }, [
+        viewCharacteristic,
     ]);
     // #endregion effects
 
@@ -234,30 +295,60 @@ const App = () => {
 
             <ScrollView
                 contentInsetAdjustmentBehavior="automatic"
+                refreshControl={
+                    <RefreshControl
+                        refreshing={loading}
+                        onRefresh={onRefresh}
+                    />
+                }
                 style={backgroundStyle}
             >
-                <View
-                    style={{
-                        backgroundColor: isDarkMode ? Colors.black : Colors.white,
-                        height: '100%',
-                    }}
-                >
-                    {loading && (
+                {loading && (
+                    <View
+                        style={[
+                            styles.container,
+                            styles.horizontal,
+                        ]}
+                    >
                         <ActivityIndicator />
-                    )}
+                    </View>
+                )}
 
-                    {!loading && devices.map(device => {
-                        return (
-                            <DeviceItem
-                                key={device.id}
-                                title={device.localName || device.name || device.id}
-                                onPress={async () => {
-                                    setActiveDevice(device);
-                                }}
-                            />
-                        );
-                    })}
-                </View>
+                {!loading && !viewCharacteristic && (
+                    <View
+                        style={{
+                            backgroundColor: isDarkMode ? Colors.black : Colors.white,
+                            height: '100%',
+                        }}
+                    >
+                        {devices.map(device => {
+                            return (
+                                <DeviceItem
+                                    key={device.id}
+                                    title={device.localName || device.name || device.id}
+                                    onPress={async () => {
+                                        setActiveDevice(device);
+                                    }}
+                                />
+                            );
+                        })}
+                    </View>
+                )}
+
+                {!loading && viewCharacteristic && (
+                    <View>
+                        <Text
+                            style={[
+                                styles.sectionTitle,
+                                {
+                                    color: isDarkMode ? Colors.white : Colors.black,
+                                },
+                            ]}
+                        >
+                            viewCharacteristic {viewCharacteristic.uuid}
+                        </Text>
+                    </View>
+                )}
             </ScrollView>
         </SafeAreaView>
     );
