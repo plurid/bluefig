@@ -43,9 +43,9 @@
         "prepublishOnly": "yarn build"
     },
     "dependencies": {
+        "@abandonware/noble": "^1.9.2-14",
         "@plurid/delog": "^0.0.0-5",
-        "@plurid/plurid-functions": "^0.0.0-5",
-        "bluetooth-serial-port": "^2.2.7"
+        "@plurid/plurid-functions": "^0.0.0-5"
     },
     "devDependencies": {
         "@plurid/deon": "^0.0.0-4",
