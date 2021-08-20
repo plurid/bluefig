@@ -12,6 +12,7 @@
         StyleSheet,
         Text,
         Button,
+        ActivityIndicator,
         useColorScheme,
         View,
     } from 'react-native';
@@ -63,6 +64,7 @@ const styles = StyleSheet.create({
 const Separator = () => (
     <View style={styles.separator} />
 );
+
 
 const DeviceItem: React.FC<{
     title: string;
@@ -116,6 +118,11 @@ const App = () => {
 
     // #region state
     const [
+        loading,
+        setLoading,
+    ] = useState(true);
+
+    const [
         devices,
         setDevices,
     ] = useState<Device[]>([]);
@@ -129,6 +136,9 @@ const App = () => {
 
     // #region handlers
     const scanAndConnect = () => {
+        let setState = false;
+        const scannedDevices: Device[]  = [];
+
         bluetooth.startDeviceScan(null, null, (error, device) => {
             if (error) {
                 // Handle error (scanning will be stopped automatically)
@@ -139,20 +149,25 @@ const App = () => {
                 return;
             }
 
-            // for (const stateDevice of devices) {
-            //     if (stateDevice.id === device.id) {
-            //         return;
-            //     }
-            // }
+            for (const scannedDevice of scannedDevices) {
+                if (scannedDevice.id === device.id) {
+                    return;
+                }
+            }
 
-            setDevices([
-                ...devices,
-                device,
-            ]);
+            scannedDevices.push(device);
 
             setTimeout(() => {
                 bluetooth.stopDeviceScan();
-            }, 15_000);
+
+                if (!setState) {
+                    setDevices([
+                        ...scannedDevices,
+                    ]);
+                    setLoading(false);
+                    setState = true;
+                }
+            }, 10_000);
         });
     }
     // #endregion handlers
@@ -173,8 +188,8 @@ const App = () => {
             return () => subscription.remove();
         });
     }, [
-        // devices.length,
-        bluetooth,
+        devices.length,
+        // bluetooth,
     ]);
 
     useEffect(() => {
@@ -184,13 +199,17 @@ const App = () => {
                     return;
                 }
 
-                const closedDevice = await activeDevice.cancelConnection();
-                const connectedDevice = await closedDevice.connect();
+                const connectedDevice = await activeDevice.connect();
                 const servicedDevice = await connectedDevice.discoverAllServicesAndCharacteristics();
                 const services = await servicedDevice.services();
 
                 for (const service of services) {
-                    console.log('service', service.id);
+                    const characteristics = await service.characteristics();
+                    console.log('service', service.uuid);
+
+                    for (const characteristic of characteristics) {
+                        console.log('characteristic', characteristic.uuid);
+                    }
                 }
             } catch (error) {
                 console.log('connect error', error);
@@ -220,13 +239,18 @@ const App = () => {
                 <View
                     style={{
                         backgroundColor: isDarkMode ? Colors.black : Colors.white,
+                        height: '100%',
                     }}
                 >
-                    {devices.map(device => {
+                    {loading && (
+                        <ActivityIndicator />
+                    )}
+
+                    {!loading && devices.map(device => {
                         return (
                             <DeviceItem
                                 key={device.id}
-                                title={device.name || device.id}
+                                title={device.localName || device.name || device.id}
                                 onPress={async () => {
                                     setActiveDevice(device);
                                 }}
