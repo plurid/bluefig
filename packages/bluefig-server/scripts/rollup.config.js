@@ -28,9 +28,9 @@ const build = {
         'os',
         'path',
 
+        '@abandonware/noble',
         '@plurid/delog',
         '@plurid/plurid-functions',
-        'bluetooth-serial-port',
     ],
     plugins: [
         typescript({
