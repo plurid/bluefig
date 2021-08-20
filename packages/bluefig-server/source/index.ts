@@ -2,20 +2,25 @@
     // #region libraries
     import bleno from '@abandonware/bleno';
     // #endregion libraries
+
+
+    // #region internal
+    import {
+        BLUEFIG_SERVICE_UUID,
+        BLUEFIG_VIEW_CHARACTERISTIC_UUID,
+
+        BLUEFIG_SERVICE_NAME,
+    } from './data/constants';
+    // #endregion internal
 // #endregion imports
 
 
 
 // #region module
-const BLUEFIG_NAME = 'Bluefig';
-const BLUEFIG_UUID = '2d5b3ea0-fb32-11eb-9a03-0242ac130003';
-const BLUEFIG_VIEW_UUID = '2d5b3ea0-fb32-11eb-9a03-0242ac130004';
-
-
 class BluefigViewCharacteristic extends bleno.Characteristic {
     constructor() {
         super({
-            uuid: BLUEFIG_VIEW_UUID,
+            uuid: BLUEFIG_VIEW_CHARACTERISTIC_UUID,
             properties: ['read', 'write'],
             descriptors: [
                 new bleno.Descriptor({
@@ -48,10 +53,10 @@ class BluefigViewCharacteristic extends bleno.Characteristic {
 class BluefigService extends bleno.PrimaryService {
     constructor() {
         super({
-            uuid: BLUEFIG_UUID,
+            uuid: BLUEFIG_SERVICE_UUID,
             characteristics: [
                 new BluefigViewCharacteristic(),
-            ]
+            ],
         });
     }
 }
@@ -71,7 +76,7 @@ const main = () => {
             // We will also advertise the service ID in the advertising packet,
             // so it's easier to find.
             //
-            bleno.startAdvertising(BLUEFIG_NAME, [bluefigService.uuid], (error) => {
+            bleno.startAdvertising(BLUEFIG_SERVICE_NAME, [bluefigService.uuid], (error) => {
                 if (error) {
                     console.log(error);
                 }
