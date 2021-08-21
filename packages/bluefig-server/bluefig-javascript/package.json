@@ -16,7 +16,7 @@
         "email": "source@plurid.com",
         "url": "https://github.com/plurid/bluefig/issues"
     },
-    "homepage": "https://github.com/plurid/bluefig/blob/master/packages/bluefig-server/README.md",
+    "homepage": "https://github.com/plurid/bluefig/tree/master/packages/bluefig-server/bluefig-javascript",
     "publishConfig": {
         "registry": "https://registry.npmjs.org/",
         "access": "public"
