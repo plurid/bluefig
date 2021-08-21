@@ -110,6 +110,11 @@ const App = () => {
     ] = useState<Characteristic | null>(null);
 
     const [
+        accessToken,
+        setAccessToken,
+    ] = useState<string | undefined>();
+
+    const [
         valuesStore,
         setValuesStore,
     ] = useState<Record<string, any>>({});
@@ -213,6 +218,7 @@ const App = () => {
                 view: view.location,
                 name: actionName,
                 arguments: actionArguments,
+                token: accessToken,
             };
 
             const data = Buffer.from(JSON.stringify(actionPayload));
@@ -317,7 +323,14 @@ const App = () => {
 
         const read = async () => {
             try {
-                const data = await viewCharacteristic.read();
+                const request = Buffer.from(
+                    JSON.stringify({
+                        method: 'get',
+                        view: '/',
+                        token: accessToken,
+                    }),
+                ).toString('base64');
+                const data = await viewCharacteristic.writeWithResponse(request);
                 if (!data.value) {
                     return;
                 }
@@ -325,6 +338,11 @@ const App = () => {
                 const buffer = Buffer.from(data.value, 'base64');
                 const value = buffer.toString();
                 const viewFromValue = JSON.parse(value);
+
+                if (viewFromValue.token) {
+                    setAccessToken(viewFromValue.token);
+                }
+
                 const identifiedValue = identifyValue(viewFromValue);
                 setView(identifiedValue);
                 setViewError('');

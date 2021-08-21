@@ -75,5 +75,6 @@ export interface ActionPayload {
     view: string;
     name: string;
     arguments?: any;
+    token?: string;
 }
 // #endregion module
