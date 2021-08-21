@@ -10,7 +10,14 @@
         BLUEFIG_VIEW_CHARACTERISTIC_UUID,
 
         BLUEFIG_SERVICE_NAME,
+
+        viewsPath,
     } from './data/constants';
+
+    import {
+        Views,
+        RequestView,
+    } from '~data/interfaces';
     // #endregion internal
 // #endregion imports
 
@@ -18,6 +25,9 @@
 
 // #region module
 class BluefigViewCharacteristic extends bleno.Characteristic {
+    private views: Views = {};
+
+
     constructor() {
         super({
             uuid: BLUEFIG_VIEW_CHARACTERISTIC_UUID,
@@ -29,6 +39,21 @@ class BluefigViewCharacteristic extends bleno.Characteristic {
                 }),
             ],
         });
+
+
+        this.loadViews();
+    }
+
+
+    private loadViews() {
+        try {
+            const views = require(viewsPath);
+            this.views = views;
+
+            console.log('Views loaded.');
+        } catch (error) {
+            console.log('Could not load views.');
+        }
     }
 
 
@@ -45,7 +70,9 @@ class BluefigViewCharacteristic extends bleno.Characteristic {
         offset: any,
         callback: any,
     ) {
-        callback(this.RESULT_SUCCESS, Buffer.from('1'));
+        const view = this.views['/test'];
+
+        callback(this.RESULT_SUCCESS, Buffer.from(JSON.stringify(view)));
     }
 }
 
