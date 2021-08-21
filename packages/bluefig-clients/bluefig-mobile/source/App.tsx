@@ -39,6 +39,11 @@
         BLUEFIG_VIEW_CHARACTERISTIC_UUID,
     } from './data/constants';
 
+    import {
+        ViewRouteClient,
+    } from './data/interfaces';
+
+    import Context from './services/context';
     import bluetooth from './services/bluetooth';
 
     import Renderer from './components/Renderer';
@@ -106,7 +111,7 @@ const App = () => {
     const [
         view,
         setView,
-    ] = useState<any>();
+    ] = useState<ViewRouteClient | null>(null);
 
     const [
         viewError,
@@ -176,9 +181,17 @@ const App = () => {
         }
 
         const collectArguments = () => {
+            const actionArguments: any[] = [];
+
+            if (!view.actions) {
+                return actionArguments;
+            }
+
             const serviceValues = valuesStore[viewCharacteristic.serviceID];
             const argumentsData = view.actions[actionName];
-            const actionArguments: any[] = [];
+            if (!argumentsData) {
+                return actionArguments;
+            }
 
             for (const argumentData of argumentsData) {
                 // based on argumentData names get the values from the values store
@@ -193,6 +206,27 @@ const App = () => {
             arguments: actionArguments,
         };
 
+    }
+
+
+    const setValue = (
+        key: string,
+        value: any,
+    ) => {
+        const newValuesStore = {
+            ...valuesStore,
+        };
+        newValuesStore[key] = value;
+
+        setValuesStore({
+            ...newValuesStore,
+        });
+    }
+
+    const getValue = (
+        key: string,
+    ) => {
+        return valuesStore[key];
     }
     // #endregion handlers
 
@@ -290,6 +324,19 @@ const App = () => {
     // #endregion effects
 
 
+    // #region context
+    const context = {
+        view,
+        isDarkMode,
+        imagesData: {},
+
+        setValue,
+        getValue,
+        sendAction,
+    };
+    // #endregion context
+
+
     // #region render
     const ViewLocation = () => {
         if (loading) {
@@ -331,6 +378,7 @@ const App = () => {
                                         title={device.localName || device.name || device.id}
                                         onPress={async () => {
                                             setActiveDevice(device);
+                                            setValuesStore({});
                                             setLocation('/device');
                                         }}
                                     />
@@ -355,11 +403,7 @@ const App = () => {
                 }
 
                 return (
-                    <Renderer
-                        view={view}
-
-                        sendAction={sendAction}
-                    />
+                    <Renderer />
                 );
             default:
                 return (<></>);
@@ -374,7 +418,11 @@ const App = () => {
                 barStyle={isDarkMode ? 'light-content' : 'dark-content'}
             />
 
-            <ViewLocation />
+            <Context.Provider
+                value={context}
+            >
+                <ViewLocation />
+            </Context.Provider>
         </SafeAreaView>
     );
     // #endregion render

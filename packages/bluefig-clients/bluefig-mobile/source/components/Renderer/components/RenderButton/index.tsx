@@ -1,14 +1,13 @@
 // #region imports
     // #region libraries
-    import React from 'react';
+    import React, {
+        useContext,
+    } from 'react';
 
     import {
         View,
-        Text,
-        TextInput,
         Button,
         StyleSheet,
-        useColorScheme,
     } from 'react-native';
     // #endregion libraries
 
@@ -17,6 +16,8 @@
     import {
         ViewButton,
     } from '../../../../data/interfaces';
+
+    import Context from '../../../../services/context';
     // #endregion external
 // #endregion imports
 
@@ -29,20 +30,28 @@ const styles = StyleSheet.create({
 
 export interface RenderButtonProperties {
     element: ViewButton;
-
-    sendAction: (
-        actionName: string,
-    ) => void;
 }
 
 const RenderButton: React.FC<RenderButtonProperties> = (
     properties,
 ) => {
+    // #region context
+    const context = useContext(Context);
+    if (!context) {
+        return (
+            <View />
+        );
+    }
+
+    const {
+        sendAction,
+    } = context;
+    // #endregion context
+
+
     // #region properties
     const {
         element,
-
-        sendAction,
     } = properties;
     // #endregion properties
 

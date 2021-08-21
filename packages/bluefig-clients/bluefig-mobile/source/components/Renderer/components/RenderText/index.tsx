@@ -1,12 +1,13 @@
 // #region imports
     // #region libraries
-    import React from 'react';
+    import React, {
+        useContext,
+    } from 'react';
 
     import {
         View,
         Text,
         StyleSheet,
-        useColorScheme,
     } from 'react-native';
 
     import {
@@ -19,6 +20,8 @@
     import {
         ViewText,
     } from '../../../../data/interfaces';
+
+    import Context from '../../../../services/context';
     // #endregion external
 // #endregion imports
 
@@ -30,6 +33,7 @@ const styles = StyleSheet.create({
         marginTop: 8,
         fontSize: 18,
         fontWeight: '400',
+        padding: 20,
     },
 });
 
@@ -41,12 +45,24 @@ export interface RenderTextProperties {
 const RenderText: React.FC<RenderTextProperties> = (
     properties,
 ) => {
+    // #region context
+    const context = useContext(Context);
+    if (!context) {
+        return (
+            <View />
+        );
+    }
+
+    const {
+        isDarkMode,
+    } = context;
+    // #endregion context
+
+
     // #region properties
     const {
         element
     } = properties;
-
-    const isDarkMode = useColorScheme() === 'dark';
     // #endregion properties
 
 

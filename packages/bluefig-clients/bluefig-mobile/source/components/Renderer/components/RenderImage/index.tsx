@@ -1,14 +1,12 @@
 // #region imports
     // #region libraries
-    import React from 'react';
+    import React, {
+        useContext,
+    } from 'react';
 
     import {
         View,
-        Text,
-        TextInput,
-        Button,
         StyleSheet,
-        useColorScheme,
     } from 'react-native';
     // #endregion libraries
 
@@ -17,6 +15,8 @@
     import {
         ViewImage,
     } from '../../../../data/interfaces';
+
+    import Context from '../../../../services/context';
     // #endregion external
 // #endregion imports
 
@@ -29,20 +29,28 @@ const styles = StyleSheet.create({
 
 export interface RenderImageProperties {
     element: ViewImage;
-
-    sendAction: (
-        actionName: string,
-    ) => void;
 }
 
 const RenderImage: React.FC<RenderImageProperties> = (
     properties,
 ) => {
+    // #region context
+    const context = useContext(Context);
+    if (!context) {
+        return (
+            <View />
+        );
+    }
+
+    const {
+        imagesData,
+    } = context;
+    // #endregion context
+
+
     // #region properties
     const {
         element,
-
-        sendAction,
     } = properties;
     // #endregion properties
 

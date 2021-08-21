@@ -1,6 +1,8 @@
 // #region imports
     // #region libraries
-    import React from 'react';
+    import React, {
+        useContext,
+    } from 'react';
 
     import {
         View,
@@ -9,9 +11,7 @@
 
 
     // #region external
-    import {
-        ViewElement,
-    } from '../../data/interfaces';
+    import Context from '../../services/context';
     // #endregion external
 
 
@@ -28,26 +28,39 @@
 
 
 // #region module
-export interface RendererProperties {
-    view: {
-        elements: ViewElement[];
-    };
+export const RenderComponents: Record<string, React.FC<any> | undefined> = {
+    'text': RenderText,
+    'input-text': RenderInputText,
+    'input-select': RenderInputSelect,
+    'button': RenderButton,
+    'image': RenderImage,
+    'list': RenderList,
+};
 
-    sendAction: (
-        actionName: string,
-    ) => void;
+
+export interface RendererProperties {
 }
 
 const Renderer: React.FC<RendererProperties> = (
     properties,
 ) => {
-    // #region properties
+    // #region context
+    const context = useContext(Context);
+    if (!context) {
+        return (
+            <View />
+        );
+    }
+
     const {
         view,
-
-        sendAction,
-    } = properties;
-    // #endregion properties
+    } = context;
+    if (!view) {
+        return (
+            <View />
+        );
+    }
+    // #endregion context
 
 
     // #region render
@@ -62,55 +75,21 @@ const Renderer: React.FC<RendererProperties> = (
                     );
                 }
 
-                switch (element.type) {
-                    case 'text':
-                        return (
-                            <RenderText
-                                key={Math.random() + ''}
-                                element={element}
-                            />
-                        );
-                    case 'input-text':
-                        return (
-                            <RenderInputText
-                                key={Math.random() + ''}
-                                element={element}
-                                sendAction={sendAction}
-                            />
-                        );
-                    case 'input-select':
-                        return (
-                            <RenderInputSelect
-                                key={Math.random() + ''}
-                                element={element}
-                                sendAction={sendAction}
-                            />
-                        );
-                    case 'button':
-                        return (
-                            <RenderButton
-                                key={Math.random() + ''}
-                                element={element}
-                                sendAction={sendAction}
-                            />
-                        );
-                    case 'image':
-                        return (
-                            <RenderImage
-                                key={Math.random() + ''}
-                                element={element}
-                                sendAction={sendAction}
-                            />
-                        );
-                    case 'list':
-                        return (
-                            <RenderList
-                                key={Math.random() + ''}
-                                element={element}
-                                sendAction={sendAction}
-                            />
-                        );
+                const Component = RenderComponents[element.type];
+                if (!Component) {
+                    return (
+                        <View
+                            key={Math.random() + ''}
+                        />
+                    );
                 }
+
+                return (
+                    <Component
+                        key={Math.random() + ''}
+                        element={element}
+                    />
+                );
             })}
         </View>
     );

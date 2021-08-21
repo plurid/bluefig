@@ -1,14 +1,19 @@
 // #region imports
     // #region libraries
-    import React from 'react';
+    import React, {
+        useContext,
+    } from 'react';
 
     import {
         View,
         Text,
         TextInput,
         StyleSheet,
-        useColorScheme,
     } from 'react-native';
+
+    import {
+        Colors,
+    } from 'react-native/Libraries/NewAppScreen';
     // #endregion libraries
 
 
@@ -16,6 +21,8 @@
     import {
         ViewInputText,
     } from '../../../../data/interfaces';
+
+    import Context from '../../../../services/context';
     // #endregion external
 // #endregion imports
 
@@ -23,25 +30,44 @@
 
 // #region module
 const styles = StyleSheet.create({
+    container: {
+        padding: 20,
+    },
+    text: {
+        marginTop: 8,
+        fontSize: 18,
+        fontWeight: '400',
+    },
 });
 
 
 export interface RenderInputTextProperties {
     element: ViewInputText;
-
-    sendAction: (
-        actionName: string,
-    ) => void;
 }
 
 const RenderInputText: React.FC<RenderInputTextProperties> = (
     properties,
 ) => {
+    // #region context
+    const context = useContext(Context);
+    if (!context) {
+        return (
+            <View />
+        );
+    }
+
+    const {
+        isDarkMode,
+
+        setValue,
+        getValue,
+    } = context;
+    // #endregion context
+
+
     // #region properties
     const {
         element,
-
-        sendAction,
     } = properties;
     // #endregion properties
 
@@ -54,16 +80,38 @@ const RenderInputText: React.FC<RenderInputTextProperties> = (
     }
 
     return (
-        <View>
+        <View
+            style={[
+                styles.container,
+            ]}
+        >
             {element.title && (
-                <Text>
+                <Text
+                    style={[
+                        styles.text,
+                        {
+                            color: isDarkMode ? Colors.white : Colors.black,
+                        },
+                    ]}
+                >
                     {element.title}
                 </Text>
             )}
 
             <TextInput
-                value={element?.initial || ''}
-                onChangeText={() => {}}
+                value={getValue(element.store)}
+                onChangeText={(value) => {
+                    setValue(
+                        element.store,
+                        value,
+                    );
+                }}
+                style={[
+                    styles.text,
+                    {
+                        color: isDarkMode ? Colors.white : Colors.black,
+                    },
+                ]}
             />
         </View>
     );

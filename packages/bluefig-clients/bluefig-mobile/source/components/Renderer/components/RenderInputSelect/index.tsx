@@ -1,12 +1,13 @@
 // #region imports
     // #region libraries
-    import React from 'react';
+    import React, {
+        useContext,
+    } from 'react';
 
     import {
         View,
         Text,
         StyleSheet,
-        useColorScheme,
     } from 'react-native';
     // #endregion libraries
 
@@ -15,6 +16,8 @@
     import {
         ViewInputSelect,
     } from '../../../../data/interfaces';
+
+    import Context from '../../../../services/context';
     // #endregion external
 // #endregion imports
 
@@ -27,20 +30,31 @@ const styles = StyleSheet.create({
 
 export interface RenderInputSelectProperties {
     element: ViewInputSelect;
-
-    sendAction: (
-        actionName: string,
-    ) => void;
 }
 
 const RenderInputSelect: React.FC<RenderInputSelectProperties> = (
     properties,
 ) => {
+    // #region context
+    const context = useContext(Context);
+    if (!context) {
+        return (
+            <View />
+        );
+    }
+
+    const {
+        isDarkMode,
+
+        setValue,
+        getValue,
+    } = context;
+    // #endregion context
+
+
     // #region properties
     const {
         element,
-
-        sendAction,
     } = properties;
     // #endregion properties
 
