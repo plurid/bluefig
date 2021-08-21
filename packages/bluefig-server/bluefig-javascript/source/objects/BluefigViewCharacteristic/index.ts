@@ -13,6 +13,7 @@
 
     import {
         ViewsServer,
+        ActionPayload,
     } from '~data/interfaces';
     // #endregion external
 // #endregion imports
@@ -54,18 +55,17 @@ class BluefigViewCharacteristic extends bleno.Characteristic {
 
 
     public async onWriteRequest(
-        data: any,
-        offset: any,
-        withoutResponse: any,
-        callback: any,
+        data: Buffer,
+        offset: number,
+        withoutResponse: boolean,
+        callback: (
+            result: number,
+            // data?: string,
+        ) => void,
     ) {
         try {
-            // parsed from data
-            const actionPayload = {
-                view: '/test',
-                name: 'click',
-                arguments: [],
-            };
+            const dataValue = data.toString();
+            const actionPayload: ActionPayload = JSON.parse(dataValue);
 
             const view = this.views[actionPayload.view];
             if (!view || !view.actions) {

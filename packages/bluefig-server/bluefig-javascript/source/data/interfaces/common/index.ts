@@ -63,6 +63,7 @@ export interface ViewList {
 export type ViewActionClient = string[];
 
 export interface ViewRouteClient {
+    location: string;
     title?: string;
     elements?: ViewElement[];
     actions?: Record<string, ViewActionClient | undefined>;
@@ -70,9 +71,9 @@ export interface ViewRouteClient {
 
 
 
-export interface RequestView {
+export interface ActionPayload {
     view: string;
-    action?: string;
+    name: string;
     arguments?: any;
 }
 // #endregion module
