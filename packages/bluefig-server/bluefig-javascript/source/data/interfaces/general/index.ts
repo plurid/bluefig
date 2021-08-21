@@ -34,9 +34,9 @@ export type ViewsServer = Record<string, ViewRouteServer | undefined>;
 export interface Hooks {
     beforeRead?: (
         view: string,
-    ) => Promise<boolean | void>;
+    ) => Promise<boolean | string | void>;
     beforeWrite?: (
         view: string,
-    ) => Promise<boolean | void>;
+    ) => Promise<boolean | string | void>;
 }
 // #endregion module

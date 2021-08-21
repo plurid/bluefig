@@ -84,13 +84,17 @@ class BluefigViewCharacteristic extends bleno.Characteristic {
             }
 
             if (this.hooks?.beforeWrite) {
-                const allow = await this.hooks.beforeWrite(
+                const hook = await this.hooks.beforeWrite(
                     actionPayload.view,
                 );
 
-                if (!allow) {
+                if (!hook) {
                     callback(this.RESULT_UNLIKELY_ERROR);
                     return;
+                }
+
+                if (typeof hook === 'string') {
+                    actionPayload.view = hook;
                 }
             }
 
@@ -144,17 +148,20 @@ class BluefigViewCharacteristic extends bleno.Characteristic {
         callback: any,
     ) {
         // load view based on request
-        const viewLocation = '/test-2';
-
+        let viewLocation = '/test-2';
 
         if (this.hooks?.beforeRead) {
-            const allow = await this.hooks.beforeRead(
+            const hook = await this.hooks.beforeRead(
                 viewLocation,
             );
 
-            if (!allow) {
+            if (!hook) {
                 callback(this.RESULT_UNLIKELY_ERROR);
                 return;
+            }
+
+            if (typeof hook === 'string') {
+                viewLocation = hook;
             }
         }
 
