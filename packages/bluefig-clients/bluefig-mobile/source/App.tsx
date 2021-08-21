@@ -43,11 +43,15 @@
         ViewRouteClient,
     } from './data/interfaces';
 
+    import Renderer from './components/Renderer';
+    import DeviceItem from './components/DeviceItem';
+
     import Context from './services/context';
     import bluetooth from './services/bluetooth';
 
-    import Renderer from './components/Renderer';
-    import DeviceItem from './components/DeviceItem';
+    import {
+        identifyValue,
+    } from './services/utilities';
     // #endregion internal
 // #endregion imports
 
@@ -310,7 +314,8 @@ const App = () => {
                 const buffer = Buffer.from(data.value, 'base64');
                 const value = buffer.toString();
                 const viewFromValue = JSON.parse(value);
-                setView(viewFromValue);
+                const identifiedValue = identifyValue(viewFromValue);
+                setView(identifiedValue);
                 setViewError('');
             } catch (error) {
                 setViewError('no view');

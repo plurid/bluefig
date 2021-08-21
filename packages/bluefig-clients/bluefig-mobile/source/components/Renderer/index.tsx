@@ -86,7 +86,7 @@ const Renderer: React.FC<RendererProperties> = (
 
                 return (
                     <Component
-                        key={Math.random() + ''}
+                        key={(element as any).id || Math.random() + ''}
                         element={element}
                     />
                 );

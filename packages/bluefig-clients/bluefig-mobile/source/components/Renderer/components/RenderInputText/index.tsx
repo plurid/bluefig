@@ -72,6 +72,18 @@ const RenderInputText: React.FC<RenderInputTextProperties> = (
     // #endregion properties
 
 
+    // #region handlers
+    const onChangeText = (
+        value: string,
+    ) => {
+        setValue(
+            element.store,
+            value,
+        );
+    }
+    // #endregion handlers
+
+
     // #region render
     if (!element.store) {
         return (
@@ -100,12 +112,7 @@ const RenderInputText: React.FC<RenderInputTextProperties> = (
 
             <TextInput
                 value={getValue(element.store)}
-                onChangeText={(value) => {
-                    setValue(
-                        element.store,
-                        value,
-                    );
-                }}
+                onChangeText={onChangeText}
                 style={[
                     styles.text,
                     {
