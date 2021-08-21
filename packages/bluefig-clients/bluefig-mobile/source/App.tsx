@@ -51,7 +51,10 @@
     import bluetooth from './services/bluetooth';
 
     import {
-        identifyValue,
+        identifyView,
+
+        dataToBase64,
+        base64ToData,
     } from './services/utilities';
     // #endregion internal
 // #endregion imports
@@ -323,28 +326,27 @@ const App = () => {
 
         const read = async () => {
             try {
-                const request = Buffer.from(
-                    JSON.stringify({
-                        method: 'get',
-                        view: '/',
-                        token: accessToken,
-                    }),
-                ).toString('base64');
+                const request = dataToBase64({
+                    method: 'get',
+                    view: '/',
+                    token: accessToken,
+                });
                 const data = await viewCharacteristic.writeWithResponse(request);
                 if (!data.value) {
                     return;
                 }
 
-                const buffer = Buffer.from(data.value, 'base64');
-                const value = buffer.toString();
-                const viewFromValue = JSON.parse(value);
-
-                if (viewFromValue.token) {
-                    setAccessToken(viewFromValue.token);
+                const view = base64ToData(data.value);
+                if (!view) {
+                    return;
                 }
 
-                const identifiedValue = identifyValue(viewFromValue);
-                setView(identifiedValue);
+                if (view.token) {
+                    setAccessToken(view.token);
+                }
+
+                const identifiedView = identifyView(view);
+                setView(identifiedView);
                 setViewError('');
             } catch (error) {
                 setViewError('no view');

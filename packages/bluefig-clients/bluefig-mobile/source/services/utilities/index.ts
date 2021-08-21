@@ -9,7 +9,7 @@
 
 
 // #region module
-export const identifyValue = (
+export const identifyView = (
     view: ViewRouteClient,
 ) => {
     if (!view.elements) {
@@ -28,5 +28,29 @@ export const identifyValue = (
         ...view,
         elements,
     };
+}
+
+
+export const dataToBase64 = <T = any>(
+    data: T,
+) => {
+    return Buffer.from(
+        JSON.stringify({data}),
+    ).toString('base64');
+}
+
+
+export const base64ToData = (
+    data: string,
+) => {
+    try {
+        const value = Buffer
+            .from(data, 'base64')
+            .toString();
+
+        return JSON.parse(value);
+    } catch (error) {
+        return;
+    }
 }
 // #endregion module
