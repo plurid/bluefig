@@ -73,7 +73,7 @@ export interface ViewRouteClient {
 
 export interface ActionPayload {
     view: string;
-    name?: string;
+    name: string;
     arguments?: any;
 }
 // #endregion module
