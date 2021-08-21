@@ -33,7 +33,12 @@ const views = {
             },
         ],
         actions: {
-            'click': [],
+            'click': {
+                arguments: [],
+                execution: () => {
+                    console.log('Click action called');
+                },
+            },
         },
     },
 };
