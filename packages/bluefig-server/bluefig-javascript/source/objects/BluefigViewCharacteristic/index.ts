@@ -18,6 +18,10 @@
         ActionPayload,
         ViewRouteClient,
     } from '~data/interfaces';
+
+    import {
+        resolveElements,
+    } from '~services/logic';
     // #endregion external
 // #endregion imports
 
@@ -178,10 +182,12 @@ class BluefigViewCharacteristic extends bleno.Characteristic {
             }
         }
 
+        const resolvedElements = await resolveElements(elements);
+
         const viewable: ViewRouteClient = {
             location: viewLocation,
             title,
-            elements,
+            elements: resolvedElements,
             actions: viewableActions,
         };
 
