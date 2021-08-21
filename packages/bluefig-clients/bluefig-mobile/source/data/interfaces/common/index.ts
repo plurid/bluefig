@@ -1,13 +1,4 @@
 // #region module
-export type PromiseOf<T> = () => Promise<T>;
-export type TypeOrPromiseOf<T> = T | PromiseOf<T>;
-
-export type StringOrPromiseOf = TypeOrPromiseOf<string>;
-export type StringArrayOrPromiseOf = TypeOrPromiseOf<string[]>;
-export type NumberOrPromiseOf = TypeOrPromiseOf<number>;
-export type BooleanOrPromiseOf = TypeOrPromiseOf<boolean>;
-
-
 export type ViewElement =
     | ViewText
     | ViewInputText
@@ -19,51 +10,48 @@ export type ViewElement =
 
 export interface ViewText {
     type: 'text';
-    value: StringOrPromiseOf;
+    value: string;
 }
 
 export interface ViewInputText {
     type: 'input-text';
-    title?: StringOrPromiseOf;
-    store: StringOrPromiseOf;
-    initial?: StringOrPromiseOf;
+    title?: string;
+    store: string;
+    initial?: string;
 }
 
 export interface ViewInputSelect {
     type: 'input-select';
-    title?: StringOrPromiseOf;
+    title?: string;
     /**
      * Select from the options list.
      */
-    options: StringArrayOrPromiseOf;
-    store: StringOrPromiseOf;
+    options: string[];
+    store: string;
     /**
      * Make the selection exclusive to one item.
      */
-    initial?: NumberOrPromiseOf;
-    exclusive?: BooleanOrPromiseOf;
+    initial?: number;
+    exclusive?: boolean;
     /**
      * Set initial value, index of `options`.
      */
-    action?: StringOrPromiseOf;
+    action?: string;
 }
 
 export interface ViewButton {
     type: 'button';
-    title: StringOrPromiseOf;
-    action: StringOrPromiseOf;
+    title: string;
+    action: string;
 }
-
-export type ViewImageAlignment = 'left' | 'right' | 'center';
 
 export interface ViewImage {
     type: 'image';
-    source: StringOrPromiseOf;
-    height?: NumberOrPromiseOf;
-    width?: NumberOrPromiseOf;
-    alignment?: ViewImageAlignment | PromiseOf<ViewImageAlignment>;
+    source: string;
+    height?: number;
+    width?: number;
+    alignment?: 'left' | 'right' | 'center';
 }
-
 
 export interface ViewList {
     type: 'list';
@@ -76,7 +64,7 @@ export type ViewActionClient = string[];
 
 export interface ViewRouteClient {
     location: string;
-    title?: StringOrPromiseOf;
+    title?: string;
     elements?: ViewElement[];
     actions?: Record<string, ViewActionClient | undefined>;
 }
