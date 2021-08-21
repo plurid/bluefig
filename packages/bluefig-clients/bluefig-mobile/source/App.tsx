@@ -13,6 +13,7 @@
         SafeAreaView,
         ScrollView,
         View,
+        Text,
         StatusBar,
         RefreshControl,
         ActivityIndicator,
@@ -73,6 +74,11 @@ const App = () => {
 
     // #region state
     const [
+        location,
+        setLocation,
+    ] = useState('/devices');
+
+    const [
         loading,
         setLoading,
     ] = useState(true);
@@ -93,9 +99,19 @@ const App = () => {
     ] = useState<Characteristic | null>(null);
 
     const [
+        valuesStore,
+        setValuesStore,
+    ] = useState<Record<string, any>>({});
+
+    const [
         view,
         setView,
     ] = useState<any>();
+
+    const [
+        viewError,
+        setViewError,
+    ] = useState('');
     // #endregion state
 
 
@@ -142,6 +158,41 @@ const App = () => {
         setActiveDevice(null);
 
         scanAndConnect();
+    }
+
+    const sendAction = (
+        actionName: string,
+    ) => {
+        if (
+            !activeDevice
+            || !viewCharacteristic
+            || !view
+        ) {
+            return;
+        }
+
+        if (!view.actions) {
+            return;
+        }
+
+        const collectArguments = () => {
+            const serviceValues = valuesStore[viewCharacteristic.serviceID];
+            const argumentsData = view.actions[actionName];
+            const actionArguments: any[] = [];
+
+            for (const argumentData of argumentsData) {
+                // based on argumentData names get the values from the values store
+            }
+
+            return actionArguments;
+        }
+        const actionArguments = collectArguments();
+
+        const actionPayload = {
+            name: actionName,
+            arguments: actionArguments,
+        };
+
     }
     // #endregion handlers
 
@@ -215,28 +266,21 @@ const App = () => {
         }
 
         const read = async () => {
-            const data = await viewCharacteristic.read();
-            if (!data.value) {
+            try {
+                const data = await viewCharacteristic.read();
+                if (!data.value) {
+                    return;
+                }
+
+                const buffer = Buffer.from(data.value, 'base64');
+                const value = buffer.toString();
+                const viewFromValue = JSON.parse(value);
+                setView(viewFromValue);
+                setViewError('');
+            } catch (error) {
+                setViewError('no view');
                 return;
             }
-
-            const buffer = Buffer.from(data.value, 'base64');
-            const value = buffer.toString();
-            console.log('value', value);
-
-            const viewFromValue = {
-                elements: [
-                    {
-                        type: 'text',
-                        value: 'one',
-                    },
-                    {
-                        type: 'button',
-                        title: 'two',
-                    },
-                ],
-            };
-            setView(viewFromValue);
         }
 
         read();
@@ -247,6 +291,81 @@ const App = () => {
 
 
     // #region render
+    const ViewLocation = () => {
+        if (loading) {
+            return (
+                <View
+                    style={[
+                        styles.container,
+                        styles.horizontal,
+                    ]}
+                >
+                    <ActivityIndicator />
+                </View>
+            );
+        }
+
+        switch (location) {
+            case '/devices':
+                return (
+                    <ScrollView
+                        contentInsetAdjustmentBehavior="automatic"
+                        refreshControl={
+                            <RefreshControl
+                                refreshing={loading}
+                                onRefresh={onRefresh}
+                            />
+                        }
+                        style={backgroundStyle}
+                    >
+                        <View
+                            style={{
+                                backgroundColor: isDarkMode ? Colors.black : Colors.white,
+                                height: '100%',
+                            }}
+                        >
+                            {devices.map(device => {
+                                return (
+                                    <DeviceItem
+                                        key={device.id}
+                                        title={device.localName || device.name || device.id}
+                                        onPress={async () => {
+                                            setActiveDevice(device);
+                                            setLocation('/device');
+                                        }}
+                                    />
+                                );
+                            })}
+                        </View>
+                    </ScrollView>
+                );
+            case '/device':
+                if (viewError) {
+                    return (
+                        <View>
+                            <Text>
+                                {viewError}
+                            </Text>
+                        </View>
+                    );
+                }
+
+                if (!view) {
+                    return (<></>);
+                }
+
+                return (
+                    <Renderer
+                        view={view}
+
+                        sendAction={sendAction}
+                    />
+                );
+            default:
+                return (<></>);
+        }
+    }
+
     return (
         <SafeAreaView
             style={backgroundStyle}
@@ -255,54 +374,7 @@ const App = () => {
                 barStyle={isDarkMode ? 'light-content' : 'dark-content'}
             />
 
-            <ScrollView
-                contentInsetAdjustmentBehavior="automatic"
-                refreshControl={
-                    <RefreshControl
-                        refreshing={loading}
-                        onRefresh={onRefresh}
-                    />
-                }
-                style={backgroundStyle}
-            >
-                {loading && (
-                    <View
-                        style={[
-                            styles.container,
-                            styles.horizontal,
-                        ]}
-                    >
-                        <ActivityIndicator />
-                    </View>
-                )}
-
-                {!loading && !viewCharacteristic && (
-                    <View
-                        style={{
-                            backgroundColor: isDarkMode ? Colors.black : Colors.white,
-                            height: '100%',
-                        }}
-                    >
-                        {devices.map(device => {
-                            return (
-                                <DeviceItem
-                                    key={device.id}
-                                    title={device.localName || device.name || device.id}
-                                    onPress={async () => {
-                                        setActiveDevice(device);
-                                    }}
-                                />
-                            );
-                        })}
-                    </View>
-                )}
-
-                {!loading && viewCharacteristic && view && (
-                    <Renderer
-                        view={view}
-                    />
-                )}
-            </ScrollView>
+            <ViewLocation />
         </SafeAreaView>
     );
     // #endregion render

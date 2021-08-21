@@ -35,6 +35,10 @@ export interface RendererProperties {
     view: {
         elements: any[];
     };
+
+    sendAction: (
+        actionName: string,
+    ) => void;
 }
 
 const Renderer: React.FC<RendererProperties> = (
@@ -43,6 +47,8 @@ const Renderer: React.FC<RendererProperties> = (
     // #region properties
     const {
         view,
+
+        sendAction,
     } = properties;
 
     const isDarkMode = useColorScheme() === 'dark';
@@ -52,9 +58,17 @@ const Renderer: React.FC<RendererProperties> = (
     // #region render
     return (
         <View>
-            {view.elements.map(element => {
+            {view.elements && view.elements.map(element => {
+                if (!element?.type) {
+                    return;
+                }
+
                 switch (element.type) {
                     case 'text':
+                        if (!element.value) {
+                            return;
+                        }
+
                         return (
                             <Text
                                 key={Math.random() + ''}
@@ -69,12 +83,21 @@ const Renderer: React.FC<RendererProperties> = (
                             </Text>
                         );
                     case 'button':
+                        if (
+                            !element.title
+                            || !element.action
+                        ) {
+                            return;
+                        }
+
                         return (
                             <Button
                                 key={Math.random() + ''}
                                 title={element.title}
                                 onPress={() => {
-                                    // call action
+                                    sendAction(
+                                        element.action,
+                                    );
                                 }}
                             />
                         );
