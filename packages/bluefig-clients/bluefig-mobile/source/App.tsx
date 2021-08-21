@@ -14,8 +14,6 @@
         ScrollView,
         View,
         StatusBar,
-        Text,
-        Button,
         RefreshControl,
         ActivityIndicator,
 
@@ -43,6 +41,7 @@
     import bluetooth from './services/bluetooth';
 
     import Renderer from './components/Renderer';
+    import DeviceItem from './components/DeviceItem';
     // #endregion internal
 // #endregion imports
 
@@ -50,30 +49,6 @@
 
 // #region module
 const styles = StyleSheet.create({
-    sectionContainer: {
-        marginTop: 32,
-        paddingHorizontal: 24,
-    },
-    sectionTitle: {
-        fontSize: 24,
-        fontWeight: '600',
-        textAlign: 'center',
-    },
-    sectionDescription: {
-        marginTop: 8,
-        fontSize: 18,
-        fontWeight: '400',
-    },
-    highlight: {
-        fontWeight: '700',
-    },
-    separator: {
-        marginVertical: 8,
-        borderBottomColor: '#737373',
-        borderBottomWidth: StyleSheet.hairlineWidth,
-    },
-
-
     container: {
         flex: 1,
         justifyContent: 'center',
@@ -84,51 +59,6 @@ const styles = StyleSheet.create({
         padding: 10,
     },
 });
-
-
-const Separator = () => (
-    <View style={styles.separator} />
-);
-
-
-const DeviceItem: React.FC<{
-    title: string;
-    onPress: () => void,
-}> = ({
-    title,
-    onPress,
-}) => {
-    // #region properties
-    const isDarkMode = useColorScheme() === 'dark';
-    // #endregion properties
-
-
-    // #region render
-    return (
-        <View
-            style={styles.sectionContainer}
-        >
-            <Text
-                style={[
-                    styles.sectionTitle,
-                    {
-                        color: isDarkMode ? Colors.white : Colors.black,
-                    },
-                ]}
-            >
-                {title}
-            </Text>
-
-            <Button
-                title="Connect"
-                onPress={() => onPress()}
-            />
-
-            <Separator />
-        </View>
-    );
-    // #endregion render
-};
 
 
 const App = () => {
