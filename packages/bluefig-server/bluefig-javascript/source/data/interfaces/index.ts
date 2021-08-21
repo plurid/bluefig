@@ -29,6 +29,16 @@ export interface ViewRouteServer {
 
 
 export type ViewsServer = Record<string, ViewRouteServer | undefined>;
+
+
+export interface Hooks {
+    beforeRead?: (
+        view: string,
+    ) => Promise<boolean | void>;
+    beforeWrite?: (
+        view: string,
+    ) => Promise<boolean | void>;
+}
 // #endregion module
 
 

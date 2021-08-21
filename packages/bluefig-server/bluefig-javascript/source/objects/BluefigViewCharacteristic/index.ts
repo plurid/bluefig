@@ -8,11 +8,13 @@
     import {
         BLUEFIG_VIEW_CHARACTERISTIC_UUID,
 
+        hooksPath,
         viewsPath,
     } from '~data/constants';
 
     import {
         ViewsServer,
+        Hooks,
         ActionPayload,
         ViewRouteClient,
     } from '~data/interfaces';
@@ -24,6 +26,7 @@
 // #region module
 class BluefigViewCharacteristic extends bleno.Characteristic {
     private views: ViewsServer = {};
+    private hooks: Hooks | null = null;
 
 
     constructor() {
@@ -39,18 +42,21 @@ class BluefigViewCharacteristic extends bleno.Characteristic {
         });
 
 
-        this.loadViews();
+        this.loadConfiguration();
     }
 
 
-    private loadViews() {
+    private loadConfiguration() {
         try {
             const views = require(viewsPath);
             this.views = views;
-
             console.log('Views loaded.');
+
+            const hooks = require(hooksPath);
+            this.hooks = hooks;
+            console.log('Hooks loaded.');
         } catch (error) {
-            console.log('Could not load views.');
+            console.log('Could not load.');
         }
     }
 
@@ -67,6 +73,22 @@ class BluefigViewCharacteristic extends bleno.Characteristic {
         try {
             const dataValue = data.toString();
             const actionPayload: ActionPayload = JSON.parse(dataValue);
+
+            if (!actionPayload.view) {
+                callback(this.RESULT_UNLIKELY_ERROR);
+                return;
+            }
+
+            if (this.hooks?.beforeWrite) {
+                const allow = await this.hooks.beforeWrite(
+                    actionPayload.view,
+                );
+
+                if (!allow) {
+                    callback(this.RESULT_UNLIKELY_ERROR);
+                    return;
+                }
+            }
 
             const view = this.views[actionPayload.view];
             if (!view || !view.actions) {
@@ -113,12 +135,25 @@ class BluefigViewCharacteristic extends bleno.Characteristic {
         }
     }
 
-    public onReadRequest(
+    public async onReadRequest(
         offset: any,
         callback: any,
     ) {
         // load view based on request
         const viewLocation = '/test-2';
+
+
+        if (this.hooks?.beforeRead) {
+            const allow = await this.hooks.beforeRead(
+                viewLocation,
+            );
+
+            if (!allow) {
+                callback(this.RESULT_UNLIKELY_ERROR);
+                return;
+            }
+        }
+
 
         const view = this.views[viewLocation];
         if (!view) {
