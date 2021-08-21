@@ -14,6 +14,7 @@
     import {
         ViewsServer,
         ActionPayload,
+        ViewRouteClient,
     } from '~data/interfaces';
     // #endregion external
 // #endregion imports
@@ -117,7 +118,9 @@ class BluefigViewCharacteristic extends bleno.Characteristic {
         callback: any,
     ) {
         // load view based on request
-        const view = this.views['/test-2'];
+        const viewLocation = '/test-2';
+
+        const view = this.views[viewLocation];
         if (!view) {
             callback(this.RESULT_UNLIKELY_ERROR);
             return;
@@ -140,7 +143,8 @@ class BluefigViewCharacteristic extends bleno.Characteristic {
             }
         }
 
-        const viewable = {
+        const viewable: ViewRouteClient = {
+            location: viewLocation,
             title,
             elements,
             actions: viewableActions,
