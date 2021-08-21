@@ -1,13 +1,11 @@
 // #region imports
     // #region libraries
-    import React, {
-        useState,
-        useEffect,
-    } from 'react';
+    import React from 'react';
 
     import {
         View,
         Text,
+        TextInput,
         Button,
         StyleSheet,
         useColorScheme,
@@ -17,6 +15,13 @@
         Colors,
     } from 'react-native/Libraries/NewAppScreen';
     // #endregion libraries
+
+
+    // #region external
+    import {
+        ViewElement,
+    } from '../../data/interfaces';
+    // #endregion external
 // #endregion imports
 
 
@@ -33,7 +38,7 @@ const styles = StyleSheet.create({
 
 export interface RendererProperties {
     view: {
-        elements: any[];
+        elements: ViewElement[];
     };
 
     sendAction: (
@@ -82,6 +87,44 @@ const Renderer: React.FC<RendererProperties> = (
                                 {element.value}
                             </Text>
                         );
+                    case 'input-text':
+                        if (!element.store) {
+                            return;
+                        }
+
+                        return (
+                            <View>
+                                {element.title && (
+                                    <Text>
+                                        {element.title}
+                                    </Text>
+                                )}
+
+                                <TextInput
+                                    onChangeText={() => {}}
+                                    value={element?.initial || ''}
+                                />
+                            </View>
+                        );
+                    case 'input-select':
+                        if (
+                            !element.store
+                            || !element.options
+                            || element.options.length === 0
+                        ) {
+                            return;
+                        }
+
+                        return (
+                            <View>
+                                {element.title && (
+                                    <Text>
+                                        {element.title}
+                                    </Text>
+                                )}
+
+                            </View>
+                        );
                     case 'button':
                         if (
                             !element.title
@@ -100,6 +143,27 @@ const Renderer: React.FC<RendererProperties> = (
                                     );
                                 }}
                             />
+                        );
+                    case 'image':
+                        if (!element.source) {
+                            return;
+                        }
+
+                        return (
+                            <View>
+                            </View>
+                        );
+                    case 'list':
+                        if (
+                            !element.items
+                            || element.items.length === 0
+                        ) {
+                            return;
+                        }
+
+                        return (
+                            <View>
+                            </View>
                         );
                 }
             })}
