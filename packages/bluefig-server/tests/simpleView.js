@@ -19,6 +19,23 @@ const views = {
             }
         },
     },
+
+    '/test': {
+        elements: [
+            {
+                type: 'text',
+                value: 'one',
+            },
+            {
+                type: 'button',
+                title: 'two',
+                action: 'click',
+            },
+        ],
+        actions: {
+            'click': [],
+        },
+    },
 };
 // #endregion module
 
