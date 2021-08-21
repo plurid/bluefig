@@ -1,3 +1,3 @@
 // #region exports
-export * from './common';
+export * from './view';
 // #endregion exports
