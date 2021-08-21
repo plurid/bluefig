@@ -170,47 +170,56 @@ const App = () => {
         scanAndConnect();
     }
 
-    const sendAction = (
+    const sendAction = async (
         actionName: string,
     ) => {
-        if (
-            !activeDevice
-            || !viewCharacteristic
-            || !view
-        ) {
-            return;
-        }
-
-        if (!view.actions) {
-            return;
-        }
-
-        const collectArguments = () => {
-            const actionArguments: any[] = [];
+        try {
+            if (
+                !activeDevice
+                || !viewCharacteristic
+                || !view
+            ) {
+                return;
+            }
 
             if (!view.actions) {
+                return;
+            }
+
+            const collectArguments = () => {
+                const actionArguments: any[] = [];
+
+                if (!view.actions) {
+                    return actionArguments;
+                }
+
+                const argumentsData = view.actions[actionName];
+                if (!argumentsData) {
+                    return actionArguments;
+                }
+
+                for (const argumentName of argumentsData) {
+                    // based on the argumentName get the value from the values store
+                    const value = getValue(argumentName);
+                    actionArguments.push(value);
+                }
+
                 return actionArguments;
             }
+            const actionArguments = collectArguments();
 
-            const serviceValues = valuesStore[viewCharacteristic.serviceID];
-            const argumentsData = view.actions[actionName];
-            if (!argumentsData) {
-                return actionArguments;
-            }
+            const actionPayload = {
+                name: actionName,
+                arguments: actionArguments,
+            };
 
-            for (const argumentData of argumentsData) {
-                // based on argumentData names get the values from the values store
-            }
-
-            return actionArguments;
+            const data = Buffer.from(JSON.stringify(actionPayload));
+            const result = await viewCharacteristic.writeWithResponse(
+                data.toString('base64'),
+            );
+        } catch (error) {
+            console.log('error', error);
         }
-        const actionArguments = collectArguments();
-
-        const actionPayload = {
-            name: actionName,
-            arguments: actionArguments,
-        };
-
     }
 
 

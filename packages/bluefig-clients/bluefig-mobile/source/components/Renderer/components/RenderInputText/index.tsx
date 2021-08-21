@@ -111,6 +111,7 @@ const RenderInputText: React.FC<RenderInputTextProperties> = (
             )}
 
             <TextInput
+                key={`input-${(element as any).id}`}
                 value={getValue(element.store)}
                 onChangeText={onChangeText}
                 style={[
