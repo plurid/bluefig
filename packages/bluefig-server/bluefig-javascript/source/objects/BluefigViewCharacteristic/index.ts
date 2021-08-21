@@ -22,6 +22,10 @@
     import {
         resolveElements,
     } from '~services/logic';
+
+    import {
+        bufferToData,
+    } from '~services/utilities';
     // #endregion external
 // #endregion imports
 
@@ -66,7 +70,7 @@ class BluefigViewCharacteristic extends bleno.Characteristic {
 
 
     public async onWriteRequest(
-        data: Buffer,
+        buffer: Buffer,
         offset: number,
         withoutResponse: boolean,
         callback: (
@@ -75,8 +79,10 @@ class BluefigViewCharacteristic extends bleno.Characteristic {
         ) => void,
     ) {
         try {
-            const dataValue = data.toString();
-            const actionPayload: ActionPayload = JSON.parse(dataValue);
+            const actionPayload = bufferToData<ActionPayload>(buffer);
+            if (!actionPayload) {
+                return;
+            }
 
             if (!actionPayload.view) {
                 callback(this.RESULT_UNLIKELY_ERROR);
