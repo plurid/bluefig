@@ -62,35 +62,57 @@ class BluefigViewCharacteristic extends bleno.Characteristic {
         withoutResponse: any,
         callback: any,
     ) {
-        // parsed from data
-        const actionPayload = {
-            view: '/test',
-            name: 'click',
-            arguments: [],
-        };
+        try {
+            // parsed from data
+            const actionPayload = {
+                view: '/test',
+                name: 'click',
+                arguments: [],
+            };
 
-        const view = this.views[actionPayload.view];
-        if (!view || !view.actions) {
+            const view = this.views[actionPayload.view];
+            if (!view || !view.actions) {
+                callback(this.RESULT_UNLIKELY_ERROR);
+                return;
+            }
+
+            const actionData = view.actions[actionPayload.name];
+            if (!actionData) {
+                callback(this.RESULT_UNLIKELY_ERROR);
+                return;
+            }
+
+
+            try {
+                if (typeof actionData === 'function') {
+                    const result = await actionData();
+                    if (!result) {
+                        callback(this.RESULT_SUCCESS);
+                    }
+
+                    // send result data back
+                    callback(this.RESULT_SUCCESS);
+
+                    return;
+                }
+
+                const result = await actionData.execution(
+                    ...actionPayload.arguments,
+                );
+                if (!result) {
+                    callback(this.RESULT_SUCCESS);
+                }
+
+                // send result data back
+                callback(this.RESULT_SUCCESS);
+            } catch (error) {
+                // action call error
+                callback(this.RESULT_UNLIKELY_ERROR);
+            }
+        } catch (error) {
+            // action definition error
             callback(this.RESULT_UNLIKELY_ERROR);
-            return;
         }
-
-        const actionData = view.actions[actionPayload.name];
-        if (!actionData) {
-            callback(this.RESULT_UNLIKELY_ERROR);
-            return;
-        }
-
-        const result = await actionData.execution(
-            ...arguments,
-        );
-
-        if (!result) {
-            callback(this.RESULT_SUCCESS);
-        }
-
-        // send result data back
-        callback(this.RESULT_SUCCESS);
     }
 
     public onReadRequest(

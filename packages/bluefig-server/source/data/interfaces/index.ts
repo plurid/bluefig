@@ -1,24 +1,46 @@
 // #region module
 export type ViewElement =
     | ViewText
-    | ViewInput
+    | ViewInputText
+    | ViewInputSelect
     | ViewButton
     | ViewList;
 
 
 export interface ViewText {
     type: 'text';
-    content: string;
+    value: string;
 }
 
-export interface ViewInput {
-    type: 'input';
-    action: string;
+export interface ViewInputText {
+    type: 'input-text';
+    title?: string;
+    store: string;
+    initial?: string;
+}
+
+export interface ViewInputSelect {
+    type: 'input-select';
+    title?: string;
+    /**
+     * Select from the options list.
+     */
+    options: string[];
+    store: string;
+    /**
+     * Make the selection exclusive to one item.
+     */
+    initial?: number;
+    exclusive?: boolean;
+    /**
+     * Set initial value, index of `options`.
+     */
+    action?: string;
 }
 
 export interface ViewButton {
     type: 'button';
-    content: string;
+    title: string;
     action: string;
 }
 
@@ -33,10 +55,11 @@ export type ViewActionExecution<P = any> = (
     payload?: P,
 ) => Promise<ViewRoute | void>;
 
-export interface ViewAction<P = any> {
-    arguments: any[];
-    execution: ViewActionExecution<P>
-}
+export type ViewAction<P = any> =
+    | {
+        arguments: any[];
+        execution: ViewActionExecution<P>;
+    } | ViewActionExecution<P>;
 
 
 export interface ViewRoute {
