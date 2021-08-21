@@ -15,7 +15,7 @@
     } from './data/constants';
 
     import {
-        Views,
+        ViewsServer,
     } from '~data/interfaces';
     // #endregion internal
 // #endregion imports
@@ -24,7 +24,7 @@
 
 // #region module
 class BluefigViewCharacteristic extends bleno.Characteristic {
-    private views: Views = {};
+    private views: ViewsServer = {};
 
 
     constructor() {
