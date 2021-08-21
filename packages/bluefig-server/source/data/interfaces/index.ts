@@ -4,6 +4,7 @@ export type ViewElement =
     | ViewInputText
     | ViewInputSelect
     | ViewButton
+    | ViewImage
     | ViewList;
 
 
@@ -42,6 +43,14 @@ export interface ViewButton {
     type: 'button';
     title: string;
     action: string;
+}
+
+export interface ViewImage {
+    type: 'image';
+    source: string;
+    height?: number;
+    width?: number;
+    alignment?: 'left' | 'right' | 'center';
 }
 
 export interface ViewList {
