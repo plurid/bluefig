@@ -71,8 +71,9 @@ const App = () => {
     // #region properties
     const isDarkMode = useColorScheme() === 'dark';
 
-    const backgroundStyle = {
+    const generalStyle = {
         backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
+        color: isDarkMode ? Colors.white : Colors.black,
     };
     // #endregion properties
 
@@ -363,7 +364,7 @@ const App = () => {
                                 onRefresh={onRefresh}
                             />
                         }
-                        style={backgroundStyle}
+                        style={generalStyle}
                     >
                         <View
                             style={{
@@ -412,7 +413,7 @@ const App = () => {
 
     return (
         <SafeAreaView
-            style={backgroundStyle}
+            style={generalStyle}
         >
             <StatusBar
                 barStyle={isDarkMode ? 'light-content' : 'dark-content'}
