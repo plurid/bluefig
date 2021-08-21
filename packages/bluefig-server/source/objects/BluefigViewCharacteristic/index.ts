@@ -117,7 +117,7 @@ class BluefigViewCharacteristic extends bleno.Characteristic {
         callback: any,
     ) {
         // load view based on request
-        const view = this.views['/test'];
+        const view = this.views['/test-2'];
         if (!view) {
             callback(this.RESULT_UNLIKELY_ERROR);
             return;
