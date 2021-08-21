@@ -29,9 +29,14 @@ export interface ViewList {
 
 
 
-export type ViewAction<P = any> = (
+export type ViewActionExecution<P = any> = (
     payload?: P,
 ) => Promise<ViewRoute | void>;
+
+export interface ViewAction<P = any> {
+    arguments: any[];
+    execution: ViewActionExecution<P>
+}
 
 
 export interface ViewRoute {

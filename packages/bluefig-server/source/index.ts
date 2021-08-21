@@ -16,7 +16,6 @@
 
     import {
         Views,
-        RequestView,
     } from '~data/interfaces';
     // #endregion internal
 // #endregion imports
@@ -57,12 +56,40 @@ class BluefigViewCharacteristic extends bleno.Characteristic {
     }
 
 
-    public onWriteRequest(
+    public async onWriteRequest(
         data: any,
         offset: any,
         withoutResponse: any,
         callback: any,
     ) {
+        // parsed from data
+        const actionPayload = {
+            view: '/test',
+            name: 'click',
+            arguments: [],
+        };
+
+        const view = this.views[actionPayload.view];
+        if (!view || !view.actions) {
+            callback(this.RESULT_UNLIKELY_ERROR);
+            return;
+        }
+
+        const actionData = view.actions[actionPayload.name];
+        if (!actionData) {
+            callback(this.RESULT_UNLIKELY_ERROR);
+            return;
+        }
+
+        const result = await actionData.execution(
+            ...arguments,
+        );
+
+        if (!result) {
+            callback(this.RESULT_SUCCESS);
+        }
+
+        // send result data back
         callback(this.RESULT_SUCCESS);
     }
 
@@ -70,9 +97,37 @@ class BluefigViewCharacteristic extends bleno.Characteristic {
         offset: any,
         callback: any,
     ) {
+        // load view based on request
         const view = this.views['/test'];
+        if (!view) {
+            callback(this.RESULT_UNLIKELY_ERROR);
+            return;
+        }
 
-        callback(this.RESULT_SUCCESS, Buffer.from(JSON.stringify(view)));
+        const {
+            title,
+            elements,
+            actions,
+        } = view;
+
+        const viewableActions: any = {};
+        if (actions) {
+            for (const [key, value] of Object.entries(actions)) {
+                if (!value) {
+                    continue;
+                }
+
+                viewableActions[key] = value.arguments || [];
+            }
+        }
+
+        const viewable = {
+            title,
+            elements,
+            actions: viewableActions,
+        };
+
+        callback(this.RESULT_SUCCESS, Buffer.from(JSON.stringify(viewable)));
     }
 }
 
