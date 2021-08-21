@@ -41,6 +41,7 @@
 
     import {
         ViewRouteClient,
+        ActionPayload,
     } from './data/interfaces';
 
     import Renderer from './components/Renderer';
@@ -208,7 +209,8 @@ const App = () => {
             }
             const actionArguments = collectArguments();
 
-            const actionPayload = {
+            const actionPayload: ActionPayload = {
+                view: view.location,
                 name: actionName,
                 arguments: actionArguments,
             };
