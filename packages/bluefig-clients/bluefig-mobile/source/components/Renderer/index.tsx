@@ -4,16 +4,7 @@
 
     import {
         View,
-        Text,
-        TextInput,
-        Button,
-        StyleSheet,
-        useColorScheme,
     } from 'react-native';
-
-    import {
-        Colors,
-    } from 'react-native/Libraries/NewAppScreen';
     // #endregion libraries
 
 
@@ -22,20 +13,21 @@
         ViewElement,
     } from '../../data/interfaces';
     // #endregion external
+
+
+    // #region internal
+    import RenderText from './components/RenderText';
+    import RenderInputText from './components/RenderInputText';
+    import RenderInputSelect from './components/RenderInputSelect';
+    import RenderButton from './components/RenderButton';
+    import RenderImage from './components/RenderImage';
+    import RenderList from './components/RenderList';
+    // #endregion internal
 // #endregion imports
 
 
 
 // #region module
-const styles = StyleSheet.create({
-    sectionText: {
-        marginTop: 8,
-        fontSize: 18,
-        fontWeight: '400',
-    },
-});
-
-
 export interface RendererProperties {
     view: {
         elements: ViewElement[];
@@ -55,8 +47,6 @@ const Renderer: React.FC<RendererProperties> = (
 
         sendAction,
     } = properties;
-
-    const isDarkMode = useColorScheme() === 'dark';
     // #endregion properties
 
 
@@ -65,105 +55,60 @@ const Renderer: React.FC<RendererProperties> = (
         <View>
             {view.elements && view.elements.map(element => {
                 if (!element?.type) {
-                    return;
+                    return (
+                        <View
+                            key={Math.random() + ''}
+                        />
+                    );
                 }
 
                 switch (element.type) {
                     case 'text':
-                        if (!element.value) {
-                            return;
-                        }
-
                         return (
-                            <Text
+                            <RenderText
                                 key={Math.random() + ''}
-                                style={[
-                                    styles.sectionText,
-                                    {
-                                        color: isDarkMode ? Colors.white : Colors.black,
-                                    },
-                                ]}
-                            >
-                                {element.value}
-                            </Text>
+                                element={element}
+                            />
                         );
                     case 'input-text':
-                        if (!element.store) {
-                            return;
-                        }
-
                         return (
-                            <View>
-                                {element.title && (
-                                    <Text>
-                                        {element.title}
-                                    </Text>
-                                )}
-
-                                <TextInput
-                                    onChangeText={() => {}}
-                                    value={element?.initial || ''}
-                                />
-                            </View>
+                            <RenderInputText
+                                key={Math.random() + ''}
+                                element={element}
+                                sendAction={sendAction}
+                            />
                         );
                     case 'input-select':
-                        if (
-                            !element.store
-                            || !element.options
-                            || element.options.length === 0
-                        ) {
-                            return;
-                        }
-
                         return (
-                            <View>
-                                {element.title && (
-                                    <Text>
-                                        {element.title}
-                                    </Text>
-                                )}
-
-                            </View>
+                            <RenderInputSelect
+                                key={Math.random() + ''}
+                                element={element}
+                                sendAction={sendAction}
+                            />
                         );
                     case 'button':
-                        if (
-                            !element.title
-                            || !element.action
-                        ) {
-                            return;
-                        }
-
                         return (
-                            <Button
+                            <RenderButton
                                 key={Math.random() + ''}
-                                title={element.title}
-                                onPress={() => {
-                                    sendAction(
-                                        element.action,
-                                    );
-                                }}
+                                element={element}
+                                sendAction={sendAction}
                             />
                         );
                     case 'image':
-                        if (!element.source) {
-                            return;
-                        }
-
                         return (
-                            <View>
-                            </View>
+                            <RenderImage
+                                key={Math.random() + ''}
+                                element={element}
+                                sendAction={sendAction}
+                            />
                         );
                     case 'list':
-                        if (
-                            !element.items
-                            || element.items.length === 0
-                        ) {
-                            return;
-                        }
-
                         return (
-                            <View>
-                            </View>
+                            <RenderList
+                                key={Math.random() + ''}
+                                element={element}
+                                sendAction={sendAction}
+                            />
                         );
                 }
             })}
