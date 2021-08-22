@@ -1,4 +1,13 @@
 // #region imports
+    // #region libraries
+    import os from 'os';
+    import path from 'path';
+    import {
+        promises as fs,
+    } from 'fs';
+    // #endregion libraries
+
+
     // #region external
     import {
         ViewElement,
@@ -31,9 +40,31 @@ export const resolveElements = async (
             resolvedElement[key] = value;
         }
 
+        if (element.type === 'image') {
+            const data = await readFile(resolvedElement.source);
+            resolvedElement.source = data;
+        }
+
         resolvedElements.push(resolvedElement);
     }
 
     return resolvedElements;
+}
+
+
+export const readFile = async (
+    source: string,
+) => {
+    const absolutePath = path.isAbsolute(source)
+        ? source
+        : path.join(
+            os.homedir(),
+            '.bluefig/' + source,
+        );
+
+    const file = await fs.readFile(absolutePath);
+    const data = file.toString('base64');
+
+    return data;
 }
 // #endregion module
