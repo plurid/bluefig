@@ -32,6 +32,10 @@ export type ViewsServer = Record<string, ViewRouteServer | undefined>;
 
 
 export interface Hooks {
+    checkToken?: (
+        token: string | undefined,
+        type: string,
+    ) => Promise<boolean>;
     beforeRead?: (
         view: string,
     ) => Promise<boolean | string | void>;
