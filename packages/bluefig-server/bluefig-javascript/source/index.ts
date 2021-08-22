@@ -7,6 +7,8 @@
     // #region internal
     import {
         BLUEFIG_SERVICE_NAME,
+
+        BLUETOOTH,
     } from './data/constants';
 
     import BluefigService from './objects/BluefigService';
@@ -20,37 +22,28 @@ const main = () => {
     const bluefigService = new BluefigService();
 
 
-    //
-    // Wait until the BLE radio powers on before attempting to advertise.
-    // If you don't have a BLE radio, then it will never power on!
-    //
-    bleno.on('stateChange', (state) => {
-        if (state === 'poweredOn') {
-            //
-            // We will also advertise the service ID in the advertising packet,
-            // so it's easier to find.
-            //
-            bleno.startAdvertising(BLUEFIG_SERVICE_NAME, [bluefigService.uuid], (error) => {
-                if (error) {
-                    console.log(error);
-                }
-            });
+    bleno.on(BLUETOOTH.STATE_CHANGE, (state) => {
+        if (state === BLUETOOTH.POWERED_ON) {
+            bleno.startAdvertising(
+                BLUEFIG_SERVICE_NAME,
+                [bluefigService.uuid],
+                (error) => {
+                    if (error) {
+                        console.log(error);
+                    }
+                },
+            );
         } else {
             bleno.stopAdvertising();
         }
     });
 
 
-    bleno.on('advertisingStart', (error) => {
+    bleno.on(BLUETOOTH.ADVERTISING_START, (error) => {
         if (error) {
             return;
         }
 
-        console.log('advertising...');
-        //
-        // Once we are advertising, it's time to set up our services,
-        // along with our characteristics.
-        //
         bleno.setServices([
             bluefigService,
         ]);
