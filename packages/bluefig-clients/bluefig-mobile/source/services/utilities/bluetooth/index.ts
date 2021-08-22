@@ -21,12 +21,10 @@ export interface Request {
     resource: string;
     id?: string;
     token?: string;
-    offset?: number;
 }
 
 export interface Response {
     id?: string;
-    offset: number;
     data: string;
     end: boolean;
 }
@@ -45,23 +43,21 @@ export interface GetResponse {
  * @param token
  * @returns
  */
-export const getData = async (
+export const readData = async (
     characteristic: Characteristic,
     resource: string,
     token?: string,
 ): Promise<GetResponse> => {
     try {
         let data = '';
-        let id = '';
+        let id = Math.random() + '';
         let finished = false;
-        let offset = 0;
 
         while (!finished) {
             const request: Request = {
                 resource,
                 id,
                 token,
-                offset,
             };
             characteristic = await characteristic.writeWithResponse(
                 dataToBase64({
@@ -80,7 +76,6 @@ export const getData = async (
                 };
             }
 
-            offset = response.offset;
             data += response.data;
 
             if (response.id) {
@@ -128,6 +123,37 @@ export interface WriteResponse {
 }
 
 
+export const chunker = (
+    baseData: any,
+    value: string,
+) => {
+    const CHUNK_FULL_SIZE = 512;
+    const chunkSize = CHUNK_FULL_SIZE - dataToBase64(baseData).length;
+    const chunks: string[] = [];
+    const chunksNumber = Math.ceil(value.length / chunkSize);
+
+    for (let i = 0; i < chunksNumber; i++) {
+        const lowerLimit = i * chunkSize;
+        const upperLimit = (i + 1) * chunkSize;
+
+        const data = upperLimit > value.length
+            ? value.slice(lowerLimit)
+            : value.slice(lowerLimit, upperLimit);
+
+        const finalChunk = i === chunksNumber - 1;
+
+        const chunk: WriteChunk = {
+            ...baseData,
+            data,
+            end: finalChunk ? 1 : 0,
+        };
+
+        chunks.push(dataToBase64(chunk));
+    }
+
+    return chunks;
+}
+
 /**
  *
  * @param characteristic
@@ -151,30 +177,10 @@ export const writeData = async (
             end: 0,
         };
 
-        const CHUNK_FULL_SIZE = 512;
-        const chunkSize = CHUNK_FULL_SIZE - dataToBase64(writeBase).length;
-        const chunks: string[] = [];
-        const chunksNumber = Math.ceil(resource.length / chunkSize);
-
-        for (let i = 0; i < chunksNumber; i++) {
-            const lowerLimit = i * chunkSize;
-            const upperLimit = (i + 1) * chunkSize;
-
-            const data = upperLimit > resource.length
-                ? resource.slice(lowerLimit)
-                : resource.slice(lowerLimit, upperLimit);
-
-            const finalChunk = i === chunksNumber - 1;
-
-            const chunk: WriteChunk = {
-                ...writeBase,
-                data,
-                end: finalChunk ? 1 : 0,
-            };
-
-            chunks.push(dataToBase64(chunk));
-        }
-
+        const chunks = chunker(
+            writeBase,
+            resource,
+        );
 
         for (const chunk of chunks) {
             characteristic = await characteristic.writeWithResponse(
@@ -186,7 +192,7 @@ export const writeData = async (
         let responseData = '';
 
         if (expectResponse) {
-            const response = await getData(
+            const response = await readData(
                 characteristic,
                 'response:' + id,
                 token,

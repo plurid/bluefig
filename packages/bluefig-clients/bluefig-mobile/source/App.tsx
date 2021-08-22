@@ -14,6 +14,7 @@
         ScrollView,
         View,
         Text,
+        Button,
         StatusBar,
         RefreshControl,
         ActivityIndicator,
@@ -55,6 +56,9 @@
 
         dataToBase64,
         base64ToData,
+
+        readData,
+        writeData,
     } from './services/utilities';
     // #endregion internal
 // #endregion imports
@@ -326,17 +330,20 @@ const App = () => {
 
         const read = async () => {
             try {
-                const request = dataToBase64({
-                    method: 'get',
-                    view: '/',
-                    token: accessToken,
-                });
-                const data = await viewCharacteristic.writeWithResponse(request);
-                if (!data.value) {
+                const {
+                    characteristic,
+                    data,
+                    finished,
+                } = await readData(
+                    viewCharacteristic,
+                    '/',
+                );
+
+                if (!finished) {
                     return;
                 }
 
-                const view = base64ToData(data.value);
+                const view = base64ToData(data);
                 if (!view) {
                     return;
                 }
@@ -348,6 +355,7 @@ const App = () => {
                 const identifiedView = identifyView(view);
                 setView(identifiedView);
                 setViewError('');
+                // setViewCharacteristic(characteristic);
             } catch (error) {
                 setViewError('no view');
                 return;
