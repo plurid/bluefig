@@ -317,8 +317,6 @@ class BluefigViewCharacteristic extends bleno.Characteristic {
             );
 
             if (chunks.length === 1) {
-                console.log('only one chunk');
-
                 callback(
                     this.RESULT_SUCCESS,
                     Buffer.from(chunks[0]),
