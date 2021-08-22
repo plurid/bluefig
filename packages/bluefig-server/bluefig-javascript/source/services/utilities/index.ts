@@ -1,14 +1,4 @@
-// #region module
-export const bufferToData = <T>(
-    buffer: Buffer,
-): T | undefined => {
-    try {
-        const value = buffer.toString();
-        const data: T = JSON.parse(value);
-
-        return data;
-    } catch (error) {
-        return;
-    }
-}
-// #endregion module
+// #region exports
+export * from './general';
+export * from './base64';
+// #endregion exports
