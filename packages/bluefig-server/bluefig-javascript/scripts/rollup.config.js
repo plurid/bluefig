@@ -27,6 +27,8 @@ const build = {
     external: [
         'os',
         'path',
+        'fs',
+        'buffer',
 
         '@abandonware/noble',
         '@abandonware/bleno',
