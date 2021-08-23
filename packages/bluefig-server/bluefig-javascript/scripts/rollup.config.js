@@ -30,10 +30,10 @@ const build = {
         'fs',
         'buffer',
 
-        '@abandonware/noble',
         '@abandonware/bleno',
         '@plurid/delog',
         '@plurid/plurid-functions',
+        'mime-types',
     ],
     plugins: [
         typescript({
