@@ -14,7 +14,7 @@ const views = {
             },
             {
                 type: 'image',
-                source: 'bluefig-logo-128x128.jpg',
+                source: 'bluefig-logo-128x128.png',
             },
             {
                 type: 'button',
