@@ -15,10 +15,6 @@
 
 
     // #region external
-    import {
-        ViewElement,
-    } from '../../data/interfaces';
-
     import Context from '../../services/context';
     // #endregion external
 
@@ -53,7 +49,6 @@ export const RenderComponents: Record<string, React.FC<any> | undefined> = {
 
 
 export interface RendererProperties {
-    elements?: ViewElement[];
 }
 
 const Renderer: React.FC<RendererProperties> = (
@@ -70,21 +65,15 @@ const Renderer: React.FC<RendererProperties> = (
     const {
         view,
     } = context;
-    if (!view) {
+    if (
+        !view
+        || !view.elements
+    ) {
         return (
             <View />
         );
     }
     // #endregion context
-
-
-    // #region properties
-    const {
-        elements,
-    } = properties;
-
-    const renderElements = elements || view.elements || [];
-    // #endregion properties
 
 
     // #region render
@@ -102,7 +91,7 @@ const Renderer: React.FC<RendererProperties> = (
                         paddingBottom: 60,
                     }}
                 >
-                    {renderElements.map(element => {
+                    {view.elements.map(element => {
                         if (!element?.type) {
                             return (
                                 <View

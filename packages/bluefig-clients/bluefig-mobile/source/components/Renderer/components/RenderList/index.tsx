@@ -6,7 +6,6 @@
 
     import {
         View,
-        StyleSheet,
     } from 'react-native';
     // #endregion libraries
 
@@ -16,17 +15,26 @@
         ViewList,
     } from '../../../../data/interfaces';
 
-    import Context from '../../../../services/context';
+    import RenderText from '../RenderText';
+    import RenderInputText from '../RenderInputText';
+    import RenderInputSelect from '../RenderInputSelect';
+    import RenderButton from '../RenderButton';
+    import RenderImage from '../RenderImage';
 
-    import Renderer from '../../index';
+    import Context from '../../../../services/context';
     // #endregion external
 // #endregion imports
 
 
 
 // #region module
-const styles = StyleSheet.create({
-});
+export const RenderComponents: Record<string, React.FC<any> | undefined> = {
+    'text': RenderText,
+    'input-text': RenderInputText,
+    'input-select': RenderInputSelect,
+    'button': RenderButton,
+    'image': RenderImage,
+};
 
 
 export interface RenderListProperties {
@@ -43,10 +51,6 @@ const RenderList: React.FC<RenderListProperties> = (
             <View />
         );
     }
-
-    const {
-        isDarkMode,
-    } = context;
     // #endregion context
 
 
@@ -73,9 +77,42 @@ const RenderList: React.FC<RenderListProperties> = (
 
     // #region render
     return (
-        <Renderer
-            elements={items}
-        />
+        <View>
+            {items.map((item) => {
+                if (!item?.type) {
+                    return (
+                        <View
+                            key={Math.random() + ''}
+                        />
+                    );
+                }
+
+                if (item.type === 'list') {
+                    return (
+                        <RenderList
+                            key={(item as any).id || Math.random() + ''}
+                            element={item}
+                        />
+                    );
+                }
+
+                const Component = RenderComponents[item.type];
+                if (!Component) {
+                    return (
+                        <View
+                            key={Math.random() + ''}
+                        />
+                    );
+                }
+
+                return (
+                    <Component
+                        key={(item as any).id || Math.random() + ''}
+                        element={item}
+                    />
+                );
+            })}
+        </View>
     );
     // #endregion render
 }

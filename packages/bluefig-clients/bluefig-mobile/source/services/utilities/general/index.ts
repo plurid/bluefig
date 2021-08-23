@@ -18,6 +18,24 @@ export const identifyView = (
 
     const elements: any[] = [];
     for (const element of view.elements) {
+        if (element.type === 'list') {
+            const items: any[] = [];
+
+            for (const item of element.items) {
+                items.push({
+                    id: Math.random() + '',
+                    ...item,
+                });
+            }
+
+            elements.push({
+                id: Math.random() + '',
+                ...element,
+                items,
+            });
+            continue;
+        }
+
         elements.push({
             id: Math.random() + '',
             ...element,
