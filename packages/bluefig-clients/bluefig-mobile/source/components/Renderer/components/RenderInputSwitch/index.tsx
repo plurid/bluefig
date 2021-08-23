@@ -33,6 +33,10 @@
 const styles = StyleSheet.create({
     container: {
         padding: 20,
+        display: 'flex',
+        justifyContent: 'space-between',
+        flexDirection: 'row',
+        alignItems: 'center',
     },
     text: {
         marginTop: 8,
@@ -151,6 +155,9 @@ const RenderInputSwitch: React.FC<RenderInputSwitchProperties> = (
                     if (action) {
                         sendAction(action);
                     }
+                }}
+                trackColor={{
+                    true: '#454f54',
                 }}
             />
         </View>
