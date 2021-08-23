@@ -25,6 +25,10 @@
 
 // #region module
 const styles = StyleSheet.create({
+    image: {
+        width: 100,
+        height: 100,
+    },
 });
 
 
@@ -68,13 +72,15 @@ const RenderImage: React.FC<RenderImageProperties> = (
         );
     }
 
+    const imageURI = `data:${imageType};base64,${element.source}`;
+
     return (
         <View>
             <Image
                 source={{
-                    uri: `data:${imageType};base64,${element.source}`,
-                    width,
-                    height,
+                    uri: imageURI,
+                    width: width || 100,
+                    height: height || 100,
                 }}
             />
         </View>

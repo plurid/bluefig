@@ -17,6 +17,8 @@
 
 
 // #region module
+export const BETWEEN_CALLS_WAIT_TIME = 2;
+
 export interface Request {
     resource: string;
     id?: string;
@@ -84,6 +86,12 @@ export const readData = async (
 
             if (response.end) {
                 finished = true;
+            } else {
+                await new Promise((done) => {
+                    setTimeout(() => {
+                        done(true);
+                    }, BETWEEN_CALLS_WAIT_TIME);
+                });
             }
         }
 
