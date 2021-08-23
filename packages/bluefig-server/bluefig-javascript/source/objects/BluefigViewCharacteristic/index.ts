@@ -296,13 +296,13 @@ class BluefigViewCharacteristic extends bleno.Characteristic {
             id,
         } = this.reading;
 
-        const readingData = this.readings[id];
-
         const baseResponse = {
             id,
             data: '',
             end: 0,
         };
+
+        const readingData = this.readings[id];
 
         if (!readingData) {
             const readResource = await this.resolveReadResource(resource);
