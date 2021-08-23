@@ -18,6 +18,7 @@
     import RenderText from '../RenderText';
     import RenderInputText from '../RenderInputText';
     import RenderInputSelect from '../RenderInputSelect';
+    import RenderInputSwitch from '../RenderInputSwitch';
     import RenderButton from '../RenderButton';
     import RenderImage from '../RenderImage';
 
@@ -32,6 +33,7 @@ export const RenderComponents: Record<string, React.FC<any> | undefined> = {
     'text': RenderText,
     'input-text': RenderInputText,
     'input-select': RenderInputSelect,
+    'input-switch': RenderInputSwitch,
     'button': RenderButton,
     'image': RenderImage,
 };
