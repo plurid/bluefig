@@ -2,6 +2,7 @@
     // #region external
     import {
         ViewRouteClient,
+        ViewElement,
     } from '../../../data/interfaces';
     // #endregion external
 // #endregion imports
@@ -9,6 +10,32 @@
 
 
 // #region module
+export const identifyElements = (
+    elements: ViewElement[],
+) => {
+    const identifieElements: any[] = [];
+
+    for (const element of elements) {
+        if (element.type === 'list') {
+            const listItems = identifyElements(element.items);
+
+            identifieElements.push({
+                ...element,
+                items: listItems,
+            });
+            continue;
+        }
+
+        identifieElements.push({
+            id: Math.random() + '',
+            ...element,
+        });
+    }
+
+    return identifieElements;
+}
+
+
 export const identifyView = (
     view: ViewRouteClient,
 ) => {
@@ -16,31 +43,9 @@ export const identifyView = (
         return view;
     }
 
-    const elements: any[] = [];
-    for (const element of view.elements) {
-        if (element.type === 'list') {
-            const items: any[] = [];
-
-            for (const item of element.items) {
-                items.push({
-                    id: Math.random() + '',
-                    ...item,
-                });
-            }
-
-            elements.push({
-                id: Math.random() + '',
-                ...element,
-                items,
-            });
-            continue;
-        }
-
-        elements.push({
-            id: Math.random() + '',
-            ...element,
-        });
-    }
+    const elements: any[] = identifyElements(
+        view.elements,
+    );
 
     return {
         ...view,
