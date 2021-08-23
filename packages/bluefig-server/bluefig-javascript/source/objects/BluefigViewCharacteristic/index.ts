@@ -123,15 +123,15 @@ class BluefigViewCharacteristic extends bleno.Characteristic {
     private async resolveReadResource(
         resource: string,
     ) {
-        if (resource.startsWith('action-result:')) {
-            const id = resource.replace('action-result:', '');
+        if (resource.startsWith('response:')) {
+            const id = resource.replace('response:', '');
             const view = this.readings[id];
             if (!view) {
                 return;
             }
             const viewable = await this.resolveViewable(
                 view,
-                `/_bluefig-action-result/${id}`,
+                `/_bluefig-response/${id}`,
             );
             return viewable;
         }
@@ -264,10 +264,9 @@ class BluefigViewCharacteristic extends bleno.Characteristic {
                 );
 
                 if (actionResult) {
-                    const id = Math.random() + '';
                     this.readings[id] = actionResult;
                     this.reading = {
-                        resource: `action-result:${id}`,
+                        resource: `response:${id}`,
                         id,
                     };
                 }
