@@ -107,6 +107,8 @@ const views = {
                     ...args
                 ) => {
                     console.log('Click action called', args);
+
+                    return views['/test'];
                 },
             },
         },
