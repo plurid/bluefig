@@ -432,6 +432,7 @@ const App = () => {
                     generalStyle={generalStyle}
                     viewError={viewError}
                     devices={devices}
+                    activeDevice={activeDevice}
 
                     onRefresh={onRefresh}
                     handleConnect={handleConnect}

@@ -46,6 +46,7 @@ export interface ViewLocationProperties {
     generalStyle: any;
     viewError: string;
     devices: Device[];
+    activeDevice: Device | null;
 
     onRefresh: () => void;
     handleConnect: (device: Device) => void;
@@ -77,11 +78,14 @@ const ViewLocation: React.FC<ViewLocationProperties> = (
         generalStyle,
         viewError,
         devices,
+        activeDevice,
 
         onRefresh,
         handleConnect,
         handleDisconnect,
     } = properties;
+
+    const deviceName = activeDevice?.localName || activeDevice?.name || activeDevice?.id;
     // #endregion properties
 
 
@@ -150,10 +154,20 @@ const ViewLocation: React.FC<ViewLocationProperties> = (
                 );
             }
 
+            if (!deviceName) {
+                return (
+                    <View>
+                        <Text>
+                            device could not be connected
+                        </Text>
+                    </View>
+                );
+            }
+
             return (
                 <View>
                     <Button
-                        title="Disconnect"
+                        title={`Disconnect ${deviceName}`}
                         onPress={() => {
                             handleDisconnect();
                         }}
