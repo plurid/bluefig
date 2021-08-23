@@ -17,6 +17,8 @@
     } from '../../../../data/interfaces';
 
     import Context from '../../../../services/context';
+
+    import Renderer from '../../index';
     // #endregion external
 // #endregion imports
 
@@ -52,12 +54,10 @@ const RenderList: React.FC<RenderListProperties> = (
     const {
         element,
     } = properties;
-    // #endregion properties
 
-
-    // #region render
     if (
-        !element.items
+        !element
+        || !element.items
         || element.items.length === 0
     ) {
         return (
@@ -65,9 +65,17 @@ const RenderList: React.FC<RenderListProperties> = (
         );
     }
 
+    const {
+        items,
+    } = element;
+    // #endregion properties
+
+
+    // #region render
     return (
-        <View>
-        </View>
+        <Renderer
+            elements={items}
+        />
     );
     // #endregion render
 }

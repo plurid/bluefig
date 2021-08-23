@@ -54,29 +54,42 @@ const RenderImage: React.FC<RenderImageProperties> = (
         element,
     } = properties;
 
-    const {
-        source,
-        contentType,
-        width,
-        height,
-    } = element;
-
-    const imageType = contentType || 'image/png';
-    // #endregion properties
-
-
-    // #region render
-    if (!source) {
+    if (
+        !element
+        || !element.source
+    ) {
         return (
             <View />
         );
     }
 
-    const imageURI = `data:${imageType};base64,${element.source}`;
+    const {
+        source,
+        contentType,
+        width,
+        height,
+        alignment,
+    } = element;
 
+    const imageType = contentType || 'image/png';
+    const imageURI = `data:${imageType};base64,${source}`;
+
+    const justifyContent = alignment === 'right'
+        ? 'flex-end'
+        : alignment === 'center'
+            ? 'center'
+            : 'flex-start';
+    // #endregion properties
+
+
+    // #region render
     return (
         <View>
             <Image
+                style={{
+                    justifyContent,
+                    alignItems: 'center',
+                }}
                 source={{
                     uri: imageURI,
                     width: width || 100,

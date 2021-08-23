@@ -15,6 +15,10 @@
 
 
     // #region external
+    import {
+        ViewElement,
+    } from '../../data/interfaces';
+
     import Context from '../../services/context';
     // #endregion external
 
@@ -49,6 +53,7 @@ export const RenderComponents: Record<string, React.FC<any> | undefined> = {
 
 
 export interface RendererProperties {
+    elements?: ViewElement[];
 }
 
 const Renderer: React.FC<RendererProperties> = (
@@ -73,6 +78,15 @@ const Renderer: React.FC<RendererProperties> = (
     // #endregion context
 
 
+    // #region properties
+    const {
+        elements,
+    } = properties;
+
+    const renderElements = elements || view.elements || [];
+    // #endregion properties
+
+
     // #region render
     return (
         <KeyboardAvoidingView
@@ -88,7 +102,7 @@ const Renderer: React.FC<RendererProperties> = (
                         paddingBottom: 60,
                     }}
                 >
-                    {view.elements && view.elements.map(element => {
+                    {renderElements.map(element => {
                         if (!element?.type) {
                             return (
                                 <View
