@@ -26,7 +26,7 @@
 
 
 
-`bluefig` is intended for the device configuration of the devices without input/output mechanisms.
+`bluefig` is intended for the configuration of devices without input/output mechanisms.
 
 A `bluefig-server` runs on the device and the user connects to it through the `bluefig-client`, running on a common user terminal.
 
@@ -35,6 +35,7 @@ A `bluefig-server` runs on the device and the user connects to it through the `b
 ### Contents
 
 + [Usage](#usage)
+    + [Example](#example)
 + [Packages](#packages)
 + [Codeophon](#codeophon)
 
@@ -42,6 +43,71 @@ A `bluefig-server` runs on the device and the user connects to it through the `b
 
 ## Usage
 
+The `bluefig-server` will load at start a list of `views` and `hooks` which will determine the `bluefig-client` user interface and the `bluefig-server` behavior.
+
+A `bluefig-view` is comprised of `elements` and `actions`.
+
+The `elements` will be sent by the `bluefig-server` to be rendered by the `bluefig-client`.
+
+The `element types` are
+
++ text
++ input-text
++ input-select
++ input-switch
++ button
++ image
++ list
+
+The `elements` used for input (`input-text`, `input-select`, `input-switch`, `button`) can have an `action` field. When the user interacts with the `element` on the `bluefig-client`, the established `action` will run accordingly on the `bluefig-server`.
+
+
+### Example
+
+Considering the simple view
+
+``` typescript
+import {
+    ViewsServer,
+} from '@plurid/bluefig-server';
+
+
+const views: ViewsServer = {
+    '/': {
+        title: 'Index',
+        elements: [
+            {
+                type: 'text',
+                value: 'Index View',
+            },
+            {
+                type: 'input-text',
+                title: 'Input Text',
+                store: 'inputText',
+            },
+            {
+                type: 'button',
+                title: 'Click Me',
+                action: 'click',
+            },
+        ],
+        actions: {
+            'click': {
+                arguments: [
+                    'inputText',
+                ],
+                execution: async (
+                    inputText,
+                ) => {
+                    console.log('Click action called', inputText);
+                },
+            },
+        },
+    },
+};
+```
+
+the `bluefig-client` will then render an interface with a text input field which will listen for changes and `store` the content in a variable named `inputText` which can then be passed to the `action` `click`, triggerable by clicking on the `button`.
 
 
 
