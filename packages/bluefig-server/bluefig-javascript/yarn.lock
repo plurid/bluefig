@@ -26,17 +26,6 @@
   optionalDependencies:
     usb "^1.6.3"
 
-"@abandonware/noble@^1.9.2-14":
-  version "1.9.2-14"
-  resolved "https://npm.plurid.cloud/@abandonware%2fnoble/-/noble-1.9.2-14.tgz#304d5dc824a1c67b5c4a6e69ce1f5620722d118a"
-  integrity sha512-zSHu2gHs6TpCS3QRzvOpOsKkiGW7MZzhjtmScTj1EjaK2DMpSkfZrmGdSB1z34nOZuVeo+2XnYzyHbcg0tb1Cg==
-  dependencies:
-    debug "^4.3.1"
-    napi-thread-safe-callback "0.0.6"
-    node-addon-api "^3.2.0"
-  optionalDependencies:
-    "@abandonware/bluetooth-hci-socket" "^0.5.3-7"
-
 "@apollo/client@^3.3.21":
   version "3.4.7"
   resolved "https://npm.plurid.cloud/@apollo%2fclient/-/client-3.4.7.tgz#63d7c3539cc45fe44ac9cb093a27641479a8d1ad"
@@ -771,6 +760,11 @@
   version "7.0.9"
   resolved "https://npm.plurid.cloud/@types%2fjson-schema/-/json-schema-7.0.9.tgz#97edc9037ea0c38585320b28964dde3b39e4660d"
   integrity sha512-qcUXuemtEu+E5wZSJHNxUXeCZhAfXKQ41D+duX+VYPde7xyEVZci+/oXKJL13tnRs9lR2pr4fod59GT6/X1/yQ==
+
+"@types/mime-types@^2.1.1":
+  version "2.1.1"
+  resolved "https://npm.plurid.cloud/@types%2fmime-types/-/mime-types-2.1.1.tgz#d9ba43490fa3a3df958759adf69396c3532cf2c1"
+  integrity sha512-vXOTGVSLR2jMw440moWTC7H19iUyLtP3Z1YTj7cSsubOICinjMxFeb/V57v9QdyyPGbbWolUFSSmSiRSn94tFw==
 
 "@types/node@*", "@types/node@^16.4.2":
   version "16.6.0"
@@ -3064,7 +3058,7 @@ mime-db@1.49.0:
   resolved "https://npm.plurid.cloud/mime-db/-/mime-db-1.49.0.tgz#f3dfde60c99e9cf3bc9701d687778f537001cbed"
   integrity sha512-CIc8j9URtOVApSFCQIF+VBkX1RwXp/oMMOrqdyXSBXq5RWNEsRfyj1kiRnQgmNXmHxPoFIxOroKA3zcU9P+nAA==
 
-mime-types@^2.1.12, mime-types@~2.1.19:
+mime-types@^2.1.12, mime-types@^2.1.32, mime-types@~2.1.19:
   version "2.1.32"
   resolved "https://npm.plurid.cloud/mime-types/-/mime-types-2.1.32.tgz#1d00e89e7de7fe02008db61001d9e02852670fd5"
   integrity sha512-hJGaVS4G4c9TSMYh2n6SQAGrC4RnfU+daP8G7cSCmaqNjiOoUY0VHCMS42pxnQmVF1GWwFhbHWn3RIxCqTmZ9A==
@@ -3181,7 +3175,7 @@ node-addon-api@^1.2.0:
   resolved "https://npm.plurid.cloud/node-addon-api/-/node-addon-api-1.7.2.tgz#3df30b95720b53c24e59948b49532b662444f54d"
   integrity sha512-ibPK3iA+vaY1eEjESkQkM0BbCqFOaZMiXRTtdB0u7b4djtY6JnsjvPdUHVMg6xQt3B8fpTTWHI9A+ADjM9frzg==
 
-node-addon-api@^3.1.0, node-addon-api@^3.2.0:
+node-addon-api@^3.1.0:
   version "3.2.1"
   resolved "https://npm.plurid.cloud/node-addon-api/-/node-addon-api-3.2.1.tgz#81325e0a2117789c0128dab65e7e38f07ceba161"
   integrity sha512-mmcei9JghVNDYydghQmeDX8KoAm0FAiYyIcUt/N4nhyAipB17pllZQDOJD2fotxABnt4Mdz+dKTO7eftLg4d0A==

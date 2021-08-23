@@ -44,13 +44,14 @@
     },
     "dependencies": {
         "@abandonware/bleno": "^0.5.1-4",
-        "@abandonware/noble": "^1.9.2-14",
         "@plurid/delog": "^0.0.0-5",
-        "@plurid/plurid-functions": "^0.0.0-5"
+        "@plurid/plurid-functions": "^0.0.0-5",
+        "mime-types": "^2.1.32"
     },
     "devDependencies": {
         "@plurid/deon": "^0.0.0-4",
         "@types/jest": "^26.0.24",
+        "@types/mime-types": "^2.1.1",
         "@types/node": "^16.4.2",
         "@typescript-eslint/eslint-plugin": "^4.28.4",
         "@typescript-eslint/parser": "^4.28.4",
