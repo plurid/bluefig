@@ -42,11 +42,31 @@ const views = {
             // {
             //     type: 'image',
             //     source: 'bluefig-logo-128x128.png',
+            //     alignment: 'center',
             // },
             {
                 type: 'button',
                 title: 'Click Me',
                 action: 'click',
+            },
+            {
+                type: 'list',
+                items: [
+                    {
+                        type: 'text',
+                        value: 'Simple Title',
+                    },
+                    {
+                        type: 'text',
+                        value: 'Selectable text',
+                        selectable: true,
+                    },
+                    {
+                        type: 'input-text',
+                        title: 'Input Text In List',
+                        store: 'inputTextInList',
+                    },
+                ],
             },
         ],
         actions: {
