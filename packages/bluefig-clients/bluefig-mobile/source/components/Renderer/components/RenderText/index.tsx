@@ -82,6 +82,7 @@ const RenderText: React.FC<RenderTextProperties> = (
                     color: isDarkMode ? Colors.white : Colors.black,
                 },
             ]}
+            selectable={!!element.selectable}
         >
             {element.value}
         </Text>

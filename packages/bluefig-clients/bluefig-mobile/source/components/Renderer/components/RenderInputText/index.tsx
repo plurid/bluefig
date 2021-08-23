@@ -37,6 +37,7 @@ const styles = StyleSheet.create({
         marginTop: 8,
         fontSize: 18,
         fontWeight: '400',
+        minHeight: 22,
     },
 });
 
@@ -106,13 +107,13 @@ const RenderInputText: React.FC<RenderInputTextProperties> = (
                         },
                     ]}
                 >
-                    {element.title}
+                    {getValue(element.store) ? element.title : ''}
                 </Text>
             )}
 
             <TextInput
                 key={`input-${(element as any).id}`}
-                value={getValue(element.store)}
+                value={getValue(element.store) || ''}
                 onChangeText={onChangeText}
                 style={[
                     styles.text,
@@ -120,6 +121,7 @@ const RenderInputText: React.FC<RenderInputTextProperties> = (
                         color: isDarkMode ? Colors.white : Colors.black,
                     },
                 ]}
+                placeholder={element.title}
             />
         </View>
     );

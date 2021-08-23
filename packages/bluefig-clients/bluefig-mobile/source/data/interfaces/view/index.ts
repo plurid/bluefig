@@ -11,6 +11,7 @@ export type ViewElement =
 export interface ViewText {
     type: 'text';
     value: string;
+    selectable?: boolean;
 }
 
 export interface ViewInputText {
