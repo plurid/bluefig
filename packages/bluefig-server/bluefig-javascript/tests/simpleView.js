@@ -80,8 +80,8 @@ const views = {
                             },
                             {
                                 type: 'input-text',
-                                title: 'Input Text In List',
-                                store: 'inputTextInList',
+                                title: 'Input Text In Nested List',
+                                store: 'inputTextInNestedList',
                             },
                         ],
                     }
