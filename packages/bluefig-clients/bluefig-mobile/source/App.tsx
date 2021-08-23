@@ -38,6 +38,8 @@
     import {
         BLUEFIG_SERVICE_UUID,
         BLUEFIG_VIEW_CHARACTERISTIC_UUID,
+
+        VIEW_INDEX,
     } from './data/constants';
 
     import {
@@ -117,6 +119,11 @@ const App = () => {
     ] = useState<Characteristic | null>(null);
 
     const [
+        viewCharacteristicFound,
+        setViewCharacteristicFound,
+    ] = useState(false);
+
+    const [
         accessToken,
         setAccessToken,
     ] = useState<string | undefined>();
@@ -140,7 +147,7 @@ const App = () => {
 
     // #region handlers
     const scanAndConnect = () => {
-        let setState = false;
+        let timeoutSet = false;
         const scannedDevices: Device[]  = [];
 
         bluetooth.startDeviceScan(null, null, (error, device) => {
@@ -149,7 +156,14 @@ const App = () => {
                 return
             }
 
-            if (!device) {
+            if (
+                !device
+                || !device.serviceUUIDs
+            ) {
+                return;
+            }
+
+            if (!device.serviceUUIDs.includes(BLUEFIG_SERVICE_UUID)) {
                 return;
             }
 
@@ -162,16 +176,17 @@ const App = () => {
             scannedDevices.push(device);
 
             setTimeout(() => {
-                bluetooth.stopDeviceScan();
-
-                if (!setState) {
-                    setDevices([
-                        ...scannedDevices,
-                    ]);
-                    setLoading(false);
-                    setState = true;
+                if (timeoutSet) {
+                    return;
                 }
-            }, 10_000);
+                timeoutSet = true;
+
+                bluetooth.stopDeviceScan();
+                setDevices([
+                    ...scannedDevices,
+                ]);
+                setLoading(false);
+            }, 2_000);
         });
     }
 
@@ -228,19 +243,66 @@ const App = () => {
                 token: accessToken,
             };
 
-            const data = Buffer.from(JSON.stringify(actionPayload));
             const {
                 characteristic,
+                data,
+                finished,
             } = await writeData(
                 viewCharacteristic,
-                data.toString('base64'),
+                dataToBase64(actionPayload),
             );
             setViewCharacteristic(characteristic);
+
+            if (!finished) {
+                return;
+            }
+
+            if (data) {
+                // get view from data
+            }
         } catch (error) {
             console.log('error', error);
         }
     }
 
+    const getView = async (
+        location: string,
+    ) => {
+        try {
+            if (!viewCharacteristic) {
+                return;
+            }
+
+            const {
+                characteristic,
+                data,
+                finished,
+            } = await readData(
+                viewCharacteristic,
+                location,
+            );
+
+            if (!finished) {
+                return;
+            }
+
+            const view = base64ToData(data);
+            if (!view) {
+                return;
+            }
+
+            if (view.token) {
+                setAccessToken(view.token);
+            }
+
+            const identifiedView = identifyView(view);
+            setView(identifiedView);
+            setViewError('');
+            setViewCharacteristic(characteristic);
+        } catch (error) {
+            setViewError('no view');
+        }
+    }
 
     const setValue = (
         key: string,
@@ -266,8 +328,6 @@ const App = () => {
 
     // #region effects
     useEffect(() => {
-        console.log('devices.length', devices.length);
-
         bluetooth.onStateChange((state) => {
             const subscription = bluetooth.onStateChange((state) => {
                 if (state === 'PoweredOn') {
@@ -279,8 +339,7 @@ const App = () => {
             return () => subscription.remove();
         });
     }, [
-        devices.length,
-        // bluetooth,
+        bluetooth,
     ]);
 
     useEffect(() => {
@@ -295,19 +354,20 @@ const App = () => {
                 const services = await servicedDevice.services();
 
                 for (const service of services) {
-                    console.log('service', service.uuid);
+                    // console.log('service', service.uuid);
                     let viewCharacteristicFound = false;
 
                     if (service.uuid === BLUEFIG_SERVICE_UUID) {
-                        console.log('bluefig service', service.uuid);
+                        // console.log('bluefig service', service.uuid);
                         const characteristics = await service.characteristics();
 
                         for (const characteristic of characteristics) {
-                            console.log('characteristic', characteristic.uuid);
+                            // console.log('characteristic', characteristic.uuid);
                             if (characteristic.uuid === BLUEFIG_VIEW_CHARACTERISTIC_UUID) {
-                                console.log('view characteristic', characteristic.uuid);
+                                // console.log('view characteristic', characteristic.uuid);
                                 setViewCharacteristic(characteristic);
                                 viewCharacteristicFound = true;
+                                setViewCharacteristicFound(true);
                                 break;
                             }
                         }
@@ -328,47 +388,9 @@ const App = () => {
     ]);
 
     useEffect(() => {
-        if (!viewCharacteristic) {
-            return;
-        }
-
-        const read = async () => {
-            try {
-                const {
-                    characteristic,
-                    data,
-                    finished,
-                } = await readData(
-                    viewCharacteristic,
-                    '/',
-                );
-
-                if (!finished) {
-                    return;
-                }
-
-                const view = base64ToData(data);
-                if (!view) {
-                    return;
-                }
-
-                if (view.token) {
-                    setAccessToken(view.token);
-                }
-
-                const identifiedView = identifyView(view);
-                setView(identifiedView);
-                setViewError('');
-                // setViewCharacteristic(characteristic);
-            } catch (error) {
-                setViewError('no view');
-                return;
-            }
-        }
-
-        read();
+        getView(VIEW_INDEX);
     }, [
-        viewCharacteristic,
+        viewCharacteristicFound,
     ]);
     // #endregion effects
 
@@ -377,7 +399,6 @@ const App = () => {
     const context = {
         view,
         isDarkMode,
-        imagesData: {},
 
         setValue,
         getValue,
@@ -387,17 +408,21 @@ const App = () => {
 
 
     // #region render
+    const Loading = () => (
+        <View
+            style={[
+                styles.container,
+                styles.horizontal,
+            ]}
+        >
+            <ActivityIndicator />
+        </View>
+    );
+
     const ViewLocation = () => {
         if (loading) {
             return (
-                <View
-                    style={[
-                        styles.container,
-                        styles.horizontal,
-                    ]}
-                >
-                    <ActivityIndicator />
-                </View>
+                <Loading />
             );
         }
 
@@ -448,7 +473,9 @@ const App = () => {
                 }
 
                 if (!view) {
-                    return (<></>);
+                    return (
+                        <Loading />
+                    );
                 }
 
                 return (

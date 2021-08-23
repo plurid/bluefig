@@ -41,10 +41,6 @@ const RenderImage: React.FC<RenderImageProperties> = (
             <View />
         );
     }
-
-    const {
-        imagesData,
-    } = context;
     // #endregion context
 
 

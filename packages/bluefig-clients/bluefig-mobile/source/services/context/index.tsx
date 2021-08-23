@@ -17,7 +17,6 @@
 export interface IContext {
     view: ViewRouteClient | null;
     isDarkMode: boolean;
-    imagesData: Record<string, string>;
 
     setValue: (key: string, value: any) => void;
     getValue: (key: string) => any;
