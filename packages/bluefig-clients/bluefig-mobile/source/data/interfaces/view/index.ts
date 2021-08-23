@@ -3,6 +3,7 @@ export type ViewElement =
     | ViewText
     | ViewInputText
     | ViewInputSelect
+    | ViewInputSwitch
     | ViewButton
     | ViewImage
     | ViewList;
@@ -37,6 +38,14 @@ export interface ViewInputSelect {
     /**
      * Set initial value, index of `options`.
      */
+    action?: string;
+}
+
+export interface ViewInputSwitch {
+    type: 'input-switch';
+    title: string;
+    store: string;
+    initial?: boolean;
     action?: string;
 }
 
