@@ -59,6 +59,7 @@ export type ViewImageAlignment = 'left' | 'right' | 'center';
 export interface ViewImage {
     type: 'image';
     source: StringOrPromiseOf;
+    contentType?: StringOrPromiseOf;
     height?: NumberOrPromiseOf;
     width?: NumberOrPromiseOf;
     alignment?: ViewImageAlignment | PromiseOf<ViewImageAlignment>;
