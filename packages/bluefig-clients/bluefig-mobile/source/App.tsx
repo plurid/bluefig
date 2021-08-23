@@ -276,6 +276,8 @@ const App = () => {
             } = await writeData(
                 viewCharacteristic,
                 dataToBase64(actionPayload),
+                accessToken,
+                true,
             );
             setViewCharacteristic(characteristic);
 
@@ -284,7 +286,11 @@ const App = () => {
             }
 
             if (data) {
-                // get view from data
+                const view = base64ToData(data);
+                if (!view) {
+                    return;
+                }
+                setView(view);
             }
         } catch (error) {
             console.log('error', error);
