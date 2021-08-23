@@ -48,6 +48,7 @@ export interface ViewButton {
 export interface ViewImage {
     type: 'image';
     source: string;
+    contentType?: string;
     height?: number;
     width?: number;
     alignment?: 'left' | 'right' | 'center';

@@ -6,6 +6,7 @@
 
     import {
         View,
+        Image,
         StyleSheet,
     } from 'react-native';
     // #endregion libraries
@@ -48,11 +49,20 @@ const RenderImage: React.FC<RenderImageProperties> = (
     const {
         element,
     } = properties;
+
+    const {
+        source,
+        contentType,
+        width,
+        height,
+    } = element;
+
+    const imageType = contentType || 'image/png';
     // #endregion properties
 
 
     // #region render
-    if (!element.source) {
+    if (!source) {
         return (
             <View />
         );
@@ -60,6 +70,13 @@ const RenderImage: React.FC<RenderImageProperties> = (
 
     return (
         <View>
+            <Image
+                source={{
+                    uri: `data:${imageType};base64,${element.source}`,
+                    width,
+                    height,
+                }}
+            />
         </View>
     );
     // #endregion render
