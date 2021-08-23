@@ -51,13 +51,13 @@ The `elements` will be sent by the `bluefig-server` to be rendered by the `bluef
 
 The `element types` are
 
-+ text
-+ input-text
-+ input-select
-+ input-switch
-+ button
-+ image
-+ list
++ `text`
++ `input-text`
++ `input-select`
++ `input-switch`
++ `button`
++ `image`
++ `list`
 
 The `elements` used for input (`input-text`, `input-select`, `input-switch`, `button`) can have an `action` field. When the user interacts with the `element` on the `bluefig-client`, the established `action` will run accordingly on the `bluefig-server`.
 
