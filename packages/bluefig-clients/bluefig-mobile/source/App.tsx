@@ -8,6 +8,7 @@
     import {
         SafeAreaView,
         StatusBar,
+        Dimensions,
 
         StyleSheet,
         useColorScheme,
@@ -64,10 +65,12 @@ const styles = StyleSheet.create({
 const App = () => {
     // #region properties
     const isDarkMode = useColorScheme() === 'dark';
+    const screenHeight = Dimensions.get("window").height;
 
     const generalStyle = {
-        backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
-        color: isDarkMode ? Colors.white : Colors.black,
+        // backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
+        // color: isDarkMode ? Colors.white : Colors.black,
+        height: screenHeight,
     };
     // #endregion properties
 
@@ -129,6 +132,8 @@ const App = () => {
     const scanAndConnect = () => {
         let timeoutSet = false;
         const scannedDevices: Device[]  = [];
+        const scanStart = Date.now();
+        const scanTime = 2_000;
 
         bluetooth.startDeviceScan(null, null, (error, device) => {
             if (error) {
@@ -140,6 +145,13 @@ const App = () => {
                 !device
                 || !device.serviceUUIDs
             ) {
+                const scanEnd = Date.now();
+
+                if (scanStart + scanTime + 1_000 < scanEnd) {
+                    setLoading(false);
+                    bluetooth.stopDeviceScan();
+                }
+
                 return;
             }
 
@@ -166,7 +178,7 @@ const App = () => {
                     ...scannedDevices,
                 ]);
                 setLoading(false);
-            }, 2_000);
+            }, scanTime);
         });
     }
 

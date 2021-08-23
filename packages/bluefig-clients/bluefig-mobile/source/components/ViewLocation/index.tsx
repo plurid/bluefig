@@ -37,6 +37,16 @@
 
 // #region module
 const styles = StyleSheet.create({
+    header: {
+        fontSize: 24,
+        textAlign: 'center',
+        padding: 20,
+    },
+    notice: {
+        fontSize: 18,
+        textAlign: 'center',
+        padding: 20,
+    },
 });
 
 
@@ -115,10 +125,28 @@ const ViewLocation: React.FC<ViewLocationProperties> = (
                             height: '100%',
                         }}
                     >
+                        <Text
+                            style={[
+                                styles.header,
+                                {
+                                    color: isDarkMode ? Colors.white : Colors.black,
+                                },
+                            ]}
+                        >
+                            bluefig devices
+                        </Text>
+
                         {devices.length === 0 && (
                             <View>
-                                <Text>
-                                    no devices
+                                <Text
+                                    style={[
+                                        styles.notice,
+                                        {
+                                            color: isDarkMode ? Colors.white : Colors.black,
+                                        },
+                                    ]}
+                                >
+                                    nothing found
                                 </Text>
                             </View>
                         )}
@@ -141,7 +169,14 @@ const ViewLocation: React.FC<ViewLocationProperties> = (
             if (viewError) {
                 return (
                     <View>
-                        <Text>
+                        <Text
+                            style={[
+                                styles.notice,
+                                {
+                                    color: isDarkMode ? Colors.white : Colors.black,
+                                },
+                            ]}
+                        >
                             {viewError}
                         </Text>
                     </View>
@@ -157,7 +192,14 @@ const ViewLocation: React.FC<ViewLocationProperties> = (
             if (!deviceName) {
                 return (
                     <View>
-                        <Text>
+                        <Text
+                            style={[
+                                styles.notice,
+                                {
+                                    color: isDarkMode ? Colors.white : Colors.black,
+                                },
+                            ]}
+                        >
                             device could not be connected
                         </Text>
                     </View>
