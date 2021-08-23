@@ -171,22 +171,13 @@ class BluefigViewCharacteristic extends bleno.Characteristic {
 
             if (typeof actionData === 'function') {
                 const result = await actionData();
-                if (!result) {
-                    return;
-                }
-
-                // send result data back
-                return;
+                return result;
             }
 
             const result = await actionData.execution(
                 ...actionPayload.arguments,
             );
-            if (!result) {
-                return;
-            }
-
-            // send result data back
+            return result;
         } catch (error) {
             return;
         }
@@ -252,9 +243,12 @@ class BluefigViewCharacteristic extends bleno.Characteristic {
 
             if (end) {
                 const data = this.chunks[id];
-                this.triggerAction(
+                const actionResult = await this.triggerAction(
                     data,
                 );
+                if (actionResult) {
+                    this.reading = actionResult;
+                }
             }
 
             callback(this.RESULT_SUCCESS);
