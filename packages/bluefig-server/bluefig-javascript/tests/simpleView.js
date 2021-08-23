@@ -39,6 +39,11 @@ const views = {
                 ],
                 store: 'inputSelect',
             },
+            {
+                type: 'input-switch',
+                title: 'Input Switch',
+                store: 'inputSwitch',
+            },
             // {
             //     type: 'image',
             //     source: 'bluefig-logo-128x128.png',
