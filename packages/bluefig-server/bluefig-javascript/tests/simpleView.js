@@ -66,6 +66,25 @@ const views = {
                         title: 'Input Text In List',
                         store: 'inputTextInList',
                     },
+                    {
+                        type: 'list',
+                        items: [
+                            {
+                                type: 'text',
+                                value: 'Simple Title',
+                            },
+                            {
+                                type: 'text',
+                                value: 'Selectable text',
+                                selectable: true,
+                            },
+                            {
+                                type: 'input-text',
+                                title: 'Input Text In List',
+                                store: 'inputTextInList',
+                            },
+                        ],
+                    }
                 ],
             },
         ],
