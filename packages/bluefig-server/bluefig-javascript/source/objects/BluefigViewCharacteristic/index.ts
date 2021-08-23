@@ -315,7 +315,7 @@ class BluefigViewCharacteristic extends bleno.Characteristic {
             );
             this.readings[id] = {
                 chunks,
-                sent: 1,
+                sent: 0,
             };
             return;
         }
