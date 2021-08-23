@@ -2,6 +2,7 @@
     // #region libraries
     import React, {
         useContext,
+        useEffect,
     } from 'react';
 
     import {
@@ -70,6 +71,28 @@ const RenderInputText: React.FC<RenderInputTextProperties> = (
     const {
         element,
     } = properties;
+
+    if (
+        !element
+        || !element.store
+    ) {
+        return (
+            <View />
+        );
+    }
+
+    const {
+        store,
+        title,
+        initial,
+    } = element;
+
+    const storeValue = getValue(store);
+    const textValue = typeof storeValue === 'string'
+        ? storeValue
+        : typeof initial === 'string'
+            ? initial
+            : '';
     // #endregion properties
 
 
@@ -78,27 +101,38 @@ const RenderInputText: React.FC<RenderInputTextProperties> = (
         value: string,
     ) => {
         setValue(
-            element.store,
-            value,
+            store,
+            value || '',
         );
     }
     // #endregion handlers
 
 
-    // #region render
-    if (!element.store) {
-        return (
-            <View />
-        );
-    }
+    // #region effects
+    useEffect(() => {
+        const storeValue = getValue(store);
 
+        if (
+            typeof storeValue === 'undefined'
+            && typeof initial === 'string'
+        ) {
+            setValue(
+                store,
+                initial,
+            );
+        }
+    }, []);
+    // #endregion effects
+
+
+    // #region render
     return (
         <View
             style={[
                 styles.container,
             ]}
         >
-            {element.title && (
+            {title && (
                 <Text
                     style={[
                         styles.text,
@@ -107,13 +141,13 @@ const RenderInputText: React.FC<RenderInputTextProperties> = (
                         },
                     ]}
                 >
-                    {getValue(element.store) ? element.title : ''}
+                    {textValue ? title : ''}
                 </Text>
             )}
 
             <TextInput
                 key={`input-${(element as any).id}`}
-                value={getValue(element.store) || ''}
+                value={textValue}
                 onChangeText={onChangeText}
                 style={[
                     styles.text,
@@ -121,7 +155,7 @@ const RenderInputText: React.FC<RenderInputTextProperties> = (
                         color: isDarkMode ? Colors.white : Colors.black,
                     },
                 ]}
-                placeholder={element.title}
+                placeholder={title}
             />
         </View>
     );

@@ -1,6 +1,7 @@
 // #region imports
     // #region libraries
     import React, {
+        useEffect,
         useContext,
     } from 'react';
 
@@ -9,6 +10,14 @@
         Text,
         StyleSheet,
     } from 'react-native';
+
+    import {
+        Picker,
+    } from '@react-native-picker/picker';
+
+    import {
+        Colors,
+    } from 'react-native/Libraries/NewAppScreen';
     // #endregion libraries
 
 
@@ -25,6 +34,15 @@
 
 // #region module
 const styles = StyleSheet.create({
+    container: {
+        padding: 20,
+    },
+    text: {
+        marginTop: 8,
+        fontSize: 18,
+        fontWeight: '400',
+        minHeight: 22,
+    },
 });
 
 
@@ -56,12 +74,10 @@ const RenderInputSelect: React.FC<RenderInputSelectProperties> = (
     const {
         element,
     } = properties;
-    // #endregion properties
 
-
-    // #region render
     if (
-        !element.store
+        !element
+        || !element.store
         || !element.options
         || element.options.length === 0
     ) {
@@ -70,14 +86,84 @@ const RenderInputSelect: React.FC<RenderInputSelectProperties> = (
         );
     }
 
+    const {
+        store,
+        options,
+        initial,
+        title,
+    } = element;
+
+    const storeValue = getValue(store);
+    const selected = typeof storeValue === 'number'
+        ? options[storeValue]
+        : typeof initial === 'number'
+            ? options[initial]
+            : options[0];
+    // #endregion properties
+
+
+    // #region effects
+    useEffect(() => {
+        const storeValue = getValue(store);
+
+        if (
+            typeof storeValue === 'undefined'
+            && typeof initial === 'undefined'
+        ) {
+            setValue(store, 0);
+            return;
+        }
+
+        if (
+            typeof storeValue === 'undefined'
+            && typeof initial === 'number'
+        ) {
+            setValue(store, initial);
+        }
+    }, []);
+    // #endregion effects
+
+
+    // #region render
     return (
-        <View>
-            {element.title && (
-                <Text>
-                    {element.title}
+        <View
+            style={[
+                styles.container,
+            ]}
+        >
+            {title && (
+                <Text
+                    style={[
+                        styles.text,
+                        {
+                            color: isDarkMode ? Colors.white : Colors.black,
+                        },
+                    ]}
+                >
+                    {title}
                 </Text>
             )}
 
+            <Picker
+                selectedValue={selected}
+                onValueChange={(_, itemIndex) => {
+                    setValue(
+                        store,
+                        itemIndex,
+                    );
+                }}
+            >
+                {options.map((option) => {
+                    return (
+                        <Picker.Item
+                            key={Math.random() + ''}
+                            label={option}
+                            value={option}
+                            color={isDarkMode ? Colors.white : Colors.black}
+                        />
+                    );
+                })}
+            </Picker>
         </View>
     );
     // #endregion render

@@ -2,6 +2,7 @@
     // #region libraries
     import React, {
         useState,
+        useCallback,
         useEffect,
     } from 'react';
 
@@ -182,7 +183,48 @@ const App = () => {
         scanAndConnect();
     }
 
-    const sendAction = async (
+
+    const getView = async (
+        location: string,
+    ) => {
+        try {
+            if (!viewCharacteristic) {
+                return;
+            }
+
+            const {
+                characteristic,
+                data,
+                finished,
+            } = await readData(
+                viewCharacteristic,
+                location,
+            );
+
+            if (!finished) {
+                return;
+            }
+
+            const view = base64ToData(data);
+            if (!view) {
+                return;
+            }
+
+            if (view.token) {
+                setAccessToken(view.token);
+            }
+
+            const identifiedView = identifyView(view);
+            setView(identifiedView);
+            setViewError('');
+            setViewCharacteristic(characteristic);
+        } catch (error) {
+            setViewError('no view');
+        }
+    }
+
+
+    const sendAction = useCallback( async(
         actionName: string,
     ) => {
         try {
@@ -247,66 +289,32 @@ const App = () => {
         } catch (error) {
             console.log('error', error);
         }
-    }
+    }, [
+        valuesStore,
+    ]);
 
-    const getView = async (
-        location: string,
-    ) => {
-        try {
-            if (!viewCharacteristic) {
-                return;
-            }
-
-            const {
-                characteristic,
-                data,
-                finished,
-            } = await readData(
-                viewCharacteristic,
-                location,
-            );
-
-            if (!finished) {
-                return;
-            }
-
-            const view = base64ToData(data);
-            if (!view) {
-                return;
-            }
-
-            if (view.token) {
-                setAccessToken(view.token);
-            }
-
-            const identifiedView = identifyView(view);
-            setView(identifiedView);
-            setViewError('');
-            setViewCharacteristic(characteristic);
-        } catch (error) {
-            setViewError('no view');
-        }
-    }
-
-    const setValue = (
+    const setValue = useCallback((
         key: string,
         value: any,
     ) => {
-        const newValuesStore = {
-            ...valuesStore,
-        };
-        newValuesStore[key] = value;
+        const newValue: any = {};
+        newValue[key] = value;
 
-        setValuesStore({
-            ...newValuesStore,
-        });
-    }
+        setValuesStore(previousState => ({
+            ...previousState,
+            ...newValue,
+        }));
+    }, [
+        valuesStore,
+    ]);
 
-    const getValue = (
+    const getValue = useCallback((
         key: string,
     ) => {
         return valuesStore[key];
-    }
+    }, [
+        valuesStore,
+    ]);
 
 
     const handleConnect = (
@@ -418,7 +426,6 @@ const App = () => {
 
 
     // #region render
-
     return (
         <SafeAreaView
             style={generalStyle}
