@@ -1,14 +1,19 @@
 // #region imports
     // #region libraries
-    import os from 'os';
     import path from 'path';
     import {
         promises as fs,
     } from 'fs';
+
+    import mime from 'mime-types';
     // #endregion libraries
 
 
     // #region external
+    import {
+        viewsPath,
+    } from '~data/constants';
+
     import {
         ViewElement,
     } from '~data/interfaces';
@@ -28,24 +33,39 @@ export const resolveElements = async (
     const resolvedElements: any[] = [];
 
     for (const element of elements) {
-        const resolvedElement: any = {};
+        try {
+            const resolvedElement: any = {};
 
-        for (const [key, value] of Object.entries(element)) {
-            if (typeof value === 'function') {
-                const resolvedValue = await value();
-                resolvedElement[key] = resolvedValue;
-                continue;
+            for (const [key, value] of Object.entries(element)) {
+                if (typeof value === 'function') {
+                    const resolvedValue = await value();
+                    resolvedElement[key] = resolvedValue;
+                    continue;
+                }
+
+                resolvedElement[key] = value;
             }
 
-            resolvedElement[key] = value;
-        }
+            if (element.type === 'image') {
+                const {
+                    data,
+                    contentType,
+                } = await readFile(resolvedElement.source);
+                resolvedElement.source = data;
 
-        if (element.type === 'image') {
-            const data = await readFile(resolvedElement.source);
-            resolvedElement.source = data;
-        }
+                if (
+                    resolvedElement.contentType &&
+                    resolvedElement.contentType !== contentType
+                ) {
+                    resolvedElement.contentType = contentType;
+                }
+            }
 
-        resolvedElements.push(resolvedElement);
+            resolvedElements.push(resolvedElement);
+        } catch (error) {
+            console.log('Error resolving element', element, error);
+            continue;
+        }
     }
 
     return resolvedElements;
@@ -58,13 +78,17 @@ export const readFile = async (
     const absolutePath = path.isAbsolute(source)
         ? source
         : path.join(
-            os.homedir(),
-            '.bluefig/' + source,
+            path.dirname(viewsPath),
+            source,
         );
 
     const file = await fs.readFile(absolutePath);
     const data = file.toString('base64');
+    const contentType = mime.lookup(absolutePath);
 
-    return data;
+    return {
+        data,
+        contentType,
+    };
 }
 // #endregion module
