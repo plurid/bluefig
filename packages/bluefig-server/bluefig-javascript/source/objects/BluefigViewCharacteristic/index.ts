@@ -17,9 +17,11 @@
         Hooks,
         ActionPayload,
         ViewRouteClient,
+        ViewRouteServer,
 
         Request,
         Response,
+        Reading,
         WriteChunk,
     } from '~data/interfaces';
 
@@ -46,7 +48,7 @@ class BluefigViewCharacteristic extends bleno.Characteristic {
 
     private chunks: Record<string, any> = {};
 
-    private reading: any | null = null;
+    private reading: Reading | null = null;
     private readings: Record<string, any> = {};
 
 
@@ -82,13 +84,9 @@ class BluefigViewCharacteristic extends bleno.Characteristic {
     }
 
     private async resolveViewable(
+        view: ViewRouteServer,
         location: string,
     ) {
-        const view = this.views[location];
-        if (!view) {
-            return;
-        }
-
         const {
             title,
             elements,
@@ -125,9 +123,29 @@ class BluefigViewCharacteristic extends bleno.Characteristic {
     private async resolveReadResource(
         resource: string,
     ) {
-        // TO EXTEND for other resources
+        if (resource.startsWith('action-result:')) {
+            const id = resource.replace('action-result:', '');
+            const view = this.readings[id];
+            if (!view) {
+                return;
+            }
+            const viewable = await this.resolveViewable(
+                view,
+                `/_bluefig-action-result/${id}`,
+            );
+            return viewable;
+        }
 
-        const viewable = await this.resolveViewable(resource);
+
+        const view = this.views[resource];
+        if (!view) {
+            return;
+        }
+
+        const viewable = await this.resolveViewable(
+            view,
+            resource,
+        );
         return viewable;
     }
 
@@ -170,14 +188,12 @@ class BluefigViewCharacteristic extends bleno.Characteristic {
 
 
             if (typeof actionData === 'function') {
-                const result = await actionData();
-                return result;
+                return await actionData();
             }
 
-            const result = await actionData.execution(
+            return await actionData.execution(
                 ...actionPayload.arguments,
             );
-            return result;
         } catch (error) {
             return;
         }
@@ -221,7 +237,7 @@ class BluefigViewCharacteristic extends bleno.Characteristic {
 
                 this.reading = {
                     resource,
-                    id,
+                    id: id || Math.random() + '',
                 };
 
                 callback(this.RESULT_SUCCESS);
@@ -246,8 +262,14 @@ class BluefigViewCharacteristic extends bleno.Characteristic {
                 const actionResult = await this.triggerAction(
                     data,
                 );
+
                 if (actionResult) {
-                    this.reading = actionResult;
+                    const id = Math.random() + '';
+                    this.readings[id] = actionResult;
+                    this.reading = {
+                        resource: `action-result:${id}`,
+                        id,
+                    };
                 }
             }
 

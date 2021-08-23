@@ -13,6 +13,19 @@ export interface Response {
 }
 
 
+export interface Reading {
+    resource: string;
+    id: string;
+}
+
+
+export interface Response {
+    id?: string;
+    data: string;
+    end: boolean;
+}
+
+
 export interface WriteChunk {
     id: string;
     token?: string;
