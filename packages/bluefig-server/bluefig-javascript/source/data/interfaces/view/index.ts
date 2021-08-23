@@ -20,6 +20,7 @@ export type ViewElement =
 export interface ViewText {
     type: 'text';
     value: StringOrPromiseOf;
+    selectable?: BooleanOrPromiseOf;
 }
 
 export interface ViewInputText {
