@@ -7,7 +7,6 @@
     import {
         View,
         Image,
-        StyleSheet,
     } from 'react-native';
     // #endregion libraries
 
@@ -24,14 +23,6 @@
 
 
 // #region module
-const styles = StyleSheet.create({
-    image: {
-        width: 100,
-        height: 100,
-    },
-});
-
-
 export interface RenderImageProperties {
     element: ViewImage;
 }
@@ -84,12 +75,16 @@ const RenderImage: React.FC<RenderImageProperties> = (
 
     // #region render
     return (
-        <View>
+        <View
+            style={{
+                display: 'flex',
+                flexDirection: 'row',
+                justifyContent,
+                alignItems: 'center',
+                padding: 20,
+            }}
+        >
             <Image
-                style={{
-                    justifyContent,
-                    alignItems: 'center',
-                }}
                 source={{
                     uri: imageURI,
                     width: width || 100,
