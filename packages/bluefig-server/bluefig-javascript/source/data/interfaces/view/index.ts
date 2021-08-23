@@ -12,6 +12,7 @@ export type ViewElement =
     | ViewText
     | ViewInputText
     | ViewInputSelect
+    | ViewInputSwitch
     | ViewButton
     | ViewImage
     | ViewList;
@@ -49,6 +50,14 @@ export interface ViewInputSelect {
     action?: StringOrPromiseOf;
 }
 
+export interface ViewInputSwitch {
+    type: 'input-switch';
+    title: StringOrPromiseOf;
+    store: StringOrPromiseOf;
+    initial?: BooleanOrPromiseOf;
+    action?: StringOrPromiseOf;
+}
+
 export interface ViewButton {
     type: 'button';
     title: StringOrPromiseOf;
@@ -65,7 +74,6 @@ export interface ViewImage {
     width?: NumberOrPromiseOf;
     alignment?: ViewImageAlignment | PromiseOf<ViewImageAlignment>;
 }
-
 
 export interface ViewList {
     type: 'list';
