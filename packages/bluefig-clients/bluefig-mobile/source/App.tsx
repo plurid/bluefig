@@ -229,9 +229,13 @@ const App = () => {
             };
 
             const data = Buffer.from(JSON.stringify(actionPayload));
-            const result = await viewCharacteristic.writeWithResponse(
+            const {
+                characteristic,
+            } = await writeData(
+                viewCharacteristic,
                 data.toString('base64'),
             );
+            setViewCharacteristic(characteristic);
         } catch (error) {
             console.log('error', error);
         }
