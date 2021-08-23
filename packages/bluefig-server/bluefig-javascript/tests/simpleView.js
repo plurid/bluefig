@@ -8,14 +8,41 @@ const views = {
                 value: 'Simple Title',
             },
             {
-                type: 'input-text',
-                title: 'Name',
-                store: 'name',
+                type: 'text',
+                value: 'Selectable text',
+                selectable: true,
             },
             {
-                type: 'image',
-                source: 'bluefig-logo-128x128.png',
+                type: 'text',
+                value: `Long text Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum faucibus massa at turpis vulputate ultrices. Quisque eget mattis sapien, in luctus mauris. Morbi vitae diam neque. Ut vestibulum neque in ex feugiat facilisis. Ut iaculis lorem mauris, vitae tincidunt mi laoreet id. Praesent vel mi non ex dignissim vehicula. Donec a risus sit amet arcu euismod imperdiet ut id felis. Aenean sed tellus neque. Donec quis accumsan nulla. Mauris in nunc risus. Nam sagittis leo arcu, id volutpat augue tristique vitae. Phasellus posuere vehicula blandit. Fusce nec lorem ac tellus finibus pretium. Morbi ipsum nisi, ornare vitae ante gravida, pellentesque pretium neque. Donec non turpis nec nisl fermentum elementum. Mauris pellentesque maximus odio, consectetur aliquam diam egestas non.`,
+                selectable: true,
             },
+            {
+                type: 'input-text',
+                title: 'Input Text',
+                store: 'inputText',
+            },
+            {
+                type: 'input-text',
+                title: 'Input Text With Initial',
+                store: 'inputTextWithInitial',
+                initial: 'value',
+            },
+            {
+                type: 'input-select',
+                title: 'Input Select',
+                options: [
+                    'one',
+                    'two',
+                    'three',
+                    'four',
+                ],
+                store: 'inputSelect',
+            },
+            // {
+            //     type: 'image',
+            //     source: 'bluefig-logo-128x128.png',
+            // },
             {
                 type: 'button',
                 title: 'Click Me',
@@ -23,8 +50,20 @@ const views = {
             },
         ],
         actions: {
-            click: async () => {
-                console.log('clicked');
+            // click: async () => {
+            //     console.log('clicked');
+            // },
+            'click': {
+                arguments: [
+                    'inputText',
+                    'inputTextWithInitial',
+                    'inputSelect',
+                ],
+                execution: async (
+                    ...args
+                ) => {
+                    console.log('Click action called', args);
+                },
             },
         },
     },
