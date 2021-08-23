@@ -215,6 +215,11 @@ const App = () => {
             }
 
             const identifiedView = identifyView(view);
+            if (!identifiedView) {
+                setViewError('invalid view');
+                return;
+            }
+
             setView(identifiedView);
             setViewError('');
             setViewCharacteristic(characteristic);
@@ -290,7 +295,13 @@ const App = () => {
                 if (!view) {
                     return;
                 }
-                setView(view);
+
+                const identifiedView = identifyView(view);
+                if (!identifiedView) {
+                    setViewError('invalid view');
+                    return;
+                }
+                setView(identifiedView);
             }
         } catch (error) {
             console.log('error', error);

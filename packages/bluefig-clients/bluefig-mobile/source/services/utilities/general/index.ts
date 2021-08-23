@@ -37,11 +37,27 @@ export const identifyElements = (
 }
 
 
+export const checkValidView = (
+    view: any,
+) => {
+    if (!view.locations) {
+        return false;
+    }
+
+    if (!view.elements) {
+        return false;
+    }
+
+    return true;
+}
+
+
 export const identifyView = (
     view: ViewRouteClient,
 ) => {
-    if (!view.elements) {
-        return view;
+    const validView = checkValidView(view);
+    if (!validView) {
+        return;
     }
 
     const elements: any[] = identifyElements(

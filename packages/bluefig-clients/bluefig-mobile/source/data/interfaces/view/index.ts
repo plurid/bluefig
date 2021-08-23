@@ -76,7 +76,7 @@ export type ViewActionClient = string[];
 export interface ViewRouteClient {
     location: string;
     title?: string;
-    elements?: ViewElement[];
+    elements: ViewElement[];
     actions?: Record<string, ViewActionClient | undefined>;
 }
 
