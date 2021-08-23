@@ -131,80 +131,62 @@ class BluefigViewCharacteristic extends bleno.Characteristic {
         return viewable;
     }
 
-    private triggerAction(
+    private async triggerAction(
         data: string,
     ) {
         try {
-            const payload = base64ToData(data);
+            const actionPayload = base64ToData<ActionPayload>(data);
+            if (!actionPayload) {
+                return;
+            }
 
-            // console.log('onWriteRequest finished writing', data);
-            // console.log('onWriteRequest finished writing', base64ToData(data));
+            if (!actionPayload.view) {
+                return;
+            }
 
-            // trigger end
-            // const actionPayload = bufferToData<ActionPayload>(buffer);
-            // if (!actionPayload) {
-            //     return;
-            // }
+            if (this.hooks?.beforeWrite) {
+                const hook = await this.hooks.beforeWrite(
+                    actionPayload.view,
+                );
 
-            // if (!actionPayload.view) {
-            //     callback(this.RESULT_UNLIKELY_ERROR);
-            //     return;
-            // }
+                if (!hook) {
+                    return;
+                }
 
-            // if (this.hooks?.beforeWrite) {
-            //     const hook = await this.hooks.beforeWrite(
-            //         actionPayload.view,
-            //     );
+                if (typeof hook === 'string') {
+                    actionPayload.view = hook;
+                }
+            }
 
-            //     if (!hook) {
-            //         callback(this.RESULT_UNLIKELY_ERROR);
-            //         return;
-            //     }
+            const view = this.views[actionPayload.view];
+            if (!view || !view.actions) {
+                return;
+            }
 
-            //     if (typeof hook === 'string') {
-            //         actionPayload.view = hook;
-            //     }
-            // }
-
-            // const view = this.views[actionPayload.view];
-            // if (!view || !view.actions) {
-            //     callback(this.RESULT_UNLIKELY_ERROR);
-            //     return;
-            // }
-
-            // const actionData = view.actions[actionPayload.name];
-            // if (!actionData) {
-            //     callback(this.RESULT_UNLIKELY_ERROR);
-            //     return;
-            // }
+            const actionData = view.actions[actionPayload.name];
+            if (!actionData) {
+                return;
+            }
 
 
-            // try {
-            //     if (typeof actionData === 'function') {
-            //         const result = await actionData();
-            //         if (!result) {
-            //             callback(this.RESULT_SUCCESS);
-            //         }
+            if (typeof actionData === 'function') {
+                const result = await actionData();
+                if (!result) {
+                    return;
+                }
 
-            //         // send result data back
-            //         callback(this.RESULT_SUCCESS);
+                // send result data back
+                return;
+            }
 
-            //         return;
-            //     }
+            const result = await actionData.execution(
+                ...actionPayload.arguments,
+            );
+            if (!result) {
+                return;
+            }
 
-            //     const result = await actionData.execution(
-            //         ...actionPayload.arguments,
-            //     );
-            //     if (!result) {
-            //         callback(this.RESULT_SUCCESS);
-            //     }
-
-            //     // send result data back
-            //     callback(this.RESULT_SUCCESS);
-            // } catch (error) {
-            //     // action call error
-            //     callback(this.RESULT_UNLIKELY_ERROR);
-            // }
+            // send result data back
         } catch (error) {
             return;
         }
@@ -283,7 +265,7 @@ class BluefigViewCharacteristic extends bleno.Characteristic {
     }
 
     public async onReadRequest(
-        callOffset: number,
+        offset: number,
         callback: (
             result: number,
             data?: Buffer,
