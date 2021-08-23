@@ -20,6 +20,7 @@ export const identifyElements = (
             const listItems = identifyElements(element.items);
 
             identifieElements.push({
+                id: Math.random() + '',
                 ...element,
                 items: listItems,
             });
