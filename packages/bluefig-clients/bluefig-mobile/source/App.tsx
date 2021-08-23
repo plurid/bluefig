@@ -305,12 +305,29 @@ const App = () => {
     }
 
 
-    const handleActivateDevice = (
+    const handleConnect = (
         device: Device,
     ) => {
         setActiveDevice(device);
         setValuesStore({});
         setLocation('/device');
+    }
+
+    const handleDisconnect = () => {
+        // reset device data
+        setDevices([]);
+        setActiveDevice(null);
+        setViewCharacteristic(null);
+        setViewCharacteristicFound(false);
+        setAccessToken(undefined);
+        setValuesStore({});
+        setView(null);
+        setViewError('');
+
+        setLoading(true);
+        setLocation('/devices');
+
+        scanAndConnect();
     }
     // #endregion handlers
 
@@ -417,7 +434,8 @@ const App = () => {
                     devices={devices}
 
                     onRefresh={onRefresh}
-                    handleActivateDevice={handleActivateDevice}
+                    handleConnect={handleConnect}
+                    handleDisconnect={() => handleDisconnect()}
                 />
             </Context.Provider>
         </SafeAreaView>

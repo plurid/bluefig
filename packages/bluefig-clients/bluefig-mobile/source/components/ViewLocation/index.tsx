@@ -8,6 +8,7 @@
         ScrollView,
         View,
         Text,
+        Button,
         RefreshControl,
 
         StyleSheet,
@@ -47,7 +48,8 @@ export interface ViewLocationProperties {
     devices: Device[];
 
     onRefresh: () => void;
-    handleActivateDevice: (device: Device) => void;
+    handleConnect: (device: Device) => void;
+    handleDisconnect: () => void;
 }
 
 const ViewLocation: React.FC<ViewLocationProperties> = (
@@ -77,7 +79,8 @@ const ViewLocation: React.FC<ViewLocationProperties> = (
         devices,
 
         onRefresh,
-        handleActivateDevice,
+        handleConnect,
+        handleDisconnect,
     } = properties;
     // #endregion properties
 
@@ -108,13 +111,21 @@ const ViewLocation: React.FC<ViewLocationProperties> = (
                             height: '100%',
                         }}
                     >
+                        {devices.length === 0 && (
+                            <View>
+                                <Text>
+                                    no devices
+                                </Text>
+                            </View>
+                        )}
+
                         {devices.map(device => {
                             return (
                                 <DeviceItem
                                     key={device.id}
                                     title={device.localName || device.name || device.id}
                                     onPress={() => {
-                                        handleActivateDevice(device)
+                                        handleConnect(device)
                                     }}
                                 />
                             );
@@ -140,9 +151,18 @@ const ViewLocation: React.FC<ViewLocationProperties> = (
             }
 
             return (
-                <Renderer
-                    key={'renderer' + location}
-                />
+                <View>
+                    <Button
+                        title="Disconnect"
+                        onPress={() => {
+                            handleDisconnect();
+                        }}
+                    />
+
+                    <Renderer
+                        key={'renderer' + location}
+                    />
+                </View>
             );
         default:
             return (<View />);
