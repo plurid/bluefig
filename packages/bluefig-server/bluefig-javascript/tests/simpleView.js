@@ -13,6 +13,10 @@ const views = {
                 store: 'name',
             },
             {
+                type: 'image',
+                source: 'bluefig-logo-128x128.jpg',
+            },
+            {
                 type: 'button',
                 title: 'Click Me',
                 action: 'click',
