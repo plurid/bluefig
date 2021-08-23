@@ -122,7 +122,7 @@ const ViewLocation: React.FC<ViewLocationProperties> = (
                     <View
                         style={{
                             backgroundColor: isDarkMode ? Colors.black : Colors.white,
-                            height: '100%',
+                            // height: '100%',
                         }}
                     >
                         <Text

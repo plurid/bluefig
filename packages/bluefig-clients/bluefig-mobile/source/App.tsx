@@ -8,15 +8,10 @@
     import {
         SafeAreaView,
         StatusBar,
-        Dimensions,
 
         StyleSheet,
         useColorScheme,
     } from 'react-native';
-
-    import {
-        Colors,
-    } from 'react-native/Libraries/NewAppScreen';
 
     import {
         Device,
@@ -65,12 +60,9 @@ const styles = StyleSheet.create({
 const App = () => {
     // #region properties
     const isDarkMode = useColorScheme() === 'dark';
-    const screenHeight = Dimensions.get("window").height;
 
     const generalStyle = {
-        // backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
-        // color: isDarkMode ? Colors.white : Colors.black,
-        height: screenHeight,
+        flexGrow: 1,
     };
     // #endregion properties
 

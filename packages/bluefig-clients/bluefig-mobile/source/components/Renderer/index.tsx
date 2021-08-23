@@ -5,7 +5,11 @@
     } from 'react';
 
     import {
+        KeyboardAvoidingView,
+        ScrollView,
         View,
+
+        StyleSheet,
     } from 'react-native';
     // #endregion libraries
 
@@ -28,6 +32,12 @@
 
 
 // #region module
+const styles = StyleSheet.create({
+    container: {
+        paddingBottom: 60,
+    },
+});
+
 export const RenderComponents: Record<string, React.FC<any> | undefined> = {
     'text': RenderText,
     'input-text': RenderInputText,
@@ -65,33 +75,47 @@ const Renderer: React.FC<RendererProperties> = (
 
     // #region render
     return (
-        <View>
-            {view.elements && view.elements.map(element => {
-                if (!element?.type) {
-                    return (
-                        <View
-                            key={Math.random() + ''}
-                        />
-                    );
-                }
+        <KeyboardAvoidingView
+            behavior="padding"
+        >
+            <View
+                style={[
+                    styles.container,
+                ]}
+            >
+                <ScrollView
+                    contentContainerStyle={{
+                        paddingBottom: 60,
+                    }}
+                >
+                    {view.elements && view.elements.map(element => {
+                        if (!element?.type) {
+                            return (
+                                <View
+                                    key={Math.random() + ''}
+                                />
+                            );
+                        }
 
-                const Component = RenderComponents[element.type];
-                if (!Component) {
-                    return (
-                        <View
-                            key={Math.random() + ''}
-                        />
-                    );
-                }
+                        const Component = RenderComponents[element.type];
+                        if (!Component) {
+                            return (
+                                <View
+                                    key={Math.random() + ''}
+                                />
+                            );
+                        }
 
-                return (
-                    <Component
-                        key={(element as any).id || Math.random() + ''}
-                        element={element}
-                    />
-                );
-            })}
-        </View>
+                        return (
+                            <Component
+                                key={(element as any).id || Math.random() + ''}
+                                element={element}
+                            />
+                        );
+                    })}
+                </ScrollView>
+            </View>
+        </KeyboardAvoidingView>
     );
     // #endregion render
 }
