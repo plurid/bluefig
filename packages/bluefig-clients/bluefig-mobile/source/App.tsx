@@ -1,9 +1,5 @@
 // #region imports
     // #region libraries
-    import {
-        Buffer,
-    } from 'buffer';
-
     import React, {
         useState,
         useEffect,
@@ -11,13 +7,7 @@
 
     import {
         SafeAreaView,
-        ScrollView,
-        View,
-        Text,
-        Button,
         StatusBar,
-        RefreshControl,
-        ActivityIndicator,
 
         StyleSheet,
         useColorScheme,
@@ -47,8 +37,7 @@
         ActionPayload,
     } from './data/interfaces';
 
-    import Renderer from './components/Renderer';
-    import DeviceItem from './components/DeviceItem';
+    import ViewLocation from './components/ViewLocation';
 
     import Context from './services/context';
     import bluetooth from './services/bluetooth';
@@ -69,15 +58,6 @@
 
 // #region module
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        justifyContent: 'center',
-    },
-    horizontal: {
-        flexDirection: 'row',
-        justifyContent: 'space-around',
-        padding: 10,
-    },
 });
 
 
@@ -323,6 +303,15 @@ const App = () => {
     ) => {
         return valuesStore[key];
     }
+
+
+    const handleActivateDevice = (
+        device: Device,
+    ) => {
+        setActiveDevice(device);
+        setValuesStore({});
+        setLocation('/device');
+    }
     // #endregion handlers
 
 
@@ -408,83 +397,6 @@ const App = () => {
 
 
     // #region render
-    const Loading = () => (
-        <View
-            style={[
-                styles.container,
-                styles.horizontal,
-            ]}
-        >
-            <ActivityIndicator />
-        </View>
-    );
-
-    const ViewLocation = () => {
-        if (loading) {
-            return (
-                <Loading />
-            );
-        }
-
-        switch (location) {
-            case '/devices':
-                return (
-                    <ScrollView
-                        contentInsetAdjustmentBehavior="automatic"
-                        refreshControl={
-                            <RefreshControl
-                                refreshing={loading}
-                                onRefresh={onRefresh}
-                            />
-                        }
-                        style={generalStyle}
-                    >
-                        <View
-                            style={{
-                                backgroundColor: isDarkMode ? Colors.black : Colors.white,
-                                height: '100%',
-                            }}
-                        >
-                            {devices.map(device => {
-                                return (
-                                    <DeviceItem
-                                        key={device.id}
-                                        title={device.localName || device.name || device.id}
-                                        onPress={async () => {
-                                            setActiveDevice(device);
-                                            setValuesStore({});
-                                            setLocation('/device');
-                                        }}
-                                    />
-                                );
-                            })}
-                        </View>
-                    </ScrollView>
-                );
-            case '/device':
-                if (viewError) {
-                    return (
-                        <View>
-                            <Text>
-                                {viewError}
-                            </Text>
-                        </View>
-                    );
-                }
-
-                if (!view) {
-                    return (
-                        <Loading />
-                    );
-                }
-
-                return (
-                    <Renderer />
-                );
-            default:
-                return (<></>);
-        }
-    }
 
     return (
         <SafeAreaView
@@ -497,7 +409,16 @@ const App = () => {
             <Context.Provider
                 value={context}
             >
-                <ViewLocation />
+                <ViewLocation
+                    loading={loading}
+                    location={location}
+                    generalStyle={generalStyle}
+                    viewError={viewError}
+                    devices={devices}
+
+                    onRefresh={onRefresh}
+                    handleActivateDevice={handleActivateDevice}
+                />
             </Context.Provider>
         </SafeAreaView>
     );
