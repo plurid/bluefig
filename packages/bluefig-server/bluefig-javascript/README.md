@@ -110,6 +110,11 @@ const views: ViewsServer = {
 the `bluefig-client` will then render an interface with a text input field which will listen for changes and `store` the content in a variable named `inputText` which can then be passed to the `action` `click`, triggerable by clicking on the `button`.
 
 
+<p align="center">
+    <img src="https://raw.githubusercontent.com/plurid/bluefig/master/about/presentation/bluefig-example.png" height="700px">
+</p>
+
+
 
 ## Packages
 
