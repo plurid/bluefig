@@ -36,6 +36,7 @@ A `bluefig-server` runs on the device and the user connects to it through the `b
 
 + [Usage](#usage)
     + [Example](#example)
+    + [Use Cases](#use-cases)
 + [Packages](#packages)
 + [Codeophon](#codeophon)
 
@@ -120,6 +121,17 @@ The `bluefig-server` will output at click
 ```
 > Click action called User input
 ```
+
+
+### Use Cases
+
+`bluefig` can be used to:
+
++ connect a device to Wi-Fi, by selecting from a `bluefig-server` provided list and entering the passkey;
++ set an administrator password on the device;
++ reset device to factory settings;
++ abstract the execution of complex logic, e.g. starting/stopping a process line with one button;
++ read/export device analytics;
 
 
 
