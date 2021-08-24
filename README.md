@@ -111,7 +111,7 @@ the `bluefig-client` will then render an interface with a text input field which
 
 
 <p align="center">
-    <img src="https://raw.githubusercontent.com/plurid/bluefig/master/about/presentation/bluefig-example.png" height="700px">
+    <img src="https://raw.githubusercontent.com/plurid/bluefig/master/about/presentation/bluefig-example.png" height="500px">
 </p>
 
 
