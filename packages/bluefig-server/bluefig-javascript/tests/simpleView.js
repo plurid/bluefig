@@ -223,6 +223,40 @@ const views = {
             }
         },
     },
+
+
+
+    '/readme-example': {
+        title: 'Index',
+        elements: [
+            {
+                type: 'text',
+                value: 'Index View',
+            },
+            {
+                type: 'input-text',
+                title: 'Input Text',
+                store: 'inputText',
+            },
+            {
+                type: 'button',
+                title: 'Click Me',
+                action: 'click',
+            },
+        ],
+        actions: {
+            'click': {
+                arguments: [
+                    'inputText',
+                ],
+                execution: async (
+                    inputText,
+                ) => {
+                    console.log('Click action called', inputText);
+                },
+            },
+        },
+    },
 };
 // #endregion module
 
