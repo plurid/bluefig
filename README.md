@@ -115,6 +115,13 @@ the `bluefig-client` will then render an interface with a text input field which
 </p>
 
 
+The `bluefig-server` will output at click
+
+```
+> Click action called User input
+```
+
+
 
 ## Packages
 
