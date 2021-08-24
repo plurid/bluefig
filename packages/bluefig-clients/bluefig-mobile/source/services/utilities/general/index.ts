@@ -40,7 +40,7 @@ export const identifyElements = (
 export const checkValidView = (
     view: any,
 ) => {
-    if (!view.locations) {
+    if (!view.location) {
         return false;
     }
 

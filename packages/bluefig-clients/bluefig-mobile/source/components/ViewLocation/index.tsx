@@ -169,6 +169,13 @@ const ViewLocation: React.FC<ViewLocationProperties> = (
             if (viewError) {
                 return (
                     <View>
+                        <Button
+                            title={`Disconnect ${deviceName}`}
+                            onPress={() => {
+                                handleDisconnect();
+                            }}
+                        />
+
                         <Text
                             style={[
                                 styles.notice,
