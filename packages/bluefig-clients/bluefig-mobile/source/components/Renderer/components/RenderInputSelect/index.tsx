@@ -98,7 +98,9 @@ const RenderInputSelect: React.FC<RenderInputSelectProperties> = (
         ? options[storeValue]
         : typeof initial === 'number'
             ? options[initial]
-            : options[0];
+            : typeof initial === 'string'
+                ? options.find(option => option === initial) || options[0]
+                : options[0];
     // #endregion properties
 
 
@@ -110,7 +112,7 @@ const RenderInputSelect: React.FC<RenderInputSelectProperties> = (
             typeof storeValue === 'undefined'
             && typeof initial === 'undefined'
         ) {
-            setValue(store, 0);
+            setValue(store, [0, options[0]]);
             return;
         }
 
@@ -118,7 +120,19 @@ const RenderInputSelect: React.FC<RenderInputSelectProperties> = (
             typeof storeValue === 'undefined'
             && typeof initial === 'number'
         ) {
-            setValue(store, initial);
+            setValue(store, [initial, options[initial]]);
+        }
+
+        if (
+            typeof storeValue === 'undefined'
+            && typeof initial === 'string'
+        ) {
+            const initialIndex = options.indexOf(initial);
+            if (initialIndex >= 0) {
+                setValue(store, [initialIndex, options[initialIndex]]);
+            } else {
+                setValue(store, [0, options[0]]);
+            }
         }
     }, []);
     // #endregion effects
@@ -146,10 +160,10 @@ const RenderInputSelect: React.FC<RenderInputSelectProperties> = (
 
             <Picker
                 selectedValue={selected}
-                onValueChange={(_, itemIndex) => {
+                onValueChange={(itemValue, itemIndex) => {
                     setValue(
                         store,
-                        itemIndex,
+                        [itemIndex, itemValue],
                     );
                 }}
             >

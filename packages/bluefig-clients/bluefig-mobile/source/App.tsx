@@ -246,7 +246,7 @@ const App = () => {
             }
 
             const collectArguments = () => {
-                const actionArguments: any[] = [];
+                const actionArguments: Record<string, any> = {};
 
                 if (!view.actions) {
                     return actionArguments;
@@ -258,9 +258,8 @@ const App = () => {
                 }
 
                 for (const argumentName of argumentsData) {
-                    // based on the argumentName get the value from the values store
                     const value = getValue(argumentName);
-                    actionArguments.push(value);
+                    actionArguments[argumentName] = value;
                 }
 
                 return actionArguments;
@@ -292,7 +291,10 @@ const App = () => {
 
             if (data) {
                 const view = base64ToData(data);
-                if (!view) {
+                if (
+                    !view
+                    || !view.location
+                ) {
                     return;
                 }
 

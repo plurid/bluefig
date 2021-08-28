@@ -156,9 +156,14 @@ const RenderInputSlider: React.FC<RenderInputSliderProperties> = (
                 onSlidingComplete={(value) => {
                     setValue(store, value);
 
-                    if (action) {
-                        sendAction(action);
-                    }
+                    setTimeout(() => {
+                        if (action) {
+                            sendAction(action);
+                        }
+                    }, 100);
+                }}
+                style={{
+                    marginTop: 10,
                 }}
             />
         </View>
