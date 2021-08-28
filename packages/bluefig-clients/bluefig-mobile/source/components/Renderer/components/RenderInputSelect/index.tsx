@@ -26,6 +26,8 @@
         ViewInputSelect,
     } from '../../../../data/interfaces';
 
+    import MultiSelect from '../../../MultiSelect';
+
     import Context from '../../../../services/context';
     // #endregion external
 // #endregion imports
@@ -96,13 +98,58 @@ const RenderInputSelect: React.FC<RenderInputSelectProperties> = (
     } = element;
 
     const storeValue = getValue(store);
-    const selected = typeof storeValue !== 'undefined'
-        ? storeValue[1]
-        : typeof initial === 'number'
-            ? options[initial]
-            : typeof initial === 'string'
-                ? options.find(option => option === initial) || options[0]
-                : options[0];
+
+    const resolveSelectedValue = () => {
+        if (exclusive) {
+            if (typeof storeValue !== 'undefined') {
+                return storeValue[1];
+            }
+
+            if (typeof initial === 'number') {
+                return options[initial];
+            }
+
+            if (typeof initial === 'string') {
+                const value = options.find(option => option === initial);
+                if (value) {
+                    return value;
+                }
+            }
+
+            return options[0];
+        }
+
+
+        if (typeof storeValue !== 'undefined') {
+            return storeValue;
+        }
+
+        if (Array.isArray(initial)) {
+            return [
+                ...initial,
+            ];
+        }
+
+        if (typeof initial === 'number') {
+            return [
+                options[initial],
+            ];
+        }
+
+        if (typeof initial === 'string') {
+            const value = options.find(option => option === initial);
+            if (value) {
+                return [
+                    value,
+                ];
+            }
+        }
+
+        return [
+            options[0],
+        ];
+    }
+    const selected = resolveSelectedValue();
     // #endregion properties
 
 
@@ -110,11 +157,43 @@ const RenderInputSelect: React.FC<RenderInputSelectProperties> = (
     useEffect(() => {
         const storeValue = getValue(store);
 
+        if (exclusive) {
+            if (
+                typeof storeValue === 'undefined'
+                && typeof initial === 'undefined'
+            ) {
+                setValue(store, [0, options[0]]);
+                return;
+            }
+
+            if (
+                typeof storeValue === 'undefined'
+                && typeof initial === 'number'
+            ) {
+                setValue(store, [initial, options[initial]]);
+            }
+
+            if (
+                typeof storeValue === 'undefined'
+                && typeof initial === 'string'
+            ) {
+                const initialIndex = options.indexOf(initial);
+
+                if (initialIndex >= 0) {
+                    setValue(store, [initialIndex, options[initialIndex]]);
+                } else {
+                    setValue(store, [0, options[0]]);
+                }
+            }
+        }
+
         if (
             typeof storeValue === 'undefined'
             && typeof initial === 'undefined'
         ) {
-            setValue(store, [0, options[0]]);
+            setValue(store, [
+                [0, options[0]],
+            ]);
             return;
         }
 
@@ -122,7 +201,9 @@ const RenderInputSelect: React.FC<RenderInputSelectProperties> = (
             typeof storeValue === 'undefined'
             && typeof initial === 'number'
         ) {
-            setValue(store, [initial, options[initial]]);
+            setValue(store, [
+                [initial, options[initial]],
+            ]);
         }
 
         if (
@@ -132,9 +213,13 @@ const RenderInputSelect: React.FC<RenderInputSelectProperties> = (
             const initialIndex = options.indexOf(initial);
 
             if (initialIndex >= 0) {
-                setValue(store, [initialIndex, options[initialIndex]]);
+                setValue(store, [
+                    [initialIndex, options[initialIndex]],
+                ]);
             } else {
-                setValue(store, [0, options[0]]);
+                setValue(store, [
+                    [0, options[0]],
+                ]);
             }
         }
     }, []);
@@ -183,6 +268,29 @@ const RenderInputSelect: React.FC<RenderInputSelectProperties> = (
                         );
                     })}
                 </Picker>
+            )}
+
+            {!exclusive && (
+                <MultiSelect
+                    items={options}
+                    selected={selected}
+                    onChange={(selected: string[]) => {
+                        const selectedTuples: [number, string][] = [];
+
+                        for (const select of selected) {
+                            const index = options.indexOf(select);
+                            selectedTuples.push([
+                                index, select,
+                            ]);
+                        }
+
+                        setValue(
+                            store,
+                            selectedTuples,
+                            action,
+                        );
+                    }}
+                />
             )}
         </View>
     );
