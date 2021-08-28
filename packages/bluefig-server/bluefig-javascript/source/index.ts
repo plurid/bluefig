@@ -29,7 +29,7 @@ const main = () => {
                 [bluefigService.uuid],
                 (error) => {
                     if (error) {
-                        console.log(error);
+                        console.log(`Bluetooth startAdvertising error`, error);
                     }
                 },
             );
@@ -41,6 +41,7 @@ const main = () => {
 
     bleno.on(BLUETOOTH.ADVERTISING_START, (error) => {
         if (error) {
+            console.log(`Bluetooth startAdvertising event error`, error);
             return;
         }
 
