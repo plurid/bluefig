@@ -102,6 +102,7 @@ export interface ViewRouteClient {
     title?: StringOrPromiseOf;
     elements?: ViewElement[];
     actions?: Record<string, ViewActionClient | undefined>;
+    notifications?: string[];
 }
 
 

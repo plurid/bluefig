@@ -50,6 +50,7 @@ class BluefigViewCharacteristic extends bleno.Characteristic {
 
     private reading: Reading | null = null;
     private readings: Record<string, any> = {};
+    private notifications: string[] = [];
 
 
     constructor() {
@@ -115,7 +116,12 @@ class BluefigViewCharacteristic extends bleno.Characteristic {
             title,
             elements: resolvedElements,
             actions: viewableActions,
+            notifications: [
+                ...this.notifications,
+            ],
         };
+
+        this.notifications = [];
 
         return viewable;
     }
@@ -147,6 +153,12 @@ class BluefigViewCharacteristic extends bleno.Characteristic {
             resource,
         );
         return viewable;
+    }
+
+    private async actionNotification(
+        notification: string,
+    ) {
+        this.notifications.push(notification);
     }
 
     private async triggerAction(
@@ -188,11 +200,14 @@ class BluefigViewCharacteristic extends bleno.Characteristic {
 
 
             if (typeof actionData === 'function') {
-                return await actionData();
+                return await actionData(
+                    this.actionNotification.bind(this),
+                );
             }
 
             return await actionData.execution(
                 ...actionPayload.arguments,
+                this.actionNotification.bind(this),
             );
         } catch (error) {
             return;
