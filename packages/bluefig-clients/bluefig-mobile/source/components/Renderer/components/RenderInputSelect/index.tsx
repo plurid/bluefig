@@ -66,7 +66,6 @@ const RenderInputSelect: React.FC<RenderInputSelectProperties> = (
 
         setValue,
         getValue,
-        sendAction,
     } = context;
     // #endregion context
 

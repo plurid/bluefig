@@ -35,6 +35,12 @@ const styles = StyleSheet.create({
     container: {
         padding: 20,
     },
+    inline: {
+        display: 'flex',
+        justifyContent: 'space-between',
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
     text: {
         marginTop: 8,
         fontSize: 18,
@@ -64,7 +70,6 @@ const RenderInputSlider: React.FC<RenderInputSliderProperties> = (
 
         setValue,
         getValue,
-        sendAction,
     } = context;
     // #endregion context
 
@@ -135,18 +140,28 @@ const RenderInputSlider: React.FC<RenderInputSliderProperties> = (
                 styles.container,
             ]}
         >
-            {title && (
-                <Text
-                    style={[
-                        styles.text,
-                        {
-                            color: isDarkMode ? Colors.white : Colors.black,
-                        },
-                    ]}
-                >
-                    {title}
+            <View
+                style={[
+                    styles.inline,
+                ]}
+            >
+                {title && (
+                    <Text
+                        style={[
+                            styles.text,
+                            {
+                                color: isDarkMode ? Colors.white : Colors.black,
+                            },
+                        ]}
+                    >
+                        {title}
+                    </Text>
+                )}
+
+                <Text>
+                    {sliderValue}
                 </Text>
-            )}
+            </View>
 
             <Slider
                 value={sliderValue}
