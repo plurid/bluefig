@@ -12,6 +12,8 @@ target 'bluefig' do
     :hermes_enabled => false
   )
 
+  pod 'RNFS', :path => '../node_modules/react-native-fs'
+
   target 'bluefigTests' do
     inherit! :complete
     # Pods for testing
