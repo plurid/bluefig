@@ -158,8 +158,15 @@ const RenderInputSlider: React.FC<RenderInputSliderProperties> = (
                     </Text>
                 )}
 
-                <Text>
-                    {sliderValue}
+                <Text
+                    style={[
+                        styles.text,
+                        {
+                            color: isDarkMode ? Colors.white : Colors.black,
+                        },
+                    ]}
+                >
+                    {sliderValue + ''}
                 </Text>
             </View>
 
