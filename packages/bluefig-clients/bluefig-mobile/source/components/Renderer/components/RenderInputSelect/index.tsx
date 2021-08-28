@@ -121,12 +121,34 @@ const RenderInputSelect: React.FC<RenderInputSelectProperties> = (
 
 
         if (typeof storeValue !== 'undefined') {
-            return storeValue;
+            const selected = [];
+            for (const stored of storeValue) {
+                selected.push(stored[1]);
+            }
+
+            return selected;
         }
 
         if (Array.isArray(initial)) {
+            const selected: string[] = [];
+
+            for (const value of initial) {
+                if (typeof value === 'number') {
+                    selected.push(options[value]);
+                    continue;
+                }
+
+                if (typeof value === 'string') {
+                    const item = options.find(option => option === value);
+                    if (item) {
+                        selected.push(item);
+                        continue;
+                    }
+                }
+            }
+
             return [
-                ...initial,
+                ...selected,
             ];
         }
 
