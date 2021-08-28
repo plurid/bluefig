@@ -174,9 +174,10 @@ class BluefigViewCharacteristic extends bleno.Characteristic {
                 return;
             }
 
-            if (this.hooks?.beforeWrite) {
-                const hook = await this.hooks.beforeWrite(
-                    actionPayload.view,
+            if (this.hooks?.beforeAction) {
+                const hook = await this.hooks.beforeAction(
+                    actionPayload,
+                    this.actionNotification.bind(this),
                 );
 
                 if (!hook) {
@@ -215,6 +216,60 @@ class BluefigViewCharacteristic extends bleno.Characteristic {
     }
 
 
+    private handleResourceRead(
+        data: any,
+        resourceOverwrite?: string,
+    ) {
+        if (typeof (data as Request).resource !== 'string') {
+            return false;
+        }
+
+        const request = data as Request;
+        const {
+            resource,
+            id,
+        } = request;
+
+        this.reading = {
+            resource: resourceOverwrite || resource,
+            id: id || Math.random() + '',
+        };
+
+        return true;
+    }
+
+    private async handleChunkWriting(
+        data: any,
+    ) {
+        const chunk = data as WriteChunk;
+        const {
+            end,
+            id,
+            data: chunkData,
+        } = chunk;
+
+        const currentChunk = this.chunks[id] || '';
+        const updateChunkData = currentChunk + chunkData;
+        this.chunks[id] = updateChunkData;
+
+        if (end) {
+            const data = this.chunks[id];
+            const actionResult = await this.triggerAction(
+                data,
+            );
+
+            if (actionResult) {
+                this.readings[id] = actionResult;
+                this.reading = {
+                    resource: `response:${id}`,
+                    id,
+                };
+            }
+        }
+    }
+
+
+
     public async onWriteRequest(
         buffer: Buffer,
         offset: number,
@@ -230,63 +285,43 @@ class BluefigViewCharacteristic extends bleno.Characteristic {
                 return;
             }
 
+
             if (this.hooks?.checkToken) {
                 const allow = await this.hooks.checkToken(
                     data.token,
-                    'write',
+                    this.actionNotification.bind(this),
                 );
 
-                if (!allow) {
-                    callback(this.RESULT_UNLIKELY_ERROR);
+                if (typeof allow === 'string') {
+                    const resourceRead = this.handleResourceRead(
+                        data,
+                        allow,
+                    );
+
+                    if (resourceRead) {
+                        callback(this.RESULT_SUCCESS);
+                        return;
+                    }
                     return;
+                }
+
+                if (typeof allow === 'boolean') {
+                    if (!allow) {
+                        callback(this.RESULT_UNLIKELY_ERROR);
+                        return;
+                    }
                 }
             }
 
-            if ((data as Request).resource) {
-                // Reading.
-                const request = data as Request;
-                const {
-                    resource,
-                    id,
-                } = request;
 
-                this.reading = {
-                    resource,
-                    id: id || Math.random() + '',
-                };
-
+            const resourceRead = this.handleResourceRead(data);
+            if (resourceRead) {
                 callback(this.RESULT_SUCCESS);
                 return;
             }
 
 
-            // Writing.
-            const chunk = data as WriteChunk;
-            const {
-                end,
-                id,
-                data: chunkData,
-            } = chunk;
-
-            const currentChunk = this.chunks[id] || '';
-            const updateChunkData = currentChunk + chunkData;
-            this.chunks[id] = updateChunkData;
-
-            if (end) {
-                const data = this.chunks[id];
-                const actionResult = await this.triggerAction(
-                    data,
-                );
-
-                if (actionResult) {
-                    this.readings[id] = actionResult;
-                    this.reading = {
-                        resource: `response:${id}`,
-                        id,
-                    };
-                }
-            }
-
+            await this.handleChunkWriting(data);
             callback(this.RESULT_SUCCESS);
         } catch (error) {
             // action definition error

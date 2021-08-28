@@ -2,6 +2,8 @@
     // #region internal
     import {
         ViewElement,
+
+        ActionPayload,
     } from '../view';
     // #endregion internal
 // #endregion imports
@@ -31,16 +33,21 @@ export interface ViewRouteServer {
 export type ViewsServer = Record<string, ViewRouteServer | undefined>;
 
 
+export type BluefigNotification = (
+    notifcation: string,
+) => void;
+
+
+export type HookResponse = Promise<boolean | string | void>;
+
 export interface Hooks {
     checkToken?: (
         token: string | undefined,
-        type: string,
-    ) => Promise<boolean>;
-    beforeRead?: (
-        view: string,
-    ) => Promise<boolean | string | void>;
-    beforeWrite?: (
-        view: string,
-    ) => Promise<boolean | string | void>;
+        bluefigNotification: BluefigNotification,
+    ) => HookResponse;
+    beforeAction?: (
+        payload: ActionPayload,
+        bluefigNotification: BluefigNotification,
+    ) => HookResponse;
 }
 // #endregion module
