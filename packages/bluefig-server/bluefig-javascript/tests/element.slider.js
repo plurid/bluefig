@@ -1,7 +1,7 @@
 // #region module
 const views = {
     '/': {
-        title: 'one',
+        title: 'input slider',
         elements: [
             {
                 type: 'input-slider',
