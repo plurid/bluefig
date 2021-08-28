@@ -229,8 +229,9 @@ const App = () => {
     }
 
 
-    const sendAction = useCallback( async(
+    const sendAction = useCallback(async (
         actionName: string,
+        updatedValuesStore?: any,
     ) => {
         try {
             if (
@@ -245,6 +246,7 @@ const App = () => {
                 return;
             }
 
+
             const collectArguments = () => {
                 const actionArguments: Record<string, any> = {};
 
@@ -258,13 +260,18 @@ const App = () => {
                 }
 
                 for (const argumentName of argumentsData) {
-                    const value = getValue(argumentName);
+                    const value = getValue(
+                        argumentName,
+                        updatedValuesStore,
+                    );
+
                     actionArguments[argumentName] = value;
                 }
 
                 return actionArguments;
             }
             const actionArguments = collectArguments();
+
 
             const actionPayload: ActionPayload = {
                 view: view.location,
@@ -315,21 +322,39 @@ const App = () => {
     const setValue = useCallback((
         key: string,
         value: any,
+        action?: string,
     ) => {
         const newValue: any = {};
         newValue[key] = value;
 
-        setValuesStore(previousState => ({
-            ...previousState,
-            ...newValue,
-        }));
+        setValuesStore(previousState => {
+            const newValuesStore = {
+                ...previousState,
+                ...newValue,
+            };
+
+            if (action) {
+                sendAction(
+                    action,
+                    newValuesStore,
+                );
+            }
+
+            return newValuesStore;
+        });
+
     }, [
         valuesStore,
     ]);
 
     const getValue = useCallback((
         key: string,
+        updatedValuesStore?: any,
     ) => {
+        if (updatedValuesStore) {
+            return updatedValuesStore[key];
+        }
+
         return valuesStore[key];
     }, [
         valuesStore,

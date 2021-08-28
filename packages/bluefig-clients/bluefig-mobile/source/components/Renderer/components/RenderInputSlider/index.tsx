@@ -154,13 +154,11 @@ const RenderInputSlider: React.FC<RenderInputSliderProperties> = (
                 maximumValue={maximumValue}
                 step={stepValue}
                 onSlidingComplete={(value) => {
-                    setValue(store, value);
-
-                    setTimeout(() => {
-                        if (action) {
-                            sendAction(action);
-                        }
-                    }, 100);
+                    setValue(
+                        store,
+                        value,
+                        action,
+                    );
                 }}
                 style={{
                     marginTop: 10,

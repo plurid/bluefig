@@ -66,6 +66,7 @@ const RenderInputSelect: React.FC<RenderInputSelectProperties> = (
 
         setValue,
         getValue,
+        sendAction,
     } = context;
     // #endregion context
 
@@ -91,11 +92,12 @@ const RenderInputSelect: React.FC<RenderInputSelectProperties> = (
         options,
         initial,
         title,
+        action,
     } = element;
 
     const storeValue = getValue(store);
-    const selected = typeof storeValue === 'number'
-        ? options[storeValue]
+    const selected = typeof storeValue !== 'undefined'
+        ? storeValue[1]
         : typeof initial === 'number'
             ? options[initial]
             : typeof initial === 'string'
@@ -128,6 +130,7 @@ const RenderInputSelect: React.FC<RenderInputSelectProperties> = (
             && typeof initial === 'string'
         ) {
             const initialIndex = options.indexOf(initial);
+
             if (initialIndex >= 0) {
                 setValue(store, [initialIndex, options[initialIndex]]);
             } else {
@@ -164,6 +167,7 @@ const RenderInputSelect: React.FC<RenderInputSelectProperties> = (
                     setValue(
                         store,
                         [itemIndex, itemValue],
+                        action,
                     );
                 }}
             >
