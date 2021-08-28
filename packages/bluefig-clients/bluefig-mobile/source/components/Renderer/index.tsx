@@ -24,8 +24,10 @@
     import RenderInputText from './components/RenderInputText';
     import RenderInputSelect from './components/RenderInputSelect';
     import RenderInputSwitch from './components/RenderInputSwitch';
+    import RenderInputSlider from './components/RenderInputSlider';
     import RenderButton from './components/RenderButton';
     import RenderImage from './components/RenderImage';
+    import RenderFile from './components/RenderFile';
     import RenderList from './components/RenderList';
     // #endregion internal
 // #endregion imports
@@ -44,8 +46,10 @@ export const RenderComponents: Record<string, React.FC<any> | undefined> = {
     'input-text': RenderInputText,
     'input-select': RenderInputSelect,
     'input-switch': RenderInputSwitch,
+    'input-slider': RenderInputSlider,
     'button': RenderButton,
     'image': RenderImage,
+    'file': RenderFile,
     'list': RenderList,
 };
 
