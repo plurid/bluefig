@@ -92,6 +92,7 @@ const RenderInputSelect: React.FC<RenderInputSelectProperties> = (
         initial,
         title,
         action,
+        exclusive,
     } = element;
 
     const storeValue = getValue(store);
@@ -160,27 +161,29 @@ const RenderInputSelect: React.FC<RenderInputSelectProperties> = (
                 </Text>
             )}
 
-            <Picker
-                selectedValue={selected}
-                onValueChange={(itemValue, itemIndex) => {
-                    setValue(
-                        store,
-                        [itemIndex, itemValue],
-                        action,
-                    );
-                }}
-            >
-                {options.map((option) => {
-                    return (
-                        <Picker.Item
-                            key={Math.random() + ''}
-                            label={option}
-                            value={option}
-                            color={isDarkMode ? Colors.white : Colors.black}
-                        />
-                    );
-                })}
-            </Picker>
+            {exclusive && (
+                <Picker
+                    selectedValue={selected}
+                    onValueChange={(itemValue, itemIndex) => {
+                        setValue(
+                            store,
+                            [itemIndex, itemValue],
+                            action,
+                        );
+                    }}
+                >
+                    {options.map((option) => {
+                        return (
+                            <Picker.Item
+                                key={Math.random() + ''}
+                                label={option}
+                                value={option}
+                                color={isDarkMode ? Colors.white : Colors.black}
+                            />
+                        );
+                    })}
+                </Picker>
+            )}
         </View>
     );
     // #endregion render
