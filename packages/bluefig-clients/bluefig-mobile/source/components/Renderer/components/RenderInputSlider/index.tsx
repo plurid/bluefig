@@ -34,10 +34,6 @@
 const styles = StyleSheet.create({
     container: {
         padding: 20,
-        display: 'flex',
-        justifyContent: 'space-between',
-        flexDirection: 'row',
-        alignItems: 'center',
     },
     text: {
         marginTop: 8,
@@ -92,17 +88,21 @@ const RenderInputSlider: React.FC<RenderInputSliderProperties> = (
         initial,
         title,
         action,
-        maximum,
         minimum,
+        maximum,
         step,
     } = element;
+
+    const minimumValue = minimum ?? 0;
+    const maximumValue = maximum ?? 100;
+    const stepValue = step ?? 1;
 
     const storeValue = getValue(store);
     const sliderValue = typeof storeValue === 'number'
         ? storeValue
         : typeof initial === 'number'
             ? initial
-            : 0;
+            : minimumValue;
     // #endregion properties
 
 
@@ -114,7 +114,7 @@ const RenderInputSlider: React.FC<RenderInputSliderProperties> = (
             typeof storeValue === 'undefined'
             && typeof initial === 'undefined'
         ) {
-            setValue(store, false);
+            setValue(store, minimumValue);
             return;
         }
 
@@ -150,9 +150,9 @@ const RenderInputSlider: React.FC<RenderInputSliderProperties> = (
 
             <Slider
                 value={sliderValue}
-                minimumValue={minimum ?? 0}
-                maximumValue={maximum ?? 100}
-                step={step ?? 1}
+                minimumValue={minimumValue}
+                maximumValue={maximumValue}
+                step={stepValue}
                 onSlidingComplete={(value) => {
                     setValue(store, value);
 
