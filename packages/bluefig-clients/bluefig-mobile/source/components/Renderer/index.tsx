@@ -8,9 +8,14 @@
         KeyboardAvoidingView,
         ScrollView,
         View,
+        Text,
 
         StyleSheet,
     } from 'react-native';
+
+    import {
+        Colors,
+    } from 'react-native/Libraries/NewAppScreen';
     // #endregion libraries
 
 
@@ -70,6 +75,7 @@ const Renderer: React.FC<RendererProperties> = (
 
     const {
         view,
+        isDarkMode,
     } = context;
     if (
         !view
@@ -97,6 +103,20 @@ const Renderer: React.FC<RendererProperties> = (
                         paddingBottom: 60,
                     }}
                 >
+                    {view.title && (
+                        <View>
+                            <Text
+                                style={{
+                                    textAlign: 'center',
+                                    color: isDarkMode ? Colors.white : Colors.black,
+                                    fontSize: 24,
+                                }}
+                            >
+                                {view.title}
+                            </Text>
+                        </View>
+                    )}
+
                     {view.elements.map(element => {
                         if (!element?.type) {
                             return (
