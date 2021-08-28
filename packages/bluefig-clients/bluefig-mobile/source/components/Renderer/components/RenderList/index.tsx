@@ -23,6 +23,7 @@
     import RenderButton from '../RenderButton';
     import RenderImage from '../RenderImage';
     import RenderFile from '../RenderFile';
+    import RenderDivider from '../RenderDivider';
 
     import Context from '../../../../services/context';
     // #endregion external
@@ -40,6 +41,7 @@ export const RenderComponents: Record<string, React.FC<any> | undefined> = {
     'button': RenderButton,
     'image': RenderImage,
     'file': RenderFile,
+    'divider': RenderDivider,
 };
 
 

@@ -33,6 +33,7 @@
     import RenderButton from './components/RenderButton';
     import RenderImage from './components/RenderImage';
     import RenderFile from './components/RenderFile';
+    import RenderDivider from './components/RenderDivider';
     import RenderList from './components/RenderList';
     // #endregion internal
 // #endregion imports
@@ -55,6 +56,7 @@ export const RenderComponents: Record<string, React.FC<any> | undefined> = {
     'button': RenderButton,
     'image': RenderImage,
     'file': RenderFile,
+    'divider': RenderDivider,
     'list': RenderList,
 };
 
