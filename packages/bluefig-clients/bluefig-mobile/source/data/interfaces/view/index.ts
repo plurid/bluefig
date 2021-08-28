@@ -7,6 +7,7 @@ export type ViewElement =
     | ViewInputSlider
     | ViewButton
     | ViewImage
+    | ViewFile
     | ViewList;
 
 
@@ -74,6 +75,12 @@ export interface ViewImage {
     height?: number;
     width?: number;
     alignment?: 'left' | 'right' | 'center';
+}
+
+export interface ViewFile {
+    type: 'file';
+    title: string;
+    source: string;
 }
 
 export interface ViewList {
