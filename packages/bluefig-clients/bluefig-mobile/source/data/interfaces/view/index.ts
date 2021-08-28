@@ -4,6 +4,7 @@ export type ViewElement =
     | ViewInputText
     | ViewInputSelect
     | ViewInputSwitch
+    | ViewInputSlider
     | ViewButton
     | ViewImage
     | ViewList;
@@ -33,7 +34,7 @@ export interface ViewInputSelect {
     /**
      * Make the selection exclusive to one item.
      */
-    initial?: number;
+    initial?: string | number;
     exclusive?: boolean;
     /**
      * Set initial value, index of `options`.
@@ -47,6 +48,17 @@ export interface ViewInputSwitch {
     store: string;
     initial?: boolean;
     action?: string;
+}
+
+export interface ViewInputSlider {
+    type: 'input-slider';
+    title: string;
+    store: string;
+    initial?: number;
+    action?: string;
+    maximum?: number;
+    minimum?: number;
+    step?: number;
 }
 
 export interface ViewButton {
