@@ -37,6 +37,7 @@ A `bluefig-server` runs on the device and the user connects to it through the `b
 + [Usage](#usage)
     + [Example](#example)
     + [Use Cases](#use-cases)
+    + [In Use](#in-use)
 + [Packages](#packages)
 + [Codeophon](#codeophon)
 
@@ -56,11 +57,14 @@ The `element types` are
 + `input-text`
 + `input-select`
 + `input-switch`
++ `input-slider`
 + `button`
 + `image`
++ `file`
++ `divider`
 + `list`
 
-The `elements` used for input (`input-text`, `input-select`, `input-switch`, `button`) can have an `action` field. When the user interacts with the `element` on the `bluefig-client`, the established `action` will run accordingly on the `bluefig-server`.
+The `elements` used for input (`input-x`, `button`) can have an `action` field. When the user interacts with the `element` on the `bluefig-client`, the established `action` will run accordingly on the `bluefig-server`.
 
 
 ### Example
@@ -75,32 +79,32 @@ import {
 
 const views: ViewsServer = {
     '/': {
-        title: 'Index',
+        title: 'Index View',
         elements: [
             {
                 type: 'text',
-                value: 'Index View',
+                value: 'this is a simple view',
             },
             {
                 type: 'input-text',
                 title: 'Input Text',
-                store: 'inputText',
+                store: 'inputTextStore',
             },
             {
                 type: 'button',
                 title: 'Click Me',
-                action: 'click',
+                action: 'clickAction',
             },
         ],
         actions: {
-            'click': {
+            'clickAction': {
                 arguments: [
-                    'inputText',
+                    'inputTextStore',
                 ],
                 execution: async (
-                    inputText,
+                    payload,
                 ) => {
-                    console.log('Click action called', inputText);
+                    console.log('Click action called', payload.inputTextStore);
                 },
             },
         },
@@ -132,6 +136,13 @@ The `bluefig-server` will output at click
 + reset device to factory settings;
 + abstract the execution of complex logic, e.g. starting/stopping a process line with one button;
 + read/export device analytics;
+
+
+### In Use
+
+`bluefig` is used to configure:
+
++ [deserver](https://github.com/plurid/deserve/tree/master/packages/utilities/deserver-os/deserver-bluefig): admin setup, user generation, Wi-Fi selection, disk formatting, docker/processes lifecycle (setup-stop-restart).
 
 
 
