@@ -20,7 +20,6 @@
         ViewRouteServer,
 
         Request,
-        Response,
         Reading,
         WriteChunk,
     } from '~data/interfaces';
@@ -83,6 +82,7 @@ class BluefigViewCharacteristic extends bleno.Characteristic {
             console.log('Could not load.');
         }
     }
+
 
     private async resolveViewable(
         view: ViewRouteServer,
@@ -155,7 +155,8 @@ class BluefigViewCharacteristic extends bleno.Characteristic {
         return viewable;
     }
 
-    private async actionNotification(
+
+    private async bluefigNotification(
         notification: string,
     ) {
         this.notifications.push(notification);
@@ -177,7 +178,7 @@ class BluefigViewCharacteristic extends bleno.Characteristic {
             if (this.hooks?.beforeAction) {
                 const hook = await this.hooks.beforeAction(
                     actionPayload,
-                    this.actionNotification.bind(this),
+                    this.bluefigNotification.bind(this),
                 );
 
                 if (!hook) {
@@ -202,13 +203,16 @@ class BluefigViewCharacteristic extends bleno.Characteristic {
 
             if (typeof actionData === 'function') {
                 return await actionData(
-                    this.actionNotification.bind(this),
+                    undefined,
+                    this.bluefigNotification.bind(this),
                 );
             }
 
             return await actionData.execution(
-                ...actionPayload.arguments,
-                this.actionNotification.bind(this),
+                {
+                    ...actionPayload.arguments,
+                },
+                this.bluefigNotification.bind(this),
             );
         } catch (error) {
             return;
@@ -289,7 +293,7 @@ class BluefigViewCharacteristic extends bleno.Characteristic {
             if (this.hooks?.checkToken) {
                 const allow = await this.hooks.checkToken(
                     data.token,
-                    this.actionNotification.bind(this),
+                    this.bluefigNotification.bind(this),
                 );
 
                 if (typeof allow === 'string') {
