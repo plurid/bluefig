@@ -136,10 +136,10 @@ The `bluefig-server` will output at click
 + reset device to factory settings;
 + abstract the execution of complex logic, e.g. starting/stopping a process line with one button;
 + read/export device analytics;
-+ read/write custom configuration files*;
-+ execute custom shell commands*;
++ read/write custom configuration files†;
++ execute custom shell commands†;
 
-* In order to ensure the device security, the interaction with configuration files/shell commands should be done indirectly, the `bluefig-server` exposing only a limited interaction mode to the `bluefig-client`.
+† In order to ensure the device security, the interaction with configuration files/shell commands should be done indirectly, the `bluefig-server` exposing only a limited interaction mode to the `bluefig-client`.
 
 
 ### In Use
