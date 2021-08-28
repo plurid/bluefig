@@ -1,6 +1,6 @@
 // #region module
-export const chunker = (
-    baseData: any,
+export const chunker = <D = any>(
+    baseData: D,
     value: string,
 ) => {
     const CHUNK_FULL_SIZE = 512;

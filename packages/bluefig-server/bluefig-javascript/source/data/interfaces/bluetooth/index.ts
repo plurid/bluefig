@@ -6,23 +6,9 @@ export interface Request {
 }
 
 
-export interface Response {
-    id?: string;
-    data: string;
-    end: boolean;
-}
-
-
 export interface Reading {
     resource: string;
     id: string;
-}
-
-
-export interface Response {
-    id?: string;
-    data: string;
-    end: boolean;
 }
 
 
