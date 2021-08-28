@@ -6,6 +6,7 @@ export type StringOrPromiseOf = TypeOrPromiseOf<string>;
 export type StringArrayOrPromiseOf = TypeOrPromiseOf<string[]>;
 export type NumberOrPromiseOf = TypeOrPromiseOf<number>;
 export type BooleanOrPromiseOf = TypeOrPromiseOf<boolean>;
+export type StringOrNumberOrPromiseOf = TypeOrPromiseOf<string | number>;
 
 
 export type ViewElement =
@@ -13,6 +14,7 @@ export type ViewElement =
     | ViewInputText
     | ViewInputSelect
     | ViewInputSwitch
+    | ViewInputSlider
     | ViewButton
     | ViewImage
     | ViewList;
@@ -42,7 +44,7 @@ export interface ViewInputSelect {
     /**
      * Make the selection exclusive to one item.
      */
-    initial?: NumberOrPromiseOf;
+    initial?: StringOrNumberOrPromiseOf;
     exclusive?: BooleanOrPromiseOf;
     /**
      * Set initial value, index of `options`.
@@ -56,6 +58,17 @@ export interface ViewInputSwitch {
     store: StringOrPromiseOf;
     initial?: BooleanOrPromiseOf;
     action?: StringOrPromiseOf;
+}
+
+export interface ViewInputSlider {
+    type: 'input-slider';
+    title: StringOrPromiseOf;
+    store: StringOrPromiseOf;
+    initial?: NumberOrPromiseOf;
+    action?: StringOrPromiseOf;
+    maximum?: NumberOrPromiseOf;
+    minimum?: NumberOrPromiseOf;
+    step?: NumberOrPromiseOf;
 }
 
 export interface ViewButton {
