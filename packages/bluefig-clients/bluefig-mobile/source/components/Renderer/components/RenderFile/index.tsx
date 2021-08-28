@@ -12,6 +12,8 @@
         StyleSheet,
     } from 'react-native';
 
+    import RNFS from 'react-native-fs';
+
     import {
         Colors,
     } from 'react-native/Libraries/NewAppScreen';
@@ -69,6 +71,7 @@ const RenderFile: React.FC<RenderFileProperties> = (
     if (
         !element
         || !element.source
+        || !element.title
     ) {
         return (
             <View />
@@ -107,15 +110,15 @@ const RenderFile: React.FC<RenderFileProperties> = (
             <Button
                 title="Download"
                 onPress={() => {
-                    // const filepath = RNFS.DocumentDirectoryPath + '/' + title;
+                    const filepath = RNFS.DocumentDirectoryPath + '/' + title;
 
-                    // RNFS.writeFile(filepath, source, 'binary')
-                    //     .then((success: any) => {
-                    //         console.log('FILE WRITTEN!');
-                    //     })
-                    //     .catch((error: any) => {
-                    //         console.log(error.message);
-                    //     });
+                    RNFS.writeFile(filepath, source, 'binary')
+                        .then((success: any) => {
+                            console.log('file written', title);
+                        })
+                        .catch((error: any) => {
+                            console.log(error.message);
+                        });
                 }}
             />
         </View>
