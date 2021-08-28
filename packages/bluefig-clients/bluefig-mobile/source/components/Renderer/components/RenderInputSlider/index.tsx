@@ -14,6 +14,8 @@
     import {
         Colors,
     } from 'react-native/Libraries/NewAppScreen';
+
+    import Slider from '@react-native-community/slider';
     // #endregion libraries
 
 
@@ -100,7 +102,7 @@ const RenderInputSlider: React.FC<RenderInputSliderProperties> = (
         ? storeValue
         : typeof initial === 'number'
             ? initial
-            : false;
+            : 0;
     // #endregion properties
 
 
@@ -146,7 +148,19 @@ const RenderInputSlider: React.FC<RenderInputSliderProperties> = (
                 </Text>
             )}
 
+            <Slider
+                value={sliderValue}
+                minimumValue={minimum ?? 0}
+                maximumValue={maximum ?? 100}
+                step={step ?? 1}
+                onSlidingComplete={(value) => {
+                    setValue(store, value);
 
+                    if (action) {
+                        sendAction(action);
+                    }
+                }}
+            />
         </View>
     );
     // #endregion render
