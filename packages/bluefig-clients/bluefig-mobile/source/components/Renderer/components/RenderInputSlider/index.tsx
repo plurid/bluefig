@@ -182,6 +182,7 @@ const RenderInputSlider: React.FC<RenderInputSliderProperties> = (
                         action,
                     );
                 }}
+                tapToSeek={true}
                 style={{
                     marginTop: 10,
                 }}
