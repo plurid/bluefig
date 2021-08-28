@@ -18,6 +18,7 @@ export type ViewElement =
     | ViewButton
     | ViewImage
     | ViewFile
+    | ViewDivider
     | ViewList;
 
 
@@ -93,6 +94,10 @@ export interface ViewFile {
     type: 'file';
     title: StringOrPromiseOf;
     source: StringOrPromiseOf;
+}
+
+export interface ViewDivider {
+    type: 'divider';
 }
 
 export interface ViewList {
