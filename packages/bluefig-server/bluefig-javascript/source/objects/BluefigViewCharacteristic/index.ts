@@ -181,12 +181,14 @@ class BluefigViewCharacteristic extends bleno.Characteristic {
                     this.bluefigNotification.bind(this),
                 );
 
-                if (!hook) {
-                    return;
-                }
-
                 if (typeof hook === 'string') {
                     actionPayload.view = hook;
+                }
+
+                if (typeof hook === 'boolean') {
+                    if (!hook) {
+                        return;
+                    }
                 }
             }
 
