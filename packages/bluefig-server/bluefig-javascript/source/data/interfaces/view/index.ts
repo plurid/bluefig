@@ -17,6 +17,7 @@ export type ViewElement =
     | ViewInputSlider
     | ViewButton
     | ViewImage
+    | ViewFile
     | ViewList;
 
 
@@ -86,6 +87,12 @@ export interface ViewImage {
     height?: NumberOrPromiseOf;
     width?: NumberOrPromiseOf;
     alignment?: ViewImageAlignment | PromiseOf<ViewImageAlignment>;
+}
+
+export interface ViewFile {
+    type: 'file';
+    title: StringOrPromiseOf;
+    source: StringOrPromiseOf;
 }
 
 export interface ViewList {
