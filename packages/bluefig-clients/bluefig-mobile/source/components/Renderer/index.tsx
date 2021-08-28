@@ -110,6 +110,8 @@ const Renderer: React.FC<RendererProperties> = (
                                     textAlign: 'center',
                                     color: isDarkMode ? Colors.white : Colors.black,
                                     fontSize: 24,
+                                    marginTop: 20,
+                                    marginBottom: 20,
                                 }}
                             >
                                 {view.title}
