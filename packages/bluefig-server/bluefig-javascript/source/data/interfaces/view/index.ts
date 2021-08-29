@@ -95,6 +95,7 @@ export interface ViewFile {
     type: 'file';
     title: StringOrPromiseOf;
     source: StringOrPromiseOf;
+    contentType?: StringOrPromiseOf;
 }
 
 export interface ViewDivider {

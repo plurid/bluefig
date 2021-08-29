@@ -61,6 +61,21 @@ export const resolveElements = async (
                 }
             }
 
+            if (element.type === 'file') {
+                const {
+                    data,
+                    contentType,
+                } = await readFile(resolvedElement.source);
+                resolvedElement.source = data;
+
+                if (
+                    resolvedElement.contentType &&
+                    resolvedElement.contentType !== contentType
+                ) {
+                    resolvedElement.contentType = contentType;
+                }
+            }
+
             resolvedElements.push(resolvedElement);
         } catch (error) {
             console.log('Error resolving element', element, error);
