@@ -231,8 +231,14 @@ const ViewLocation: React.FC<ViewLocationProperties> = (
                         <View
                             style={{
                                 position: 'absolute',
-                                bottom: 0,
+                                top: 0,
+                                left: 0,
+                                right: 0,
+                                backgroundColor: isDarkMode ? Colors.black : Colors.white,
+                                zIndex: 9,
+                                elevation: 9,
                             }}
+                            pointerEvents="none"
                         >
                             {notifications.map((notification) => {
                                 return (
@@ -242,6 +248,7 @@ const ViewLocation: React.FC<ViewLocationProperties> = (
                                             styles.notice,
                                             {
                                                 color: isDarkMode ? Colors.white : Colors.black,
+                                                textAlign: 'center',
                                             },
                                         ]}
                                     >
