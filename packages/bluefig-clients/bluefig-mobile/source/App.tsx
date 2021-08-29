@@ -29,13 +29,16 @@
     } from './data/constants';
 
     import {
+        Notification,
         ViewRouteClient,
         ActionPayload,
     } from './data/interfaces';
 
     import ViewLocation from './components/ViewLocation';
 
-    import Context from './services/context';
+    import Context, {
+        IContext,
+    } from './services/context';
     import bluetooth from './services/bluetooth';
 
     import {
@@ -68,6 +71,11 @@ const App = () => {
         location,
         setLocation,
     ] = useState('/devices');
+
+    const [
+        notifications,
+        setNotifications,
+    ] = useState<Notification[]>([]);
 
     const [
         loading,
@@ -179,6 +187,66 @@ const App = () => {
     }
 
 
+    const addNotifications = (
+        notifications: string[],
+    ) => {
+        for (const notification of notifications) {
+            addNotification(notification);
+        }
+    }
+
+    const addNotification = (
+        notification: string,
+    ) => {
+        const id = Math.random() + '';
+        const duration = 1_500 + notification.length * 50;
+
+        const data: Notification = {
+            id,
+            text: notification,
+        };
+
+        setNotifications(notifications => ([
+            ...notifications,
+            data,
+        ]));
+
+        setTimeout(() => {
+            removeNotification(id);
+        }, duration);
+    }
+
+    const removeNotification = (
+        id: string,
+    ) => {
+        setNotifications(
+            notifications => notifications.filter(notification => notification.id !== id),
+        );
+    }
+
+    const handleNewView = (
+        view: any,
+        characteristic: Characteristic,
+    ) => {
+        const identifiedView = identifyView(view);
+        if (!identifiedView) {
+            setViewError('invalid view');
+            return;
+        }
+
+        if (view.token) {
+            setAccessToken(view.token);
+        }
+
+        if (view.notifications) {
+            addNotifications(view.notifications);
+        }
+
+        setView(identifiedView);
+        setViewError('');
+        setViewCharacteristic(characteristic);
+    }
+
     const getView = async (
         location: string,
     ) => {
@@ -205,19 +273,10 @@ const App = () => {
                 return;
             }
 
-            if (view.token) {
-                setAccessToken(view.token);
-            }
-
-            const identifiedView = identifyView(view);
-            if (!identifiedView) {
-                setViewError('invalid view');
-                return;
-            }
-
-            setView(identifiedView);
-            setViewError('');
-            setViewCharacteristic(characteristic);
+            handleNewView(
+                view,
+                characteristic,
+            );
         } catch (error) {
             setViewError('no view');
         }
@@ -234,10 +293,6 @@ const App = () => {
                 || !viewCharacteristic
                 || !view
             ) {
-                return;
-            }
-
-            if (!view.actions) {
                 return;
             }
 
@@ -285,7 +340,6 @@ const App = () => {
                 accessToken,
                 true,
             );
-            setViewCharacteristic(characteristic);
 
             if (!finished) {
                 return;
@@ -300,18 +354,19 @@ const App = () => {
                     return;
                 }
 
-                const identifiedView = identifyView(view);
-                if (!identifiedView) {
-                    setViewError('invalid view');
-                    return;
-                }
-                setView(identifiedView);
+                handleNewView(
+                    view,
+                    characteristic,
+                );
             }
         } catch (error) {
             console.log('error', error);
         }
     }, [
         valuesStore,
+        activeDevice,
+        viewCharacteristic,
+        view,
     ]);
 
     const setValue = useCallback((
@@ -466,8 +521,9 @@ const App = () => {
 
 
     // #region context
-    const context = {
+    const context: IContext = {
         view,
+        notifications,
         isDarkMode,
 
         setValue,

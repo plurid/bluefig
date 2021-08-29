@@ -76,6 +76,7 @@ const ViewLocation: React.FC<ViewLocationProperties> = (
 
     const {
         view,
+        notifications,
         isDarkMode,
     } = context;
     // #endregion context
@@ -225,6 +226,31 @@ const ViewLocation: React.FC<ViewLocationProperties> = (
                     <Renderer
                         key={'renderer' + location}
                     />
+
+                    {notifications.length > 0 && (
+                        <View
+                            style={{
+                                position: 'absolute',
+                                bottom: 0,
+                            }}
+                        >
+                            {notifications.map((notification) => {
+                                return (
+                                    <Text
+                                        key={notification.id}
+                                        style={[
+                                            styles.notice,
+                                            {
+                                                color: isDarkMode ? Colors.white : Colors.black,
+                                            },
+                                        ]}
+                                    >
+                                        {notification.text}
+                                    </Text>
+                                );
+                            })}
+                        </View>
+                    )}
                 </View>
             );
         default:
