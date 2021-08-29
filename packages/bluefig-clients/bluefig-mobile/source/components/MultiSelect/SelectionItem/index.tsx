@@ -27,7 +27,7 @@
 // #region module
 const styles = StyleSheet.create({
     container: {
-        padding: 20,
+        padding: 10,
         display: 'flex',
         justifyContent: 'space-between',
         flexDirection: 'row',
