@@ -25,6 +25,7 @@ export type ViewActionServer =
 
 
 export interface ViewRouteServer {
+    location?: string;
     title?: string;
     elements?: ViewElement[];
     actions?: Record<string, ViewActionServer | undefined>;
@@ -35,6 +36,6 @@ export type ViewsServer = Record<string, ViewRouteServer | undefined>;
 
 
 export type BluefigNotification = (
-    notifcation: string,
+    notification: string,
 ) => void;
 // #endregion module

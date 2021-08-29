@@ -48,7 +48,7 @@ class BluefigViewCharacteristic extends bleno.Characteristic {
     private chunks: Record<string, any> = {};
 
     private reading: Reading | null = null;
-    private readings: Record<string, any> = {};
+    private readings: Record<string, ViewRouteServer | any> = {};
     private notifications: string[] = [];
 
 
@@ -84,9 +84,33 @@ class BluefigViewCharacteristic extends bleno.Characteristic {
     }
 
 
+    private resolveViewLocation(
+        view: ViewRouteServer,
+    ) {
+        if (view.location) {
+            return view.location;
+        }
+
+        for (const [key, value] of Object.entries(this.views)) {
+            if (!value) {
+                continue;
+            }
+
+            if (
+                view.title === value.title
+                && view.elements?.length === value.elements?.length
+                && view.actions?.length === value.actions?.length
+            ) {
+                return key;
+            }
+        }
+
+        return;
+    }
+
     private async resolveViewable(
         view: ViewRouteServer,
-        location: string,
+        location?: string,
     ) {
         const {
             title,
@@ -112,7 +136,7 @@ class BluefigViewCharacteristic extends bleno.Characteristic {
         const resolvedElements = await resolveElements(elements);
 
         const viewable: ViewRouteClient = {
-            location,
+            location: location || view.location || `/${Math.random()}`,
             title,
             elements: resolvedElements,
             actions: viewableActions,
@@ -131,13 +155,16 @@ class BluefigViewCharacteristic extends bleno.Characteristic {
     ) {
         if (resource.startsWith('response:')) {
             const id = resource.replace('response:', '');
+            if (!id) {
+                return;
+            }
+
             const view = this.readings[id];
             if (!view) {
                 return;
             }
             const viewable = await this.resolveViewable(
                 view,
-                `/_bluefig-response/${id}`,
             );
             return viewable;
         }
@@ -167,11 +194,10 @@ class BluefigViewCharacteristic extends bleno.Characteristic {
     ) {
         try {
             const actionPayload = base64ToData<ActionPayload>(data);
-            if (!actionPayload) {
-                return;
-            }
-
-            if (!actionPayload.view) {
+            if (
+                !actionPayload
+                || !actionPayload.view
+            ) {
                 return;
             }
 
@@ -265,7 +291,15 @@ class BluefigViewCharacteristic extends bleno.Characteristic {
             );
 
             if (actionResult) {
-                this.readings[id] = actionResult;
+                const location = this.resolveViewLocation(actionResult);
+                if (!location) {
+                    return;
+                }
+
+                this.readings[id] = {
+                    location,
+                    ...actionResult,
+                };
                 this.reading = {
                     resource: `response:${id}`,
                     id,
