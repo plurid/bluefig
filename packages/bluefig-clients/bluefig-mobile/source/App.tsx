@@ -10,7 +10,6 @@
         SafeAreaView,
         StatusBar,
 
-        StyleSheet,
         useColorScheme,
     } from 'react-native';
 
@@ -54,10 +53,6 @@
 
 
 // #region module
-const styles = StyleSheet.create({
-});
-
-
 const App = () => {
     // #region properties
     const isDarkMode = useColorScheme() === 'dark';
@@ -122,7 +117,7 @@ const App = () => {
 
 
     // #region handlers
-    const scanAndConnect = () => {
+    const deviceScan = () => {
         let timeoutSet = false;
         const scannedDevices: Device[]  = [];
         const scanStart = Date.now();
@@ -180,7 +175,7 @@ const App = () => {
         setDevices([]);
         setActiveDevice(null);
 
-        scanAndConnect();
+        deviceScan();
     }
 
 
@@ -368,6 +363,7 @@ const App = () => {
         setValuesStore({});
         setLocation('/device');
 
+
         device.onDisconnected((error) => {
             if (error) {
                 console.log('Disconnected error', error);
@@ -395,7 +391,7 @@ const App = () => {
         setLoading(true);
         setLocation('/devices');
 
-        scanAndConnect();
+        deviceScan();
     }
     // #endregion handlers
 
@@ -405,7 +401,7 @@ const App = () => {
         bluetooth.onStateChange((state) => {
             const subscription = bluetooth.onStateChange((state) => {
                 if (state === 'PoweredOn') {
-                    scanAndConnect();
+                    deviceScan();
                     subscription.remove();
                 }
             }, true);
