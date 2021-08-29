@@ -1,15 +1,17 @@
 // #region module
 const hooks = {
-    beforeRead: async (
-        view,
+    checkToken: async (
+        token,
+        notify,
     ) => {
-        console.log('beforeRead hook called', view);
+        console.log('checkToken hook called', token);
         return true;
     },
-    beforeWrite: async (
-        view,
+    beforeAction: async (
+        payload,
+        notify,
     ) => {
-        console.log('beforeWrite hook called', view);
+        console.log('beforeAction hook called', payload);
         return true;
     },
 };
