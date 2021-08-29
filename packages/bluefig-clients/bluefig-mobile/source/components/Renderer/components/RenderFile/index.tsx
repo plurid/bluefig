@@ -8,6 +8,7 @@
         View,
         Text,
         Button,
+        Share,
 
         StyleSheet,
     } from 'react-native';
@@ -108,16 +109,19 @@ const RenderFile: React.FC<RenderFileProperties> = (
             </Text>
 
             <Button
-                title="Download"
+                title="Save"
                 onPress={() => {
                     const filepath = RNFS.DocumentDirectoryPath + '/' + title;
 
-                    RNFS.writeFile(filepath, source, 'binary')
-                        .then((success: any) => {
-                            console.log('file written', title);
+                    RNFS.writeFile(filepath, source, 'base64')
+                        .then(() => {
+                            Share.share({
+                                url: filepath,
+                                title,
+                            });
                         })
                         .catch((error: any) => {
-                            console.log(error.message);
+                            console.log('RNFS error', error);
                         });
                 }}
             />

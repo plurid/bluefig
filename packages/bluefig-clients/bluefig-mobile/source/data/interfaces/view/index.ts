@@ -82,6 +82,7 @@ export interface ViewFile {
     type: 'file';
     title: string;
     source: string;
+    contentType?: string;
 }
 
 export interface ViewDivider {
