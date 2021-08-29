@@ -442,7 +442,7 @@ class BluefigViewCharacteristic extends bleno.Characteristic {
         if (nextChunkIndex === readingData.chunks.length - 1) {
             // last chunk was sent
             this.reading = null;
-            delete this.readings[id];
+            this.readings = {};
         } else {
             // sending intermediary chunks
             this.readings[id].sent += 1;
