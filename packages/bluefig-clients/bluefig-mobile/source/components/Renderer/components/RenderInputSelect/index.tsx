@@ -167,9 +167,7 @@ const RenderInputSelect: React.FC<RenderInputSelectProperties> = (
             }
         }
 
-        return [
-            options[0],
-        ];
+        return [];
     }
     const selected = resolveSelectedValue();
     // #endregion properties
@@ -193,6 +191,7 @@ const RenderInputSelect: React.FC<RenderInputSelectProperties> = (
                 && typeof initial === 'number'
             ) {
                 setValue(store, [initial, options[initial]]);
+                return;
             }
 
             if (
@@ -203,19 +202,19 @@ const RenderInputSelect: React.FC<RenderInputSelectProperties> = (
 
                 if (initialIndex >= 0) {
                     setValue(store, [initialIndex, options[initialIndex]]);
-                } else {
-                    setValue(store, [0, options[0]]);
+                    return;
                 }
             }
+
+            return;
         }
+
 
         if (
             typeof storeValue === 'undefined'
             && typeof initial === 'undefined'
         ) {
-            setValue(store, [
-                [0, options[0]],
-            ]);
+            setValue(store, []);
             return;
         }
 
@@ -224,8 +223,9 @@ const RenderInputSelect: React.FC<RenderInputSelectProperties> = (
             && typeof initial === 'number'
         ) {
             setValue(store, [
-                [initial, options[initial]],
+                options[initial],
             ]);
+            return;
         }
 
         if (
@@ -236,12 +236,9 @@ const RenderInputSelect: React.FC<RenderInputSelectProperties> = (
 
             if (initialIndex >= 0) {
                 setValue(store, [
-                    [initialIndex, options[initialIndex]],
+                    options[initialIndex],
                 ]);
-            } else {
-                setValue(store, [
-                    [0, options[0]],
-                ]);
+                return;
             }
         }
     }, []);
