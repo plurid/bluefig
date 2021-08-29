@@ -52,5 +52,15 @@ const main = () => {
 }
 
 
-main();
+if (require.main === module) {
+    main();
+}
 // #endregion module
+
+
+
+// #region exports
+export * from '~data/interfaces';
+
+export default main;
+// #endregion exports
