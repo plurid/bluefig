@@ -367,10 +367,22 @@ const App = () => {
         setActiveDevice(device);
         setValuesStore({});
         setLocation('/device');
+
+        device.onDisconnected((error) => {
+            if (error) {
+                console.log('Disconnected error', error);
+            }
+
+            handleDisconnect();
+        });
     }
 
-    const handleDisconnect = () => {
+    const handleDisconnect = async () => {
         // reset device data
+        if (activeDevice) {
+            await bluetooth.cancelDeviceConnection(activeDevice.id);
+        }
+
         setDevices([]);
         setActiveDevice(null);
         setViewCharacteristic(null);
