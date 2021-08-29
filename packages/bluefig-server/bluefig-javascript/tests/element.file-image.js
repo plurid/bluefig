@@ -1,12 +1,12 @@
 // #region module
 const views = {
     '/': {
-        title: 'file',
+        title: 'file image',
         elements: [
             {
                 type: 'file',
-                title: 'Sample File.png',
-                source: 'a-file.txt',
+                title: 'Sample File Image.png',
+                source: 'an-image.png',
             },
         ],
     },
