@@ -101,7 +101,7 @@ export const readData = async (
             data,
         };
     } catch (error) {
-        console.log('error', error);
+        console.log('readData error', error);
 
         return {
             finished: false,
@@ -219,7 +219,7 @@ export const writeData = async (
             data: responseData,
         };
     } catch (error) {
-        console.log('error', error);
+        console.log('writeData error', error);
 
         return {
             finished: false,
