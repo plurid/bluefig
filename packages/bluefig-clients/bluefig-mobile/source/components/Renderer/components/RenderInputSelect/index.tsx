@@ -94,13 +94,13 @@ const RenderInputSelect: React.FC<RenderInputSelectProperties> = (
         initial,
         title,
         action,
-        exclusive,
+        multiple,
     } = element;
 
     const storeValue = getValue(store);
 
     const resolveSelectedValue = () => {
-        if (exclusive) {
+        if (!multiple) {
             if (typeof storeValue !== 'undefined') {
                 return storeValue[1];
             }
@@ -177,7 +177,7 @@ const RenderInputSelect: React.FC<RenderInputSelectProperties> = (
     useEffect(() => {
         const storeValue = getValue(store);
 
-        if (exclusive) {
+        if (!multiple) {
             if (
                 typeof storeValue === 'undefined'
                 && typeof initial === 'undefined'
@@ -265,7 +265,7 @@ const RenderInputSelect: React.FC<RenderInputSelectProperties> = (
                 </Text>
             )}
 
-            {exclusive && (
+            {!multiple && (
                 <Picker
                     selectedValue={selected}
                     onValueChange={(itemValue, itemIndex) => {
@@ -289,7 +289,7 @@ const RenderInputSelect: React.FC<RenderInputSelectProperties> = (
                 </Picker>
             )}
 
-            {!exclusive && (
+            {multiple && (
                 <MultiSelect
                     items={options}
                     selected={selected}

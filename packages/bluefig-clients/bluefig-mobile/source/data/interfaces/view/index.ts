@@ -33,11 +33,11 @@ export interface ViewInputSelect {
      */
     options: string[];
     store: string;
+    initial?: string | number | (string | number)[];
     /**
-     * Make the selection exclusive to one item.
+     * Allow for multiple selection.
      */
-    initial?: string | number;
-    exclusive?: boolean;
+    multiple?: boolean;
     /**
      * Set initial value, index of `options`.
      */
