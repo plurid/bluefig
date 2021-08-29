@@ -303,11 +303,12 @@ class BluefigViewCharacteristic extends bleno.Characteristic {
                         data,
                         allow,
                     );
-
-                    if (resourceRead) {
-                        callback(this.RESULT_SUCCESS);
+                    if (!resourceRead) {
+                        callback(this.RESULT_UNLIKELY_ERROR);
                         return;
                     }
+
+                    callback(this.RESULT_SUCCESS);
                     return;
                 }
 
@@ -330,7 +331,6 @@ class BluefigViewCharacteristic extends bleno.Characteristic {
             await this.handleChunkWriting(data);
             callback(this.RESULT_SUCCESS);
         } catch (error) {
-            // action definition error
             callback(this.RESULT_UNLIKELY_ERROR);
         }
     }
