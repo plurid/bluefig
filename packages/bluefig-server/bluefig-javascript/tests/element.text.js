@@ -20,7 +20,7 @@ const views = {
         },
     },
     '/long-text': {
-        title: 'text',
+        title: 'text long',
         elements: [
             {
                 type: 'text',
