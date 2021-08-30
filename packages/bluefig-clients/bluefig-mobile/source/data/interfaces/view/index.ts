@@ -23,6 +23,7 @@ export interface ViewInputText {
     title?: string;
     store: string;
     initial?: string;
+    secure?: boolean;
 }
 
 export interface ViewInputSelect {

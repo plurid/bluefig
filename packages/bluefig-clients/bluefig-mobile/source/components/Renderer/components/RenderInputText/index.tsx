@@ -85,6 +85,7 @@ const RenderInputText: React.FC<RenderInputTextProperties> = (
         store,
         title,
         initial,
+        secure,
     } = element;
 
     const storeValue = getValue(store);
@@ -160,6 +161,7 @@ const RenderInputText: React.FC<RenderInputTextProperties> = (
                 autoCorrect={false}
                 autoCapitalize="none"
                 autoCompleteType="off"
+                secureTextEntry={secure}
             />
         </View>
     );
