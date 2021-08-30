@@ -78,6 +78,7 @@ const Renderer: React.FC<RendererProperties> = (
     const {
         view,
         isDarkMode,
+        sendingAction,
     } = context;
     if (
         !view
@@ -98,7 +99,11 @@ const Renderer: React.FC<RendererProperties> = (
             <View
                 style={[
                     styles.container,
+                    {
+                        opacity: sendingAction ? 0.3 : 1,
+                    },
                 ]}
+                pointerEvents={sendingAction ? 'none' : 'auto'}
             >
                 <ScrollView
                     contentContainerStyle={{

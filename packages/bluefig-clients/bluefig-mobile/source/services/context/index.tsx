@@ -19,6 +19,7 @@ export interface IContext {
     view: ViewRouteClient | null;
     notifications: Notification[];
     isDarkMode: boolean;
+    sendingAction: boolean;
 
     setValue: (key: string, value: any, action?: string) => void;
     getValue: (key: string) => any;

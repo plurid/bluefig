@@ -83,6 +83,11 @@ const App = () => {
     ] = useState(true);
 
     const [
+        sendingAction,
+        setSendingAction,
+    ] = useState(false);
+
+    const [
         devices,
         setDevices,
     ] = useState<Device[]>([]);
@@ -297,6 +302,8 @@ const App = () => {
             }
 
 
+            setSendingAction(true);
+
             const collectArguments = () => {
                 const actionArguments: Record<string, any> = {};
 
@@ -340,6 +347,7 @@ const App = () => {
                 accessToken,
                 true,
             );
+            setSendingAction(false);
 
             if (!finished) {
                 return;
@@ -361,6 +369,7 @@ const App = () => {
             }
         } catch (error) {
             console.log('error', error);
+            setSendingAction(false);
         }
     }, [
         valuesStore,
@@ -525,6 +534,7 @@ const App = () => {
         view,
         notifications,
         isDarkMode,
+        sendingAction,
 
         setValue,
         getValue,
