@@ -150,11 +150,8 @@ const RenderInputSwitch: React.FC<RenderInputSwitchProperties> = (
                     setValue(
                         store,
                         value,
+                        action,
                     );
-
-                    if (action) {
-                        sendAction(action);
-                    }
                 }}
                 trackColor={{
                     true: '#454f54',
