@@ -13,7 +13,8 @@ export type ViewActionResult = Promise<ViewRouteServer | void>;
 
 export type ViewActionExecution<P = Record<string, any>> = (
     payload: P | undefined,
-    bluefigNotification: BluefigNotification,
+    notify: BluefigNotification,
+    event: BluefigEvent,
 ) => ViewActionResult;
 
 
@@ -37,5 +38,11 @@ export type ViewsServer = Record<string, ViewRouteServer | undefined>;
 
 export type BluefigNotification = (
     notification: string,
+) => void;
+
+
+export type BluefigEvent = (
+    type: string,
+    payload?: any,
 ) => void;
 // #endregion module

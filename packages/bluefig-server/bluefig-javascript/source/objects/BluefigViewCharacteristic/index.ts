@@ -50,6 +50,7 @@ class BluefigViewCharacteristic extends bleno.Characteristic {
     private reading: Reading | null = null;
     private readings: Record<string, ViewRouteServer | any> = {};
     private notifications: string[] = [];
+    private token = '';
 
 
     constructor() {
@@ -189,6 +190,21 @@ class BluefigViewCharacteristic extends bleno.Characteristic {
         this.notifications.push(notification);
     }
 
+    private async bluefigEvent(
+        type: string,
+        payload?: any,
+    ) {
+        type = type.trim().toLowerCase();
+
+        switch (type) {
+            case 'set-token':
+                if (typeof payload === 'string') {
+                    this.token = payload;
+                }
+                break;
+        }
+    }
+
     private async triggerAction(
         data: string,
     ) {
@@ -233,6 +249,7 @@ class BluefigViewCharacteristic extends bleno.Characteristic {
                 return await actionData(
                     undefined,
                     this.bluefigNotification.bind(this),
+                    this.bluefigEvent.bind(this),
                 );
             }
 
@@ -241,6 +258,7 @@ class BluefigViewCharacteristic extends bleno.Characteristic {
                     ...actionPayload.arguments,
                 },
                 this.bluefigNotification.bind(this),
+                this.bluefigEvent.bind(this),
             );
         } catch (error) {
             return;
@@ -386,11 +404,16 @@ class BluefigViewCharacteristic extends bleno.Characteristic {
             id,
         } = this.reading;
 
-        const baseResponse = {
+        const baseResponse: WriteChunk = {
             id,
             data: '',
             end: 0,
         };
+
+        if (this.token) {
+            baseResponse.token = this.token;
+            this.token = '';
+        }
 
         const readingData = this.readings[id];
 
