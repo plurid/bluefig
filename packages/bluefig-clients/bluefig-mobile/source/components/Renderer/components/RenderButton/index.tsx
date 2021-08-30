@@ -25,6 +25,9 @@
 
 // #region module
 const styles = StyleSheet.create({
+    container: {
+        padding: 10,
+    },
 });
 
 
@@ -67,15 +70,21 @@ const RenderButton: React.FC<RenderButtonProperties> = (
     }
 
     return (
-        <Button
-            key={Math.random() + ''}
-            title={element.title}
-            onPress={() => {
-                sendAction(
-                    element.action,
-                );
-            }}
-        />
+        <View
+            style={[
+                styles.container,
+            ]}
+        >
+            <Button
+                key={Math.random() + ''}
+                title={element.title}
+                onPress={() => {
+                    sendAction(
+                        element.action,
+                    );
+                }}
+            />
+        </View>
     );
     // #endregion render
 }

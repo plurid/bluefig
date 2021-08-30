@@ -156,6 +156,10 @@ const RenderInputText: React.FC<RenderInputTextProperties> = (
                     },
                 ]}
                 placeholder={title}
+                spellCheck={false}
+                autoCorrect={false}
+                autoCapitalize="none"
+                autoCompleteType="off"
             />
         </View>
     );
