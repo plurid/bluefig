@@ -221,6 +221,7 @@ class BluefigViewCharacteristic extends bleno.Characteristic {
                 const hook = await this.hooks.beforeAction(
                     actionPayload,
                     this.bluefigNotification.bind(this),
+                    this.bluefigEvent.bind(this),
                 );
 
                 if (typeof hook === 'string') {
@@ -344,39 +345,46 @@ class BluefigViewCharacteristic extends bleno.Characteristic {
             }
 
 
-            if (this.hooks?.checkToken) {
-                const allow = await this.hooks.checkToken(
-                    data.token,
-                    this.bluefigNotification.bind(this),
-                );
-
-                if (typeof allow === 'string') {
-                    const resourceRead = this.handleResourceRead(
-                        data,
-                        allow,
+            if (typeof (data as Request).resource === 'string') {
+                if (
+                    this.hooks?.checkToken
+                ) {
+                    const allow = await this.hooks.checkToken(
+                        {
+                            token: this.token || data.token,
+                        },
+                        this.bluefigNotification.bind(this),
+                        this.bluefigEvent.bind(this),
                     );
-                    if (!resourceRead) {
-                        callback(this.RESULT_UNLIKELY_ERROR);
+
+                    if (typeof allow === 'string') {
+                        const resourceRead = this.handleResourceRead(
+                            data,
+                            allow,
+                        );
+                        if (!resourceRead) {
+                            callback(this.RESULT_UNLIKELY_ERROR);
+                            return;
+                        }
+
+                        callback(this.RESULT_SUCCESS);
                         return;
                     }
 
+                    if (typeof allow === 'boolean') {
+                        if (!allow) {
+                            callback(this.RESULT_UNLIKELY_ERROR);
+                            return;
+                        }
+                    }
+                }
+
+
+                const resourceRead = this.handleResourceRead(data);
+                if (resourceRead) {
                     callback(this.RESULT_SUCCESS);
                     return;
                 }
-
-                if (typeof allow === 'boolean') {
-                    if (!allow) {
-                        callback(this.RESULT_UNLIKELY_ERROR);
-                        return;
-                    }
-                }
-            }
-
-
-            const resourceRead = this.handleResourceRead(data);
-            if (resourceRead) {
-                callback(this.RESULT_SUCCESS);
-                return;
             }
 
 

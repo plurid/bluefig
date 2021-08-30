@@ -2,6 +2,7 @@
     // #region internal
     import {
         BluefigNotification,
+        BluefigEvent,
     } from '../general';
 
     import {
@@ -22,12 +23,16 @@ export type HookResponse = Promise<boolean | string | void>;
 
 export interface Hooks {
     checkToken?: (
-        token: string | undefined,
-        bluefigNotification: BluefigNotification,
+        payload: {
+            token: string | undefined,
+        },
+        notify: BluefigNotification,
+        event: BluefigEvent,
     ) => HookResponse;
     beforeAction?: (
         payload: ActionPayload,
-        bluefigNotification: BluefigNotification,
+        notify: BluefigNotification,
+        event: BluefigEvent,
     ) => HookResponse;
 }
 // #endregion module
