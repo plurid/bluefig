@@ -34,6 +34,7 @@ export interface ViewInputText {
     title?: StringOrPromiseOf;
     store: StringOrPromiseOf;
     initial?: StringOrPromiseOf;
+    secure?: BooleanOrPromiseOf;
 }
 
 export interface ViewInputSelect {
