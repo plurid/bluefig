@@ -29,6 +29,7 @@ export interface Response {
     id?: string;
     data: string;
     end: boolean;
+    token?: string;
 }
 
 export interface GetResponse {
@@ -49,6 +50,9 @@ export const readData = async (
     characteristic: Characteristic,
     resource: string,
     token?: string,
+    setToken?: (
+        token: string,
+    ) => void,
 ): Promise<GetResponse> => {
     try {
         let data = '';
@@ -82,6 +86,10 @@ export const readData = async (
 
             if (response.id) {
                 id = response.id;
+            }
+
+            if (setToken && response.token) {
+                setToken(response.token);
             }
 
             if (response.end) {
@@ -173,6 +181,9 @@ export const writeData = async (
     characteristic: Characteristic,
     resource: string,
     token?: string,
+    setToken?: (
+        token: string,
+    ) => void,
     expectResponse?: boolean,
 ): Promise<WriteResponse> => {
     try {
@@ -204,6 +215,7 @@ export const writeData = async (
                 characteristic,
                 'response:' + id,
                 token,
+                setToken,
             );
 
             if (response.finished) {

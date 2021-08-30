@@ -230,26 +230,25 @@ const App = () => {
     }
 
     const handleNewView = (
-        view: any,
+        view: ViewRouteClient,
         characteristic: Characteristic,
     ) => {
+        setViewCharacteristic(characteristic);
+
         const identifiedView = identifyView(view);
         if (!identifiedView) {
             setViewError('invalid view');
             return;
         }
 
-        if (view.token) {
-            setAccessToken(view.token);
-        }
+        setValuesStore({});
 
         if (view.notifications) {
             addNotifications(view.notifications);
         }
 
-        setView(identifiedView);
         setViewError('');
-        setViewCharacteristic(characteristic);
+        setView(identifiedView);
     }
 
     const getView = async (
@@ -345,6 +344,9 @@ const App = () => {
                 viewCharacteristic,
                 dataToBase64(actionPayload),
                 accessToken,
+                (token) => {
+                    setAccessToken(token);
+                },
                 true,
             );
             setSendingAction(false);
