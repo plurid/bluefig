@@ -20,7 +20,7 @@ export type ViewActionExecution<P = Record<string, any>> = (
 
 export type ViewActionServer =
     | {
-        arguments: any[];
+        arguments: string[];
         execution: ViewActionExecution;
     } | ViewActionExecution;
 
