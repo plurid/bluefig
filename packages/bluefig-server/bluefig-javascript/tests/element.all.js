@@ -1,5 +1,92 @@
 // #region module
 const views = {
+    '/': {
+        title: 'elements',
+        elements: [
+            {
+                type: 'button',
+                title: 'Text',
+                action: 'viewText',
+            },
+            {
+                type: 'button',
+                title: 'Input Text',
+                action: 'viewInputText',
+            },
+            {
+                type: 'button',
+                title: 'Input Select',
+                action: 'viewInputSelect',
+            },
+            {
+                type: 'button',
+                title: 'Input Switch',
+                action: 'viewInputSwitch',
+            },
+            {
+                type: 'button',
+                title: 'Input Slider',
+                action: 'viewInputSlider',
+            },
+            {
+                type: 'button',
+                title: 'Button',
+                action: 'viewButton',
+            },
+            {
+                type: 'button',
+                title: 'Image',
+                action: 'viewImage',
+            },
+            {
+                type: 'button',
+                title: 'File',
+                action: 'viewFile',
+            },
+            {
+                type: 'button',
+                title: 'Divider',
+                action: 'viewDivider',
+            },
+            {
+                type: 'button',
+                title: 'List',
+                action: 'viewList',
+            },
+        ],
+        actions: {
+            'viewText': async () => {
+                return views['/text'];
+            },
+            'viewInputText': async () => {
+                return views['/input-text'];
+            },
+            'viewInputSelect': async () => {
+                return views['/input-select'];
+            },
+            'viewInputSwitch': async () => {
+                return views['/input-switch'];
+            },
+            'viewInputSlider': async () => {
+                return views['/input-slider'];
+            },
+            'viewButton': async () => {
+                return views['/button'];
+            },
+            'viewImage': async () => {
+                return views['/image'];
+            },
+            'viewFile': async () => {
+                return views['/file'];
+            },
+            'viewDivider': async () => {
+                return views['/divider'];
+            },
+            'viewList': async () => {
+                return views['/list'];
+            },
+        },
+    },
     '/text': {
         title: 'text',
         elements: [
