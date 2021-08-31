@@ -123,7 +123,7 @@ the `bluefig-client` will then render an interface with a text input field which
 The `bluefig-server` will output at click
 
 ```
-> Click action called User input
+> Click action called input text
 ```
 
 
