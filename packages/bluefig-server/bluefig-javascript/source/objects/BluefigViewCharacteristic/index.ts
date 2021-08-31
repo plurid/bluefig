@@ -21,6 +21,7 @@
 
         Request,
         Reading,
+        ReadingData,
         WriteChunk,
     } from '~data/interfaces';
 
@@ -48,7 +49,7 @@ class BluefigViewCharacteristic extends bleno.Characteristic {
     private chunks: Record<string, any> = {};
 
     private reading: Reading | null = null;
-    private readings: Record<string, ViewRouteServer | any> = {};
+    private readings: Record<string, ViewRouteServer | ReadingData> = {};
     private notifications: string[] = [];
     private token = '';
 
@@ -165,7 +166,7 @@ class BluefigViewCharacteristic extends bleno.Characteristic {
                 return;
             }
             const viewable = await this.resolveViewable(
-                view,
+                view as ViewRouteServer,
             );
             return viewable;
         }
@@ -456,9 +457,8 @@ class BluefigViewCharacteristic extends bleno.Characteristic {
             return;
         }
 
-
-        const nextChunkIndex = readingData.sent + 1;
-        const nextChunk = readingData.chunks[nextChunkIndex];
+        const nextChunkIndex = (readingData as ReadingData).sent + 1;
+        const nextChunk = (readingData as ReadingData).chunks[nextChunkIndex];
         if (!nextChunk) {
             callback(this.RESULT_UNLIKELY_ERROR);
             return;
@@ -470,13 +470,13 @@ class BluefigViewCharacteristic extends bleno.Characteristic {
             Buffer.from(nextChunk),
         );
 
-        if (nextChunkIndex === readingData.chunks.length - 1) {
+        if (nextChunkIndex === (readingData as ReadingData).chunks.length - 1) {
             // last chunk was sent
             this.reading = null;
             this.readings = {};
         } else {
             // sending intermediary chunks
-            this.readings[id].sent += 1;
+            (this.readings[id] as ReadingData).sent += 1;
         }
     }
 }

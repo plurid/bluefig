@@ -12,6 +12,12 @@ export interface Reading {
 }
 
 
+export interface ReadingData {
+    chunks: string[];
+    sent: number;
+}
+
+
 export interface WriteChunk {
     id: string;
     token?: string;
