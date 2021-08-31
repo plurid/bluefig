@@ -72,6 +72,7 @@ if (require.main === module) {
 
 // #region exports
 export * from '~data/interfaces';
+export * from '~data/constants/bluefig';
 
 export {
     BluefigService,
