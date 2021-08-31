@@ -30,6 +30,7 @@
 
 The `bluefig-server` runs on the device and the user connects to it through the `bluefig-client`, running on a common user terminal.
 
+The user then interacts with the `bluefig-client`, effectively changing the internal state of the `bluefig-server` machine, within the limits of the `views` (`elements` and `actions`) specified by the `bluefig-server`.
 
 
 ### Contents
