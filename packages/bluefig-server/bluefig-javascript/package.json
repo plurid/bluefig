@@ -28,6 +28,9 @@
     "main": "distribution/index.js",
     "module": "distribution/index.es.js",
     "typings": "distribution/index.d.ts",
+    "bin": {
+        "bluefig": "binder/bluefig"
+    },
     "files": [
         "distribution"
     ],
