@@ -11,7 +11,7 @@
 
     // #region external
     import {
-        viewsPath,
+        VIEWS_PATH,
     } from '~data/constants';
 
     import {
@@ -84,7 +84,7 @@ export const readFile = async (
     const absolutePath = path.isAbsolute(source)
         ? source
         : path.join(
-            path.dirname(viewsPath),
+            path.dirname(VIEWS_PATH),
             source,
         );
 

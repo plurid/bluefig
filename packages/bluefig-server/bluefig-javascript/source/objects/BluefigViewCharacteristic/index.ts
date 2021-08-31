@@ -9,8 +9,8 @@
         BLUEFIG_VIEW_CHARACTERISTIC_UUID,
         BLUEFIG_RESPONSE,
 
-        hooksPath,
-        viewsPath,
+        HOOKS_PATH,
+        VIEWS_PATH,
     } from '~data/constants';
 
     import {
@@ -74,15 +74,21 @@ class BluefigViewCharacteristic extends bleno.Characteristic {
 
     private loadConfiguration() {
         try {
-            const views = require(viewsPath);
+            const views = require(VIEWS_PATH);
             this.views = views;
-            console.log('Views loaded.');
-
-            const hooks = require(hooksPath);
-            this.hooks = hooks;
-            console.log('Hooks loaded.');
+            console.log('bluefig loaded views');
         } catch (error) {
-            console.log('Could not load.');
+            console.log('bluefig could not load views');
+        }
+
+        try {
+            if (HOOKS_PATH) {
+                const hooks = require(HOOKS_PATH);
+                this.hooks = hooks;
+                console.log('bluefig loaded hooks');
+            }
+        } catch (error) {
+            console.log('bluefig could not load hooks');
         }
     }
 

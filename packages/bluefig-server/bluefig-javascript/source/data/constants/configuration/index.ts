@@ -8,16 +8,16 @@
 
 
 // #region module
-export const BLUEFIG_SERVICE_NAME = process.env.BLUEFIG_SERVICE_NAME || 'Bluefig';
+export const SERVICE_NAME = process.env.BLUEFIG_SERVICE_NAME || 'Bluefig';
 
 
-export const hooksPath = process.env.BLUEFIG_HOOKS_PATH || path.join(
+export const HOOKS_PATH = process.env.BLUEFIG_HOOKS_PATH ?? path.join(
     os.homedir(),
     '.bluefig/hooks.js',
 );
 
 
-export const viewsPath = process.env.BLUEFIG_VIEWS_PATH || path.join(
+export const VIEWS_PATH = process.env.BLUEFIG_VIEWS_PATH || path.join(
     os.homedir(),
     '.bluefig/views.js',
 );

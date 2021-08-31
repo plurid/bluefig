@@ -6,7 +6,7 @@
 
     // #region internal
     import {
-        BLUEFIG_SERVICE_NAME,
+        SERVICE_NAME,
 
         BLUETOOTH,
     } from './data/constants';
@@ -32,7 +32,7 @@ const main = (
 
         if (state === BLUETOOTH.POWERED_ON) {
             bleno.startAdvertising(
-                BLUEFIG_SERVICE_NAME,
+                SERVICE_NAME,
                 [bluefigService.uuid],
                 (error) => {
                     if (error) {
