@@ -26,7 +26,7 @@
 
     import {
         resolveElements,
-    } from '~services/logic';
+    } from '~logic/index';
 
     import {
         bufferToData,
@@ -34,7 +34,7 @@
         base64ToData,
 
         chunker,
-    } from '~services/utilities';
+    } from '~utilities/index';
     // #endregion external
 // #endregion imports
 

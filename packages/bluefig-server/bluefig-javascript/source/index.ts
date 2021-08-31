@@ -12,17 +12,24 @@
     } from './data/constants';
 
     import BluefigService from './objects/BluefigService';
+    import BluefigViewCharacteristic from './objects/BluefigViewCharacteristic';
     // #endregion internal
 // #endregion imports
 
 
 
 // #region module
-const main = () => {
-    const bluefigService = new BluefigService();
+const main = (
+    bluefigService?: BluefigService,
+) => {
+    bluefigService = bluefigService || new BluefigService();
 
 
     bleno.on(BLUETOOTH.STATE_CHANGE, (state) => {
+        if (!bluefigService) {
+            return;
+        }
+
         if (state === BLUETOOTH.POWERED_ON) {
             bleno.startAdvertising(
                 BLUEFIG_SERVICE_NAME,
@@ -40,6 +47,10 @@ const main = () => {
 
 
     bleno.on(BLUETOOTH.ADVERTISING_START, (error) => {
+        if (!bluefigService) {
+            return;
+        }
+
         if (error) {
             console.log(`Bluetooth startAdvertising event error`, error);
             return;
@@ -61,6 +72,11 @@ if (require.main === module) {
 
 // #region exports
 export * from '~data/interfaces';
+
+export {
+    BluefigService,
+    BluefigViewCharacteristic,
+};
 
 export default main;
 // #endregion exports
