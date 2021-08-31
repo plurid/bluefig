@@ -46,31 +46,20 @@ export const resolveElements = async (
                 resolvedElement[key] = value;
             }
 
-            if (element.type === 'image') {
+            if (
+                element.type === 'image'
+                || element.type === 'file'
+            ) {
                 const {
                     data,
                     contentType,
                 } = await readFile(resolvedElement.source);
+
                 resolvedElement.source = data;
 
                 if (
-                    resolvedElement.contentType &&
-                    resolvedElement.contentType !== contentType
-                ) {
-                    resolvedElement.contentType = contentType;
-                }
-            }
-
-            if (element.type === 'file') {
-                const {
-                    data,
-                    contentType,
-                } = await readFile(resolvedElement.source);
-                resolvedElement.source = data;
-
-                if (
-                    resolvedElement.contentType &&
-                    resolvedElement.contentType !== contentType
+                    resolvedElement.contentType
+                    && resolvedElement.contentType !== contentType
                 ) {
                     resolvedElement.contentType = contentType;
                 }
