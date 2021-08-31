@@ -250,9 +250,9 @@ const views = {
                     'inputText',
                 ],
                 execution: async (
-                    inputText,
+                    payload,
                 ) => {
-                    console.log('Click action called', inputText);
+                    console.log('Click action called', payload.inputText);
                 },
             },
         },
