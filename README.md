@@ -28,7 +28,7 @@
 
 `bluefig` is intended for the configuration of devices without input/output mechanisms.
 
-A `bluefig-server` runs on the device and the user connects to it through the `bluefig-client`, running on a common user terminal.
+The `bluefig-server` runs on the device and the user connects to it through the `bluefig-client`, running on a common user terminal.
 
 
 
@@ -36,8 +36,20 @@ A `bluefig-server` runs on the device and the user connects to it through the `b
 
 + [Usage](#usage)
     + [Example](#example)
+    + [Configuration](#configuration)
     + [Use Cases](#use-cases)
     + [In Use](#in-use)
++ [Elements](#elements)
+    + [`text`](#text)
+    + [`input-text`](#input-text)
+    + [`input-select`](#input-select)
+    + [`input-switch`](#input-switch)
+    + [`input-slider`](#input-slider)
+    + [`button`](#button)
+    + [`image`](#image)
+    + [`file`](#file)
+    + [`divider`](#divider)
+    + [`list`](#list)
 + [Packages](#packages)
 + [Codeophon](#codeophon)
 
@@ -47,24 +59,15 @@ A `bluefig-server` runs on the device and the user connects to it through the `b
 
 The `bluefig-server` will load at start a list of `views` and `hooks` which will determine the `bluefig-client` user interface and the `bluefig-server` behavior.
 
-A `bluefig-view` is comprised of `elements` and `actions`.
+A bluefig `view` is comprised of `elements` and `actions`.
 
-The `elements` will be sent by the `bluefig-server` to be rendered by the `bluefig-client`.
-
-The `element types` are
-
-+ `text`
-+ `input-text`
-+ `input-select`
-+ `input-switch`
-+ `input-slider`
-+ `button`
-+ `image`
-+ `file`
-+ `divider`
-+ `list`
+The [`elements`](#elements) will be sent by the `bluefig-server` to be rendered by the `bluefig-client`.
 
 The `elements` used for input (`input-x`, `button`) can have an `action` field. When the user interacts with the `element` on the `bluefig-client`, the established `action` will run accordingly on the `bluefig-server`.
+
+An `action` is an `async function` which can return another `view`; either one already defined in the `views` object, or something dynamically computed based on the functions `payload`, the object containing all the `arguments` passed from the `store`.
+
+Any `action` will also have as the second argument a `notify` function which will push a notification to the `bluefig-client`, and as the third argument an `event` function which can be used to trigger a `bluefig-server` event, such as `set-token` to set the access token.
 
 
 ### Example
@@ -116,7 +119,7 @@ the `bluefig-client` will then render an interface with a text input field which
 
 
 <p align="center">
-    <img src="https://raw.githubusercontent.com/plurid/bluefig/master/about/presentation/bluefig-example.png" height="500px">
+    <img src="https://raw.githubusercontent.com/plurid/bluefig/master/about/presentation/bluefig-example.png" height="400px">
 </p>
 
 
@@ -125,6 +128,15 @@ The `bluefig-server` will output at click
 ```
 > Click action called input text
 ```
+
+
+### Configuration
+
+The `bluefig-server` will by default load the `views` and `hooks` from `~/.bluefig`.
+
+Custom `views` and `hooks` paths can be provided using the environment variables `BLUEFIG_VIEWS_PATH` and `BLUEFIG_HOOKS_PATH`.
+
+The environment variable `BLUEFIG_SERVICE_NAME` can be used to set the name appearing in the `bluefig-client` scan list.
 
 
 ### Use Cases
@@ -147,6 +159,170 @@ The `bluefig-server` will output at click
 `bluefig` is used to configure:
 
 + [deserver](https://github.com/plurid/deserve/tree/master/packages/utilities/deserver-os/deserver-bluefig): admin setup, user generation, Wi-Fi selection, disk formatting, docker/processes lifecycle (setup-stop-restart).
+
+
+
+## Elements
+
+The `elements` of a `view` are comprised of `ViewElement`s.
+
+``` typescript
+export type ViewElement =
+    | ViewText
+    | ViewInputText
+    | ViewInputSelect
+    | ViewInputSwitch
+    | ViewInputSlider
+    | ViewButton
+    | ViewImage
+    | ViewFile
+    | ViewDivider
+    | ViewList;
+```
+
+Any field of an `element`, except the `type`, can receive a static value (`string`, `boolean`, etc.), or an `async function` which will be evaluated at view-request time.
+
+
+Helper types
+
+``` typescript
+export type PromiseOf<T> = () => Promise<T>;
+export type TypeOrPromiseOf<T> = T | PromiseOf<T>;
+
+export type StringOrPromiseOf = TypeOrPromiseOf<string>;
+export type StringArrayOrPromiseOf = TypeOrPromiseOf<string[]>;
+export type NumberOrPromiseOf = TypeOrPromiseOf<number>;
+export type BooleanOrPromiseOf = TypeOrPromiseOf<boolean>;
+export type StringOrNumberOrPromiseOf = TypeOrPromiseOf<string | number>;
+export type StringOrNumberOrStringNumberArrayOrPromiseOf = TypeOrPromiseOf<string | number | (string | number)[]>;
+export type ViewElementsOrPromiseOf = TypeOrPromiseOf<ViewElement[]>;
+```
+
+
+### text
+
+``` typescript
+export interface ViewText {
+    type: 'text';
+    value: StringOrPromiseOf;
+    selectable?: BooleanOrPromiseOf;
+}
+```
+
+### input-text
+
+``` typescript
+export interface ViewInputText {
+    type: 'input-text';
+    title?: StringOrPromiseOf;
+    store: StringOrPromiseOf;
+    initial?: StringOrPromiseOf;
+    secure?: BooleanOrPromiseOf;
+}
+```
+
+### input-select
+
+``` typescript
+export interface ViewInputSelect {
+    type: 'input-select';
+    title?: StringOrPromiseOf;
+    /**
+     * Select from the options list.
+     */
+    options: StringArrayOrPromiseOf;
+    store: StringOrPromiseOf;
+    initial?: StringOrNumberOrStringNumberArrayOrPromiseOf;
+    /**
+     * Allow for multiple selection.
+     */
+    multiple?: BooleanOrPromiseOf;
+    /**
+     * Set initial value, index of `options`.
+     */
+    action?: StringOrPromiseOf;
+}
+```
+
+### input-switch
+
+``` typescript
+export interface ViewInputSwitch {
+    type: 'input-switch';
+    title: StringOrPromiseOf;
+    store: StringOrPromiseOf;
+    initial?: BooleanOrPromiseOf;
+    action?: StringOrPromiseOf;
+}
+```
+
+### input-slider
+
+``` typescript
+export interface ViewInputSlider {
+    type: 'input-slider';
+    title: StringOrPromiseOf;
+    store: StringOrPromiseOf;
+    initial?: NumberOrPromiseOf;
+    action?: StringOrPromiseOf;
+    maximum?: NumberOrPromiseOf;
+    minimum?: NumberOrPromiseOf;
+    step?: NumberOrPromiseOf;
+}
+```
+
+### button
+
+``` typescript
+export interface ViewButton {
+    type: 'button';
+    title: StringOrPromiseOf;
+    action: StringOrPromiseOf;
+}
+```
+
+### image
+
+``` typescript
+export type ViewImageAlignment = 'left' | 'right' | 'center';
+
+export interface ViewImage {
+    type: 'image';
+    source: StringOrPromiseOf;
+    contentType?: StringOrPromiseOf;
+    height?: NumberOrPromiseOf;
+    width?: NumberOrPromiseOf;
+    alignment?: ViewImageAlignment | PromiseOf<ViewImageAlignment>;
+}
+```
+
+### file
+
+``` typescript
+export interface ViewFile {
+    type: 'file';
+    title: StringOrPromiseOf;
+    source: StringOrPromiseOf;
+    contentType?: StringOrPromiseOf;
+}
+```
+
+### divider
+
+``` typescript
+export interface ViewDivider {
+    type: 'divider';
+}
+```
+
+### list
+
+``` typescript
+export interface ViewList {
+    type: 'list';
+    items: ViewElementsOrPromiseOf;
+}
+```
 
 
 
