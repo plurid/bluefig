@@ -227,32 +227,32 @@ const views = {
 
 
     '/readme-example': {
-        title: 'Index',
+        title: 'Index View',
         elements: [
             {
                 type: 'text',
-                value: 'Index View',
+                value: 'this is a simple view',
             },
             {
                 type: 'input-text',
                 title: 'Input Text',
-                store: 'inputText',
+                store: 'inputTextStore',
             },
             {
                 type: 'button',
                 title: 'Click Me',
-                action: 'click',
+                action: 'clickAction',
             },
         ],
         actions: {
-            'click': {
+            'clickAction': {
                 arguments: [
-                    'inputText',
+                    'inputTextStore',
                 ],
                 execution: async (
                     payload,
                 ) => {
-                    console.log('Click action called', payload.inputText);
+                    console.log('Click action called', payload.inputTextStore);
                 },
             },
         },
