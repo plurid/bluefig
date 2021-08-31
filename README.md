@@ -210,6 +210,11 @@ export interface ViewText {
 }
 ```
 
+<p align="center">
+    <img src="https://raw.githubusercontent.com/plurid/bluefig/master/about/presentation/elements/element.text.png" height="400px">
+</p>
+
+
 ### input-text
 
 ``` typescript
@@ -221,6 +226,15 @@ export interface ViewInputText {
     secure?: BooleanOrPromiseOf;
 }
 ```
+
+<p align="center">
+    <img src="https://raw.githubusercontent.com/plurid/bluefig/master/about/presentation/elements/element.input-text.png" height="400px">
+</p>
+
+<p align="center">
+    <img src="https://raw.githubusercontent.com/plurid/bluefig/master/about/presentation/elements/element.input-text2.png" height="400px">
+</p>
+
 
 ### input-select
 
@@ -245,6 +259,11 @@ export interface ViewInputSelect {
 }
 ```
 
+<p align="center">
+    <img src="https://raw.githubusercontent.com/plurid/bluefig/master/about/presentation/elements/element.input-select.png" height="400px">
+</p>
+
+
 ### input-switch
 
 ``` typescript
@@ -256,6 +275,11 @@ export interface ViewInputSwitch {
     action?: StringOrPromiseOf;
 }
 ```
+
+<p align="center">
+    <img src="https://raw.githubusercontent.com/plurid/bluefig/master/about/presentation/elements/element.input-switch.png" height="400px">
+</p>
+
 
 ### input-slider
 
@@ -272,6 +296,11 @@ export interface ViewInputSlider {
 }
 ```
 
+<p align="center">
+    <img src="https://raw.githubusercontent.com/plurid/bluefig/master/about/presentation/elements/element.input-slider.png" height="400px">
+</p>
+
+
 ### button
 
 ``` typescript
@@ -281,6 +310,11 @@ export interface ViewButton {
     action: StringOrPromiseOf;
 }
 ```
+
+<p align="center">
+    <img src="https://raw.githubusercontent.com/plurid/bluefig/master/about/presentation/elements/element.button.png" height="400px">
+</p>
+
 
 ### image
 
@@ -297,6 +331,11 @@ export interface ViewImage {
 }
 ```
 
+<p align="center">
+    <img src="https://raw.githubusercontent.com/plurid/bluefig/master/about/presentation/elements/element.image.png" height="400px">
+</p>
+
+
 ### file
 
 ``` typescript
@@ -308,6 +347,11 @@ export interface ViewFile {
 }
 ```
 
+<p align="center">
+    <img src="https://raw.githubusercontent.com/plurid/bluefig/master/about/presentation/elements/element.file.png" height="400px">
+</p>
+
+
 ### divider
 
 ``` typescript
@@ -315,6 +359,11 @@ export interface ViewDivider {
     type: 'divider';
 }
 ```
+
+<p align="center">
+    <img src="https://raw.githubusercontent.com/plurid/bluefig/master/about/presentation/elements/element.divider.png" height="400px">
+</p>
+
 
 ### list
 
@@ -324,6 +373,10 @@ export interface ViewList {
     items: ViewElementsOrPromiseOf;
 }
 ```
+
+<p align="center">
+    <img src="https://raw.githubusercontent.com/plurid/bluefig/master/about/presentation/elements/element.list.png" height="400px">
+</p>
 
 
 
