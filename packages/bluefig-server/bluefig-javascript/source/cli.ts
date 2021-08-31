@@ -11,7 +11,7 @@ const VERSION = `0.0.0-0`;
 
 const availableCommands = `Available commands:
 
-    file        - get distribution/index.js filepath
+    file        - get distribution/index.js filepath;
     version     - print version;
     help        - print help.
 `;
@@ -34,9 +34,13 @@ const version = () => {
 
 
 const help = (
-    command: string,
+    command?: string,
 ) => {
-    console.log(`\n\tCommand '${command}' is unknown. ${availableCommands}\n`);
+    let base = command
+        ? `Command '${command}' is unknown. `
+        : '';
+
+    console.log(`\n\t${base}${availableCommands}\n`);
 }
 
 
@@ -59,7 +63,7 @@ const cli = () => {
                 version();
                 break;
             case 'help':
-                help(command);
+                help();
                 break;
             default:
                 help(command);
