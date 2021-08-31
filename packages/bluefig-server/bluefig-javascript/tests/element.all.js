@@ -32,7 +32,6 @@ const views = {
                     'three',
                 ],
                 initial: 1,
-                exclusive: true,
             },
         ],
     },
