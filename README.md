@@ -210,6 +210,19 @@ export interface ViewText {
 }
 ```
 
+``` typescript
+// tests/example.all.js
+    '/text': {
+        title: 'text',
+        elements: [
+            {
+                type: 'text',
+                value: 'Text',
+            },
+        ],
+    },
+```
+
 <p align="center">
     <img src="https://raw.githubusercontent.com/plurid/bluefig/master/about/presentation/elements/element.text.png" height="400px">
 </p>
@@ -225,6 +238,20 @@ export interface ViewInputText {
     initial?: StringOrPromiseOf;
     secure?: BooleanOrPromiseOf;
 }
+```
+
+``` typescript
+// tests/example.all.js
+    '/input-text': {
+        title: 'input text',
+        elements: [
+            {
+                type: 'input-text',
+                title: 'Input Text',
+                store: 'inputText',
+            },
+        ],
+    },
 ```
 
 <p align="center">
@@ -259,6 +286,26 @@ export interface ViewInputSelect {
 }
 ```
 
+``` typescript
+// tests/example.all.js
+    '/input-select': {
+        title: 'input select',
+        elements: [
+            {
+                type: 'input-select',
+                title: 'Input Select',
+                store: 'inputSelect',
+                options: [
+                    'one',
+                    'two',
+                    'three',
+                ],
+                initial: 1,
+            },
+        ],
+    },
+```
+
 <p align="center">
     <img src="https://raw.githubusercontent.com/plurid/bluefig/master/about/presentation/elements/element.input-select.png" height="400px">
 </p>
@@ -274,6 +321,20 @@ export interface ViewInputSwitch {
     initial?: BooleanOrPromiseOf;
     action?: StringOrPromiseOf;
 }
+```
+
+``` typescript
+// tests/example.all.js
+    '/input-switch': {
+        title: 'input switch',
+        elements: [
+            {
+                type: 'input-switch',
+                title: 'Input Switch',
+                store: 'inputSwitch',
+            },
+        ],
+    },
 ```
 
 <p align="center">
@@ -296,6 +357,20 @@ export interface ViewInputSlider {
 }
 ```
 
+``` typescript
+// tests/example.all.js
+    '/input-slider': {
+        title: 'input slider',
+        elements: [
+            {
+                type: 'input-slider',
+                title: 'Input Slider',
+                store: 'inputSlider',
+            },
+        ],
+    },
+```
+
 <p align="center">
     <img src="https://raw.githubusercontent.com/plurid/bluefig/master/about/presentation/elements/element.input-slider.png" height="400px">
 </p>
@@ -309,6 +384,20 @@ export interface ViewButton {
     title: StringOrPromiseOf;
     action: StringOrPromiseOf;
 }
+```
+
+``` typescript
+// tests/example.all.js
+    '/button': {
+        title: 'button',
+        elements: [
+            {
+                type: 'button',
+                title: 'Button',
+                action: 'actionButton',
+            },
+        ],
+    },
 ```
 
 <p align="center">
@@ -331,6 +420,19 @@ export interface ViewImage {
 }
 ```
 
+``` typescript
+// tests/example.all.js
+    '/image': {
+        title: 'image',
+        elements: [
+            {
+                type: 'image',
+                source: 'bluefig-logo-128x128.jpg',
+            },
+        ],
+    },
+```
+
 <p align="center">
     <img src="https://raw.githubusercontent.com/plurid/bluefig/master/about/presentation/elements/element.image.png" height="400px">
 </p>
@@ -347,6 +449,20 @@ export interface ViewFile {
 }
 ```
 
+``` typescript
+// tests/example.all.js
+    '/file': {
+        title: 'file',
+        elements: [
+            {
+                type: 'file',
+                title: 'Sample File.png',
+                source: 'a-file.txt',
+            },
+        ],
+    },
+```
+
 <p align="center">
     <img src="https://raw.githubusercontent.com/plurid/bluefig/master/about/presentation/elements/element.file.png" height="400px">
 </p>
@@ -358,6 +474,18 @@ export interface ViewFile {
 export interface ViewDivider {
     type: 'divider';
 }
+```
+
+``` typescript
+// tests/example.all.js
+    '/divider': {
+        title: 'divider',
+        elements: [
+            {
+                type: 'divider',
+            },
+        ],
+    },
 ```
 
 <p align="center">
@@ -372,6 +500,29 @@ export interface ViewList {
     type: 'list';
     items: ViewElementsOrPromiseOf;
 }
+```
+
+``` typescript
+// tests/example.all.js
+    '/list': {
+        title: 'list',
+        elements: [
+            {
+                type: 'list',
+                items: [
+                    {
+                        type: 'text',
+                        value: 'Text In List',
+                    },
+                    {
+                        type: 'input-text',
+                        title: 'Input Text In List',
+                        store: 'inputTextInList',
+                    },
+                ],
+            },
+        ],
+    },
 ```
 
 <p align="center">
