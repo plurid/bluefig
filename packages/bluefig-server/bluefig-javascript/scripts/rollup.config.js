@@ -14,6 +14,35 @@
 
 
 // #region module
+const cli = {
+    input: `source/cli.ts`,
+    output: [
+        {
+            file: `distribution/cli.js`,
+            format: 'cjs',
+        },
+    ],
+    external: [
+        'path',
+    ],
+    plugins: [
+        typescript({
+            typescript: ttypescript,
+            rollupCommonJSResolveHack: true,
+            clean: true,
+        }),
+        terser({
+            mangle: false,
+            compress: false,
+            format: {
+                beautify: true,
+                comments: false,
+            },
+        }),
+    ],
+};
+
+
 const build = {
     input: 'source/index.ts',
     output: [
@@ -56,5 +85,8 @@ const build = {
 
 
 // #region exports
-export default build;
+export default [
+    cli,
+    build,
+];
 // #endregion exports
