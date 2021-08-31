@@ -47,7 +47,7 @@
     },
     "dependencies": {
         "@abandonware/bleno": "^0.5.1-4",
-        "@plurid/delog": "^0.0.0-5",
+        "@plurid/delog": "^0.0.0-6",
         "@plurid/plurid-functions": "^0.0.0-5",
         "mime-types": "^2.1.32"
     },

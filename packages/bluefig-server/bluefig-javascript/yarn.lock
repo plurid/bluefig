@@ -26,10 +26,10 @@
   optionalDependencies:
     usb "^1.6.3"
 
-"@apollo/client@^3.3.21":
-  version "3.4.7"
-  resolved "https://npm.plurid.cloud/@apollo%2fclient/-/client-3.4.7.tgz#63d7c3539cc45fe44ac9cb093a27641479a8d1ad"
-  integrity sha512-EmqGxXD8hr05cIFWJFwtGXifc+Lo8hTCEuiaQMtKknHszJfqIFXSxqP+H+eJnjfuoxH74aTSsZKtJlnE83Vt6w==
+"@apollo/client@^3.4.10":
+  version "3.4.10"
+  resolved "https://npm.plurid.cloud/@apollo%2fclient/-/client-3.4.10.tgz#cee9ed75b1bb7f391c55d79300ecf87096e59792"
+  integrity sha512-b+8TT3jBM2BtEJi+V2FuLpvoYDZCY3baNYrgAgEyw4fjnuBCSRPY7qVjqriZAwMaGiTLtyVifGhmdeICQs4Eow==
   dependencies:
     "@graphql-typed-document-node/core" "^3.0.0"
     "@wry/context" "^0.6.0"
@@ -614,15 +614,15 @@
     "@nodelib/fs.scandir" "2.1.5"
     fastq "^1.6.0"
 
-"@plurid/delog@^0.0.0-5":
-  version "0.0.0-5"
-  resolved "https://npm.plurid.cloud/@plurid%2fdelog/-/delog-0.0.0-5.tgz#991adab6a9b1b988ec0d3b9a808e67da879ac346"
-  integrity sha512-6WORARj8XSRhsnSR/Hq31nXGy5BHRDfaNzBrPI08bUAJqUX9n4DvJx+2cdEhIrI1Jdc6iYJo6gGk3EAW6bMlWw==
+"@plurid/delog@^0.0.0-6":
+  version "0.0.0-6"
+  resolved "https://npm.plurid.cloud/@plurid%2fdelog/-/delog-0.0.0-6.tgz#8f6eb55a25ae45f80edd2b10940e1d863042ba82"
+  integrity sha512-5OZbxF9ynv0ZBQHZkQw2mx+TUuOEyaj09fyMbcH+yq22izC0H6j0tWskGuohGNgh0RwvsCWlZWkrX1zuvZ3Uvg==
   dependencies:
-    "@apollo/client" "^3.3.21"
+    "@apollo/client" "^3.4.10"
     "@plurid/plurid-functions" "0.0.0-5"
     cross-fetch "^3.1.4"
-    graphql "^15.5.1"
+    graphql "^15.5.2"
     graphql-tag "^2.12.5"
     microtime "^3.0.0"
     subscriptions-transport-ws "^0.9.19"
@@ -2102,10 +2102,10 @@ graphql-tag@^2.12.3, graphql-tag@^2.12.5:
   dependencies:
     tslib "^2.1.0"
 
-graphql@^15.5.1:
-  version "15.5.1"
-  resolved "https://npm.plurid.cloud/graphql/-/graphql-15.5.1.tgz#f2f84415d8985e7b84731e7f3536f8bb9d383aad"
-  integrity sha512-FeTRX67T3LoE3LWAxxOlW2K3Bz+rMYAC18rRguK4wgXaTZMiJwSUwDmPFo3UadAKbzirKIg5Qy+sNJXbpPRnQw==
+graphql@^15.5.2:
+  version "15.5.2"
+  resolved "https://npm.plurid.cloud/graphql/-/graphql-15.5.2.tgz#efa19f8f2bf1a48eb7d5c85bf17e144ba8bb0480"
+  integrity sha512-dZjLPWNQqYv0dqV2RNbiFed0LtSp6yd4jchsDGnuhDKa9OQHJYCfovaOEvY91w9gqbYO7Se9LKDTl3xxYva/3w==
 
 har-schema@^2.0.0:
   version "2.0.0"
