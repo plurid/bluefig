@@ -74,8 +74,7 @@ class BluefigViewCharacteristic extends bleno.Characteristic {
 
     private loadConfiguration() {
         try {
-            const views = require(VIEWS_PATH);
-            this.views = views;
+            this.views = require(VIEWS_PATH);
             console.log('bluefig loaded views');
         } catch (error) {
             console.log('bluefig could not load views');
@@ -83,8 +82,7 @@ class BluefigViewCharacteristic extends bleno.Characteristic {
 
         try {
             if (HOOKS_PATH) {
-                const hooks = require(HOOKS_PATH);
-                this.hooks = hooks;
+                this.hooks = require(HOOKS_PATH);
                 console.log('bluefig loaded hooks');
             }
         } catch (error) {

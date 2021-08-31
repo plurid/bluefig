@@ -125,6 +125,6 @@ export interface ViewRouteClient {
 export interface ActionPayload {
     view: string;
     name: string;
-    arguments?: any;
+    arguments?: Record<string, any>;
 }
 // #endregion module
