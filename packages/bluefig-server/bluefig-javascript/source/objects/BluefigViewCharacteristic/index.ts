@@ -7,6 +7,7 @@
     // #region external
     import {
         BLUEFIG_VIEW_CHARACTERISTIC_UUID,
+        BLUEFIG_RESPONSE,
 
         hooksPath,
         viewsPath,
@@ -120,7 +121,7 @@ class BluefigViewCharacteristic extends bleno.Characteristic {
             actions,
         } = view;
 
-        const viewableActions: any = {};
+        const viewableActions: Record<string, string[]> = {};
         if (actions) {
             for (const [key, value] of Object.entries(actions)) {
                 if (!value) {
@@ -142,12 +143,15 @@ class BluefigViewCharacteristic extends bleno.Characteristic {
             title,
             elements: resolvedElements,
             actions: viewableActions,
-            notifications: [
-                ...this.notifications,
-            ],
         };
 
-        this.notifications = [];
+        if (this.notifications.length > 0) {
+            viewable.notifications = [
+                ...this.notifications,
+            ];
+
+            this.notifications = [];
+        }
 
         return viewable;
     }
@@ -155,8 +159,8 @@ class BluefigViewCharacteristic extends bleno.Characteristic {
     private async resolveReadResource(
         resource: string,
     ) {
-        if (resource.startsWith('response:')) {
-            const id = resource.replace('response:', '');
+        if (resource.startsWith(BLUEFIG_RESPONSE)) {
+            const id = resource.replace(BLUEFIG_RESPONSE, '');
             if (!id) {
                 return;
             }
@@ -215,6 +219,7 @@ class BluefigViewCharacteristic extends bleno.Characteristic {
                 !actionPayload
                 || !actionPayload.view
             ) {
+                console.log('triggerAction warn :: actionPayload has no view');
                 return;
             }
 
@@ -263,37 +268,33 @@ class BluefigViewCharacteristic extends bleno.Characteristic {
                 this.bluefigEvent.bind(this),
             );
         } catch (error) {
+            console.log('triggerAction error ::', error);
+
             return;
         }
     }
 
 
     private handleResourceRead(
-        data: any,
+        data: Request,
         resourceOverwrite?: string,
     ) {
-        if (typeof (data as Request).resource !== 'string') {
-            return false;
-        }
-
-        const request = data as Request;
         const {
             resource,
             id,
-        } = request;
+        } = data;
 
         this.reading = {
             resource: resourceOverwrite || resource,
-            id: id || Math.random() + '',
+            id: id || (Math.random() + ''),
         };
 
         return true;
     }
 
     private async handleChunkWriting(
-        data: any,
+        chunk: WriteChunk,
     ) {
-        const chunk = data as WriteChunk;
         const {
             end,
             id,
@@ -313,6 +314,7 @@ class BluefigViewCharacteristic extends bleno.Characteristic {
             if (actionResult) {
                 const location = this.resolveViewLocation(actionResult);
                 if (!location) {
+                    console.log('handleChunkWriting error :: location not resolved');
                     return;
                 }
 
@@ -321,7 +323,7 @@ class BluefigViewCharacteristic extends bleno.Characteristic {
                     ...actionResult,
                 };
                 this.reading = {
-                    resource: `response:${id}`,
+                    resource: BLUEFIG_RESPONSE + id,
                     id,
                 };
             }
@@ -347,9 +349,9 @@ class BluefigViewCharacteristic extends bleno.Characteristic {
 
 
             if (typeof (data as Request).resource === 'string') {
-                if (
-                    this.hooks?.checkToken
-                ) {
+                const request = data as Request;
+
+                if (this.hooks?.checkToken) {
                     const allow = await this.hooks.checkToken(
                         {
                             token: this.token || data.token,
@@ -360,7 +362,7 @@ class BluefigViewCharacteristic extends bleno.Characteristic {
 
                     if (typeof allow === 'string') {
                         const resourceRead = this.handleResourceRead(
-                            data,
+                            request,
                             allow,
                         );
                         if (!resourceRead) {
@@ -380,8 +382,9 @@ class BluefigViewCharacteristic extends bleno.Characteristic {
                     }
                 }
 
-
-                const resourceRead = this.handleResourceRead(data);
+                const resourceRead = this.handleResourceRead(
+                    request,
+                );
                 if (resourceRead) {
                     callback(this.RESULT_SUCCESS);
                     return;
@@ -389,7 +392,9 @@ class BluefigViewCharacteristic extends bleno.Characteristic {
             }
 
 
-            await this.handleChunkWriting(data);
+            await this.handleChunkWriting(
+                data as WriteChunk,
+            );
             callback(this.RESULT_SUCCESS);
         } catch (error) {
             console.log('onWriteRequest error ::', error);
@@ -477,6 +482,7 @@ class BluefigViewCharacteristic extends bleno.Characteristic {
                 // last chunk was sent
                 this.reading = null;
                 this.readingsData = {};
+                this.actionViews = {};
             } else {
                 // sending intermediary chunks
                 (this.readingsData[id] as ReadingData).sent += 1;

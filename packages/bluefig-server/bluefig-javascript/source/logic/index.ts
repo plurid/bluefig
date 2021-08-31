@@ -30,7 +30,7 @@ export const resolveElements = async (
         return [];
     }
 
-    const resolvedElements: any[] = [];
+    const resolvedElements: ViewElement[] = [];
 
     for (const element of elements) {
         try {
@@ -65,9 +65,11 @@ export const resolveElements = async (
                 }
             }
 
-            resolvedElements.push(resolvedElement);
+            resolvedElements.push(
+                resolvedElement as ViewElement,
+            );
         } catch (error) {
-            console.log('Error resolving element', element, error);
+            console.log('resolveElements error ::', element, error);
             continue;
         }
     }
