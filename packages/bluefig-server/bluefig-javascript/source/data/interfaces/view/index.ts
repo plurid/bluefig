@@ -8,6 +8,7 @@ export type NumberOrPromiseOf = TypeOrPromiseOf<number>;
 export type BooleanOrPromiseOf = TypeOrPromiseOf<boolean>;
 export type StringOrNumberOrPromiseOf = TypeOrPromiseOf<string | number>;
 export type StringOrNumberOrStringNumberArrayOrPromiseOf = TypeOrPromiseOf<string | number | (string | number)[]>;
+export type ViewElementsOrPromiseOf = TypeOrPromiseOf<ViewElement[]>;
 
 
 export type ViewElement =
@@ -105,7 +106,7 @@ export interface ViewDivider {
 
 export interface ViewList {
     type: 'list';
-    items: ViewElement[];
+    items: ViewElementsOrPromiseOf;
 }
 
 
