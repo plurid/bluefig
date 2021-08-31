@@ -1,6 +1,8 @@
 // #region imports
     // #region libraries
     import bleno from '@abandonware/bleno';
+
+    import delog from '@plurid/delog';
     // #endregion libraries
 
 
@@ -36,7 +38,11 @@ const main = (
                 [bluefigService.uuid],
                 (error) => {
                     if (error) {
-                        console.log(`Bluetooth startAdvertising error`, error);
+                        delog({
+                            text: 'startAdvertising error',
+                            level: 'error',
+                            error,
+                        });
                     }
                 },
             );
@@ -52,7 +58,11 @@ const main = (
         }
 
         if (error) {
-            console.log(`Bluetooth startAdvertising event error`, error);
+            delog({
+                text: 'startAdvertising event error',
+                level: 'error',
+                error,
+            });
             return;
         }
 

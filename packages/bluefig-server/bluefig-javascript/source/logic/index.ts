@@ -6,6 +6,8 @@
     } from 'fs';
 
     import mime from 'mime-types';
+
+    import delog from '@plurid/delog';
     // #endregion libraries
 
 
@@ -69,7 +71,11 @@ export const resolveElements = async (
                 resolvedElement as ViewElement,
             );
         } catch (error) {
-            console.log('resolveElements error ::', element, error);
+            delog({
+                text: `resolveElements error :: ${element.toString()}`,
+                level: 'error',
+                error,
+            });
             continue;
         }
     }

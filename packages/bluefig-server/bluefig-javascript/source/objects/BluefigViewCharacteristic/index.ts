@@ -1,6 +1,12 @@
 // #region imports
     // #region libraries
     import bleno from '@abandonware/bleno';
+
+    import delog from '@plurid/delog';
+
+    import {
+        uuid,
+    } from '@plurid/plurid-functions';
     // #endregion libraries
 
 
@@ -75,18 +81,28 @@ class BluefigViewCharacteristic extends bleno.Characteristic {
     private loadConfiguration() {
         try {
             this.views = require(VIEWS_PATH);
-            console.log('bluefig loaded views');
+            delog({
+                text: 'bluefig loaded views',
+            });
         } catch (error) {
-            console.log('bluefig could not load views');
+            delog({
+                text: 'bluefig could not load views',
+                level: 'warn',
+            });
         }
 
         try {
             if (HOOKS_PATH) {
                 this.hooks = require(HOOKS_PATH);
-                console.log('bluefig loaded hooks');
+                delog({
+                    text: 'bluefig loaded hooks',
+                });
             }
         } catch (error) {
-            console.log('bluefig could not load hooks');
+            delog({
+                text: 'bluefig could not load hooks',
+                level: 'warn',
+            });
         }
     }
 
@@ -143,7 +159,7 @@ class BluefigViewCharacteristic extends bleno.Characteristic {
         const resolvedElements = await resolveElements(elements);
 
         const viewable: ViewRouteClient = {
-            location: location || view.location || `/${Math.random()}`,
+            location: location || view.location || `/${uuid.generate()}`,
             title,
             elements: resolvedElements,
             actions: viewableActions,
@@ -223,7 +239,10 @@ class BluefigViewCharacteristic extends bleno.Characteristic {
                 !actionPayload
                 || !actionPayload.view
             ) {
-                console.log('triggerAction warn :: actionPayload has no view');
+                delog({
+                    text: 'triggerAction warn :: actionPayload has no view',
+                    level: 'warn',
+                });
                 return;
             }
 
@@ -272,7 +291,11 @@ class BluefigViewCharacteristic extends bleno.Characteristic {
                 this.bluefigEvent.bind(this),
             );
         } catch (error) {
-            console.log('triggerAction error ::', error);
+            delog({
+                text: 'triggerAction error',
+                level: 'error',
+                error,
+            });
 
             return;
         }
@@ -290,7 +313,7 @@ class BluefigViewCharacteristic extends bleno.Characteristic {
 
         this.reading = {
             resource: resourceOverwrite || resource,
-            id: id || (Math.random() + ''),
+            id: id || uuid.generate(),
         };
 
         return true;
@@ -318,7 +341,10 @@ class BluefigViewCharacteristic extends bleno.Characteristic {
             if (actionResult) {
                 const location = this.resolveViewLocation(actionResult);
                 if (!location) {
-                    console.log('handleChunkWriting error :: location not resolved');
+                    delog({
+                        text: 'handleChunkWriting error :: location not resolved',
+                        level: 'warn',
+                    });
                     return;
                 }
 
@@ -401,7 +427,11 @@ class BluefigViewCharacteristic extends bleno.Characteristic {
             );
             callback(this.RESULT_SUCCESS);
         } catch (error) {
-            console.log('onWriteRequest error ::', error);
+            delog({
+                text: 'onWriteRequest error',
+                level: 'error',
+                error,
+            });
 
             callback(this.RESULT_UNLIKELY_ERROR);
         }
@@ -492,7 +522,11 @@ class BluefigViewCharacteristic extends bleno.Characteristic {
                 (this.readingsData[id] as ReadingData).sent += 1;
             }
         } catch (error) {
-            console.log('onReadRequest error ::', error);
+            delog({
+                text: 'onReadRequest error',
+                level: 'error',
+                error,
+            });
 
             callback(this.RESULT_UNLIKELY_ERROR);
         }
