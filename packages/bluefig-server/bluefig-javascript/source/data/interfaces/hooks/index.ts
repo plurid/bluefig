@@ -21,18 +21,28 @@
  */
 export type HookResponse = Promise<boolean | string | void>;
 
+
+export interface CheckTokenPayload {
+    token: string | undefined,
+}
+
+
+export type HookCheckToken = (
+    payload: CheckTokenPayload,
+    notify: BluefigNotification,
+    event: BluefigEvent,
+) => HookResponse;
+
+
+export type HookBeforeAction = (
+    payload: ActionPayload,
+    notify: BluefigNotification,
+    event: BluefigEvent,
+) => HookResponse;
+
+
 export interface Hooks {
-    checkToken?: (
-        payload: {
-            token: string | undefined,
-        },
-        notify: BluefigNotification,
-        event: BluefigEvent,
-    ) => HookResponse;
-    beforeAction?: (
-        payload: ActionPayload,
-        notify: BluefigNotification,
-        event: BluefigEvent,
-    ) => HookResponse;
+    checkToken?: HookCheckToken;
+    beforeAction?: HookBeforeAction;
 }
 // #endregion module
