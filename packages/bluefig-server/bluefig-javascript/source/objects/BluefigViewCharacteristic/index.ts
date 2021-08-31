@@ -45,13 +45,13 @@
 class BluefigViewCharacteristic extends bleno.Characteristic {
     private views: ViewsServer = {};
     private hooks: Hooks | null = null;
-
-    private chunks: Record<string, any> = {};
-
-    private reading: Reading | null = null;
-    private readings: Record<string, ViewRouteServer | ReadingData> = {};
     private notifications: string[] = [];
     private token = '';
+
+    private chunks: Record<string, any> = {};
+    private reading: Reading | null = null;
+    private readingsData: Record<string, ReadingData | undefined> = {};
+    private actionViews: Record<string, ViewRouteServer | undefined> = {};
 
 
     constructor() {
@@ -161,12 +161,12 @@ class BluefigViewCharacteristic extends bleno.Characteristic {
                 return;
             }
 
-            const view = this.readings[id];
+            const view = this.actionViews[id];
             if (!view) {
                 return;
             }
             const viewable = await this.resolveViewable(
-                view as ViewRouteServer,
+                view,
             );
             return viewable;
         }
@@ -316,7 +316,7 @@ class BluefigViewCharacteristic extends bleno.Characteristic {
                     return;
                 }
 
-                this.readings[id] = {
+                this.actionViews[id] = {
                     location,
                     ...actionResult,
                 };
@@ -392,6 +392,8 @@ class BluefigViewCharacteristic extends bleno.Characteristic {
             await this.handleChunkWriting(data);
             callback(this.RESULT_SUCCESS);
         } catch (error) {
+            console.log('onWriteRequest error ::', error);
+
             callback(this.RESULT_UNLIKELY_ERROR);
         }
     }
@@ -403,80 +405,86 @@ class BluefigViewCharacteristic extends bleno.Characteristic {
             data?: Buffer,
         ) => void,
     ) {
-        if (!this.reading) {
-            callback(this.RESULT_UNLIKELY_ERROR);
-            return;
-        }
+        try {
+            if (!this.reading) {
+                callback(this.RESULT_UNLIKELY_ERROR);
+                return;
+            }
 
-        const {
-            resource,
-            id,
-        } = this.reading;
+            const {
+                resource,
+                id,
+            } = this.reading;
 
-        const baseResponse: WriteChunk = {
-            id,
-            data: '',
-            end: 0,
-        };
+            const baseResponse: WriteChunk = {
+                id,
+                data: '',
+                end: 0,
+            };
 
-        if (this.token) {
-            baseResponse.token = this.token;
-            this.token = '';
-        }
+            if (this.token) {
+                baseResponse.token = this.token;
+                this.token = '';
+            }
 
-        const readingData = this.readings[id];
+            const readingData = this.readingsData[id];
 
-        if (!readingData) {
-            const readResource = await this.resolveReadResource(resource);
-            const resourceString = dataToBase64(readResource);
+            if (!readingData) {
+                const readResource = await this.resolveReadResource(resource);
+                const resourceString = dataToBase64(readResource);
 
-            const chunks = chunker(
-                baseResponse,
-                resourceString,
-            );
+                const chunks = chunker(
+                    baseResponse,
+                    resourceString,
+                );
 
-            if (chunks.length === 1) {
+                if (chunks.length === 1) {
+                    callback(
+                        this.RESULT_SUCCESS,
+                        Buffer.from(chunks[0]),
+                    );
+
+                    this.reading = null;
+                    return;
+                }
+
+
                 callback(
                     this.RESULT_SUCCESS,
                     Buffer.from(chunks[0]),
                 );
+                this.readingsData[id] = {
+                    chunks,
+                    sent: 0,
+                };
+                return;
+            }
 
-                this.reading = null;
+            const nextChunkIndex = readingData.sent + 1;
+            const nextChunk = readingData.chunks[nextChunkIndex];
+            if (!nextChunk) {
+                callback(this.RESULT_UNLIKELY_ERROR);
                 return;
             }
 
 
             callback(
                 this.RESULT_SUCCESS,
-                Buffer.from(chunks[0]),
+                Buffer.from(nextChunk),
             );
-            this.readings[id] = {
-                chunks,
-                sent: 0,
-            };
-            return;
-        }
 
-        const nextChunkIndex = (readingData as ReadingData).sent + 1;
-        const nextChunk = (readingData as ReadingData).chunks[nextChunkIndex];
-        if (!nextChunk) {
+            if (nextChunkIndex === readingData.chunks.length - 1) {
+                // last chunk was sent
+                this.reading = null;
+                this.readingsData = {};
+            } else {
+                // sending intermediary chunks
+                (this.readingsData[id] as ReadingData).sent += 1;
+            }
+        } catch (error) {
+            console.log('onReadRequest error ::', error);
+
             callback(this.RESULT_UNLIKELY_ERROR);
-            return;
-        }
-
-
-        callback(
-            this.RESULT_SUCCESS,
-            Buffer.from(nextChunk),
-        );
-
-        if (nextChunkIndex === (readingData as ReadingData).chunks.length - 1) {
-            // last chunk was sent
-            this.reading = null;
-            this.readings = {};
-        } else {
-            // sending intermediary chunks
-            (this.readings[id] as ReadingData).sent += 1;
         }
     }
 }
