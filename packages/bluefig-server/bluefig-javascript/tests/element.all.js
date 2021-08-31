@@ -62,6 +62,7 @@ const views = {
             {
                 type: 'button',
                 title: 'Button',
+                action: 'actionButton',
             },
         ],
     },
