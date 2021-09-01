@@ -1072,10 +1072,10 @@
     "@nodelib/fs.scandir" "2.1.5"
     fastq "^1.6.0"
 
-"@plurid/bluefig-server@^0.0.0-0":
-  version "0.0.0-0"
-  resolved "https://registry.yarnpkg.com/@plurid/bluefig-server/-/bluefig-server-0.0.0-0.tgz#fcd4c9607cb745cbce89e69c1e550523e911a96a"
-  integrity sha512-PRiEaaArDy58v8ONuwUEREgqRnocpFLPGYE4IeTWpew1LMhd0CX1TBDtHEbBHFpyNLH5nblZVhYvQJRShboztg==
+"@plurid/bluefig-server@^0.0.0-2":
+  version "0.0.0-2"
+  resolved "https://registry.yarnpkg.com/@plurid/bluefig-server/-/bluefig-server-0.0.0-2.tgz#fba7f12223eae738444ff03516085addbcac0127"
+  integrity sha512-AFzO0uvTWsd8rySneoJMjVyNzLsazx3DFBZar6fE6ou03mYipbPG5cH3FFxNp2pzeDzfLsWz5S83C4UU9FNUIA==
   dependencies:
     "@abandonware/bleno" "^0.5.1-4"
     "@plurid/delog" "^0.0.0-6"
@@ -1372,10 +1372,10 @@
   resolved "https://registry.yarnpkg.com/@react-native-community/eslint-plugin/-/eslint-plugin-1.1.0.tgz#e42b1bef12d2415411519fd528e64b593b1363dc"
   integrity sha512-W/J0fNYVO01tioHjvYWQ9m6RgndVtbElzYozBq1ZPrHO/iCzlqoySHl4gO/fpCl9QEFjvJfjPgtPMTMlsoq5DQ==
 
-"@react-native-community/slider@^4.1.3":
-  version "4.1.3"
-  resolved "https://registry.yarnpkg.com/@react-native-community/slider/-/slider-4.1.3.tgz#5011d09bdbaa0149458b44a436d7f1a39d1bfaab"
-  integrity sha512-XTNlaGyL2IBJ8NsqHvuvyMwzxxBPYtUcaGhc5ry4tm8cbMS5bUZTrFb+KDx058r3XUxFd+DLMyiRZSnisb1xiQ==
+"@react-native-community/slider@^4.1.6":
+  version "4.1.6"
+  resolved "https://registry.yarnpkg.com/@react-native-community/slider/-/slider-4.1.6.tgz#5e6d886b8369b532bf4b91c3cda50ba43b8952ad"
+  integrity sha512-WI7VUWKQlj0LPK453RmpOEKj6gpe4gmSL5B6cDnhO6mqytlCCz92hVja5ZG6X/2NsHLTCl99GLVKXvCfkaY5xw==
   dependencies:
     flow-bin "0.113.0"
 
@@ -6804,10 +6804,10 @@ react-native-fs@^2.18.0:
     base-64 "^0.1.0"
     utf8 "^3.0.0"
 
-react-native-windows@^0.65.0:
-  version "0.65.0"
-  resolved "https://registry.yarnpkg.com/react-native-windows/-/react-native-windows-0.65.0.tgz#47684e0f39a37db5c0311bcdcf0df019161dba33"
-  integrity sha512-mXk4VSZNZvka3moGCDFycouIyRbsw0/PwMDfG1rkRrUrmpGJ6eKol6auQ0XoKAO50Ga8qtUbZZU66Zb9xFACxw==
+react-native-windows@^0.65.1:
+  version "0.65.1"
+  resolved "https://registry.yarnpkg.com/react-native-windows/-/react-native-windows-0.65.1.tgz#0c8605e62fcf0e051380b900ad80b741814c30c5"
+  integrity sha512-+cu1kkGjMJDcBVQlJ3WtSEQc74dSjDBEwzIQX5woxmR8raUmYy5/9CFcR8eY3FLfEe2MGX8tyVR5s5XotRHscA==
   dependencies:
     "@babel/runtime" "^7.0.0"
     "@jest/create-cache-key-function" "^27.0.1"
