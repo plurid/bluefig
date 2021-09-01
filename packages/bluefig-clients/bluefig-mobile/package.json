@@ -22,7 +22,6 @@
         "generate.icon": "npx react-native-svg-app-icon"
     },
     "dependencies": {
-        "@plurid/bluefig-server": "^0.0.0-2",
         "@react-native-community/slider": "^4.1.6",
         "@react-native-picker/picker": "^1.16.7",
         "buffer": "^6.0.3",

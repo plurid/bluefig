@@ -17,16 +17,14 @@
         Device,
         Characteristic,
     } from 'react-native-ble-plx';
-
-    import {
-        BLUEFIG_SERVICE_UUID,
-        BLUEFIG_VIEW_CHARACTERISTIC_UUID,
-    } from '@plurid/bluefig-server';
     // #endregion libraries
 
 
     // #region internal
     import {
+        BLUEFIG_SERVICE_UUID,
+        BLUEFIG_VIEW_CHARACTERISTIC_UUID,
+
         VIEW_INDEX,
     } from './data/constants';
 
