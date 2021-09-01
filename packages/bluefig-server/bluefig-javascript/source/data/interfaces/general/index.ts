@@ -1,7 +1,6 @@
 // #region imports
     // #region internal
     import {
-        TypeOrPromiseOf,
         ViewElement,
     } from '../view';
     // #endregion internal
@@ -12,7 +11,7 @@
 // #region module
 export type ViewActionResultResolved = ViewRouteServer | void;
 
-export type ViewActionResult = TypeOrPromiseOf<ViewRouteServer | void>;
+export type ViewActionResult = (ViewRouteServer | void) | Promise<ViewRouteServer | void>;
 
 export type UnknownPayload = any;
 
