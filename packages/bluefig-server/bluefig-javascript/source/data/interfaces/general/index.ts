@@ -1,6 +1,7 @@
 // #region imports
     // #region internal
     import {
+        TypeOrPromiseOf,
         ViewElement,
     } from '../view';
     // #endregion internal
@@ -9,20 +10,26 @@
 
 
 // #region module
-export type ViewActionResult = Promise<ViewRouteServer | void>;
+export type ViewActionResult = TypeOrPromiseOf<ViewRouteServer | void>;
 
-export type ViewActionExecution<P = Record<string, any>> = (
-    payload: P | undefined,
+export type UnknownPayload = any;
+
+export type ViewActionExecution<P = UnknownPayload> = (
+    payload: P,
     notify: BluefigNotification,
     event: BluefigEvent,
 ) => ViewActionResult;
 
 
-export type ViewActionServer =
-    | {
-        arguments: string[];
-        execution: ViewActionExecution;
-    } | ViewActionExecution;
+export type ViewActionServer<P = UnknownPayload> =
+    | ViewActionExecution<undefined>
+    | ViewActionExecutionWithArguments<P>;
+
+
+export type ViewActionExecutionWithArguments<P = UnknownPayload> = {
+    arguments: string[];
+    execution: ViewActionExecution<P>;
+}
 
 
 export interface ViewRouteServer {
