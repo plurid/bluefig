@@ -25,6 +25,7 @@
         ActionPayload,
         ViewRouteClient,
         ViewRouteServer,
+        ViewActionResultResolved,
 
         Request,
         Reading,
@@ -276,20 +277,22 @@ class BluefigViewCharacteristic extends bleno.Characteristic {
 
 
             if (typeof actionData === 'function') {
-                return await actionData(
+                const result = await actionData(
                     undefined,
                     this.bluefigNotification.bind(this),
                     this.bluefigEvent.bind(this),
                 );
+                return result as ViewActionResultResolved;
             }
 
-            return await actionData.execution(
+            const result = await actionData.execution(
                 {
                     ...actionPayload.arguments,
                 },
                 this.bluefigNotification.bind(this),
                 this.bluefigEvent.bind(this),
             );
+            return result as ViewActionResultResolved;
         } catch (error) {
             delog({
                 text: 'triggerAction error',

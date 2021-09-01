@@ -10,6 +10,8 @@
 
 
 // #region module
+export type ViewActionResultResolved = ViewRouteServer | void;
+
 export type ViewActionResult = TypeOrPromiseOf<ViewRouteServer | void>;
 
 export type UnknownPayload = any;
