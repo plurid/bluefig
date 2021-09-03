@@ -485,8 +485,16 @@ const App = () => {
                     return;
                 }
 
-                const connectedDevice = await activeDevice.connect();
-                const servicedDevice = await connectedDevice.discoverAllServicesAndCharacteristics();
+                // console.log('activeDevice', activeDevice.mtu);
+                const connectedDevice = await activeDevice.connect({
+                    requestMTU: 512,
+                    timeout: 30_000,
+                });
+                // console.log('activeDevice 2', activeDevice.mtu);
+                const deviceWithMtu = await bluetooth.requestMTUForDevice(connectedDevice.id, 512);
+                // console.log('deviceWithMtu', deviceWithMtu.mtu);
+                // console.log('connectedDevice', connectedDevice.mtu);
+                const servicedDevice = await deviceWithMtu.discoverAllServicesAndCharacteristics();
                 const services = await servicedDevice.services();
 
                 for (const service of services) {
