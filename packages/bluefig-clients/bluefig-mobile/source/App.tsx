@@ -98,6 +98,11 @@ const App = () => {
     ] = useState<Device | null>(null);
 
     const [
+        deviceMTU,
+        setDeviceMTU,
+    ] = useState(256);
+
+    const [
         viewCharacteristic,
         setViewCharacteristic,
     ] = useState<Characteristic | null>(null);
@@ -282,6 +287,8 @@ const App = () => {
                 characteristic,
             );
         } catch (error) {
+            console.log('getView', error);
+
             setViewError('no view');
         }
     }
@@ -348,6 +355,7 @@ const App = () => {
                     setAccessToken(token);
                 },
                 true,
+                deviceMTU,
             );
             setSendingAction(false);
 
@@ -485,16 +493,13 @@ const App = () => {
                     return;
                 }
 
-                // console.log('activeDevice', activeDevice.mtu);
                 const connectedDevice = await activeDevice.connect({
                     requestMTU: 512,
                     timeout: 30_000,
                 });
-                // console.log('activeDevice 2', activeDevice.mtu);
                 const deviceWithMtu = await bluetooth.requestMTUForDevice(connectedDevice.id, 512);
-                // console.log('deviceWithMtu', deviceWithMtu.mtu);
-                // console.log('connectedDevice', connectedDevice.mtu);
                 const servicedDevice = await deviceWithMtu.discoverAllServicesAndCharacteristics();
+                const mtu = servicedDevice.mtu;
                 const services = await servicedDevice.services();
 
                 for (const service of services) {
@@ -512,6 +517,7 @@ const App = () => {
                                 setViewCharacteristic(characteristic);
                                 viewCharacteristicFound = true;
                                 setViewCharacteristicFound(true);
+                                setDeviceMTU(mtu);
                                 break;
                             }
                         }

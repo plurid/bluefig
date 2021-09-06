@@ -142,8 +142,9 @@ export interface WriteResponse {
 export const chunker = (
     baseData: any,
     value: string,
+    deviceMTU?: number,
 ) => {
-    const CHUNK_FULL_SIZE = 512;
+    const CHUNK_FULL_SIZE = deviceMTU || 256;
     const chunkSize = CHUNK_FULL_SIZE - dataToBase64(baseData).length;
     const chunks: string[] = [];
     const chunksNumber = Math.ceil(value.length / chunkSize);
@@ -185,6 +186,7 @@ export const writeData = async (
         token: string,
     ) => void,
     expectResponse?: boolean,
+    deviceMTU?: number,
 ): Promise<WriteResponse> => {
     try {
         const id = Math.random() + '';
@@ -199,6 +201,7 @@ export const writeData = async (
         const chunks = chunker(
             writeBase,
             resource,
+            deviceMTU,
         );
 
         for (const chunk of chunks) {
