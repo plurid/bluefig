@@ -1,9 +1,17 @@
+// #region imports
+    // #region libraries
+    import bleno from '@abandonware/bleno';
+    // #endregion libraries
+// #endregion imports
+
+
+
 // #region module
 export const chunker = <D = any>(
     baseData: D,
     value: string,
 ) => {
-    const CHUNK_FULL_SIZE = 512;
+    const CHUNK_FULL_SIZE = bleno.mtu || 256;
     const chunkSize = CHUNK_FULL_SIZE - JSON.stringify(baseData).length;
     const chunks: string[] = [];
     const chunksNumber = Math.ceil(value.length / chunkSize);
