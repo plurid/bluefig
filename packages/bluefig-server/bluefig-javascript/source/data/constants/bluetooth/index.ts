@@ -8,4 +8,6 @@ export const BLUETOOTH: {
     ADVERTISING_START: 'advertisingStart',
     POWERED_ON: 'poweredOn',
 };
+
+export const BLUEFIG_BLUETOOTH_MTU = parseInt(process.env.BLUEFIG_BLUETOOTH_MTU || '') || 256;
 // #endregion module

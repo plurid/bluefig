@@ -2,6 +2,13 @@
     // #region libraries
     import bleno from '@abandonware/bleno';
     // #endregion libraries
+
+
+    // #region external
+    import {
+        BLUEFIG_BLUETOOTH_MTU,
+    } from '~data/constants';
+    // #endregion external
 // #endregion imports
 
 
@@ -11,7 +18,7 @@ export const chunker = <D = any>(
     baseData: D,
     value: string,
 ) => {
-    const CHUNK_FULL_SIZE = bleno.mtu || 256;
+    const CHUNK_FULL_SIZE = bleno.mtu || BLUEFIG_BLUETOOTH_MTU;
     const chunkSize = CHUNK_FULL_SIZE - JSON.stringify(baseData).length;
     const chunks: string[] = [];
     const chunksNumber = Math.ceil(value.length / chunkSize);
